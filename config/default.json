@@ -1,0 +1,8 @@
+{
+    "port" : 5000,
+    "host" : "localhost",
+    "user" : "root",
+    "database" : "storedb",
+    "password" : "Nail2003",
+    "jwtToken" : "qwerty"
+}
