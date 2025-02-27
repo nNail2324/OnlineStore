@@ -2,11 +2,10 @@ import React from "react"
 import { Route, Routes, Navigate } from "react-router-dom"
 import Profile from "./components/Profile"
 import MainPage from "./components/MainPage"
-import Login from "./components/Login"
-import SignUp from "./components/SignUp"
 import Category from "./components/Category"
 import Basket from "./components/Basket"
 import Favorite from "./components/Favorite"
+import AuthPage from "./components/AuthPage"
 
 export const useRoutes = (isAuthenticated) => {
     if (isAuthenticated) {
@@ -25,8 +24,7 @@ export const useRoutes = (isAuthenticated) => {
         <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/category" element={<Category />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route path="/auth" element={<AuthPage />} />
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>
     )

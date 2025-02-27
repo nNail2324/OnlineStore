@@ -28,6 +28,7 @@ input:focus {
 }
 
 .orange-button button {
+    font-family: 'Inter-Medium';
     height: 37px;
     background-color: #FF7F00;
     border-radius: 10px;
@@ -53,6 +54,7 @@ input:focus {
 }
 
 .white-button button {
+    font-family: 'Inter-Medium';
     height: 37px;
     background-color: white;
     border-radius: 10px;
@@ -449,12 +451,72 @@ input:focus {
 
 /*Аутентификация*/
 
+.error-message {
+    color: red;
+    font-family: 'Inter-Medium';
+    font-size: 12px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+  }
+  
+.general-error {
+    color: red;
+    font-family: 'Inter-Medium';
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.auth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 5px; 
+}
+
+.auth-button button {
+    font-family: 'Inter-Medium';
+    height: 37px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    background-color: #000000;
+    border-radius: 10px;
+    border-color: #000000;
+    border-style: solid;
+    color: white;
+    font-size: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    transition: 0.5s ease;
+    width: 75%; 
+}
+
+.auth-button button:hover {
+    background-color: #FFFFFF;
+    border-color: #000000;
+    color: #000000;
+}
+
+.auth-label label{
+    color: #000000;
+    font-family: 'Inter-Medium';
+    font-size: 16px;
+    transition: 0.5s ease;
+}
+
+.auth-label label:hover {
+    color: #2d2d2d;
+}
+
 .body-page .authentication {
     padding-top: 30px;
     padding-bottom: 50px;
-    background-color: #F2F2F2;
+    background-color: #FFFFFF;
     border-radius: 15px;
-    border-color: #EBEBEB;
+    border-color: #FFFFFF;
     border-style: solid;
     width: 50%; 
     height: 100%; 
@@ -468,7 +530,7 @@ input:focus {
 .body-page .form-authentication {
     flex-direction: column;
     display: flex;
-    width: 60%;
+    width: 75%;
 }
 
 .body-page .form-authentication label {
@@ -486,7 +548,20 @@ input:focus {
     background-color: #FFFFFF;
     height: 30px;
     display: flex;
-    margin-bottom: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.body-page .form-authentication input:focus {
+    border-color: #000000; 
+    outline: none; 
+}
+
+.body-page .form-authentication input::placeholder {
+    transition: color 0.3s ease;
+}
+
+.body-page .form-authentication input:focus::placeholder {
+    color: #000000;
 }
 
 /*Профиль*/
@@ -521,3 +596,6 @@ input:focus {
     font-family: 'Asimplerdnm';
     font-size: 25px;
 }
+
+
+
