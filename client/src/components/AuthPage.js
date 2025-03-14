@@ -9,7 +9,7 @@ const AuthPage = () => {
   const { loading, request } = useHttp();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [form, setForm] = useState({
-    phone_number: "",
+    phone_number: "",  // Начальное значение пустое
     password: "",
     confirm_password: "",
   });
@@ -20,6 +20,7 @@ const AuthPage = () => {
   });
   const [generalError, setGeneralError] = useState("");
 
+  // Валидация формы
   const validateForm = () => {
     const errors = {};
 
@@ -39,6 +40,34 @@ const AuthPage = () => {
     return Object.keys(errors).length === 0;
   };
 
+  // Обработка ввода с проверкой префикса +7
+const changeHandler = (event) => {
+  const { name, value } = event.target;
+
+  // Если это поле телефона и пытаются удалить "+7", возвращаем старое значение
+  if (name === "phone_number" && !value.startsWith("+7")) {
+      return;
+  }
+
+  setForm({ ...form, [name]: value });
+};
+
+// Добавляем префикс +7 при фокусе
+const handleFocus = () => {
+  if (form.phone_number === "") {
+      setForm({ ...form, phone_number: "+7" });
+  }
+};
+
+// Убираем префикс +7 при потере фокуса, если он единственный
+const handleBlur = () => {
+  if (form.phone_number === "+7") {
+      setForm({ ...form, phone_number: "" });
+  }
+};
+
+
+  // Обработка входа/регистрации
   const authHandler = async () => {
     setValidationErrors({
       phone_number: "",
@@ -57,27 +86,23 @@ const AuthPage = () => {
         : "http://localhost:5000/api/auth/register";
       const data = await request(endpoint, "POST", { ...form });
 
-      if (data.message) { 
+      if (data.message) {
         setGeneralError(data.message);
         return;
       }
 
       auth.login(data.token, data.userId);
-      navigate("/")
+      navigate("/");  // Переход на главную страницу
     } catch (e) {
       setGeneralError(e.message || "Ошибка сервера. Попробуйте снова.");
-      }
-};
-
-
-  const changeHandler = (event) => {
-    setForm({ ...form, [event.target.name]: event.target.value });
+    }
   };
 
+  // Переключение между режимами "Вход" и "Регистрация"
   const switchModeHandler = () => {
     setIsLoginMode((prevMode) => !prevMode);
     setForm({
-      phone_number: "",
+      phone_number: "",  // Начальное значение пустое
       password: "",
       confirm_password: "",
     });
@@ -104,6 +129,8 @@ const AuthPage = () => {
             name="phone_number"
             placeholder="+7XXX-XXX-XX-XX"
             value={form.phone_number}
+            onFocus={handleFocus}
+            onBlur={handleBlur}  
             onChange={changeHandler}
           />
           <div className="error-message">{validationErrors.phone_number}</div>
@@ -130,7 +157,9 @@ const AuthPage = () => {
                 value={form.confirm_password}
                 onChange={changeHandler}
               />
-              <div className="error-message">{validationErrors.confirm_password}</div>
+              <div className="error-message">
+                {validationErrors.confirm_password}
+              </div>
             </>
           )}
 
