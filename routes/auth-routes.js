@@ -19,9 +19,16 @@ router.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const userId = await User.create(phone_number, hashedPassword);
+
+    const token = jwt.sign(
+      { userId },
+      config.get("jwtToken"),
+      { expiresIn: "1h" }
+    );
+
     console.log("Пользователь успешно создан с ID:", userId);
 
-    res.status(201).json({ userId });
+    res.status(201).json({ token, userId });
   } catch (e) {
     console.error("Ошибка на сервере при регистрации:", e);
     res.status(500).json({ message: "Ошибка сервера. Попробуйте снова." });

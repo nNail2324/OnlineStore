@@ -1,9 +1,11 @@
 import React, { useState, useContext } from "react";
 import { useHttp } from "../hooks/http";
 import { AuthContext } from "../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const { loading, request } = useHttp();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [form, setForm] = useState({
@@ -60,9 +62,8 @@ const AuthPage = () => {
         return;
       }
 
-      if (isLoginMode) {
-        auth.login(data.token, data.userId);
-      } 
+      auth.login(data.token, data.userId);
+      navigate("/")
     } catch (e) {
       setGeneralError(e.message || "Ошибка сервера. Попробуйте снова.");
       }

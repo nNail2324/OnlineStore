@@ -272,7 +272,7 @@ input:focus {
 /*Главная страница*/
 
 .body-page .banner {
-    background-color: #F2F2F2;
+    background-color: #FFFFFF;
     border-radius: 10px;
     border-color: #FF7F00;
     border-style: solid;
@@ -281,6 +281,12 @@ input:focus {
     justify-content: center;
     align-items: center;
     display: flex;
+}
+
+.body-page .banner label {
+    font-family: 'Asimplerdnm';
+    font-size: 80px;
+    color: #FF7F00;
 }
 
 .body-page .products {

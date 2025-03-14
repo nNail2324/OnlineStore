@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
-class Profile extends React.Component {
-    render() {
-        return (
-            <div className="body-page">
+const Profile = () => {
+    const { isAuthenticated, logout } = useContext(AuthContext);
+    const navigate = useNavigate();
+    
+    const onClickLogout = () => {
+        logout()
+        navigate("/auth")
+    }
+
+    return(
+        <div className="body-page">
                 <div className="name">
                     <label>Личные данные</label>
                 </div>
@@ -13,7 +22,7 @@ class Profile extends React.Component {
                             <label>Шарипов Наиль</label>
                         </div>
                         <div className="white-button">
-                            <button>Выйти</button>
+                            <button onClick={onClickLogout}>Выйти</button>
                         </div>
                     </div>
                     <div className="product-desc">
@@ -95,8 +104,7 @@ class Profile extends React.Component {
                     </div>
                 </div>
             </div>
-        );
-    }
+    )
 }
 
 export default Profile;
