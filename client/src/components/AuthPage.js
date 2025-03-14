@@ -4,7 +4,7 @@ import { AuthContext } from "../context/auth-context";
 
 const AuthPage = () => {
   const auth = useContext(AuthContext);
-  const { loading, request, error, clearError } = useHttp();
+  const { loading, request } = useHttp();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [form, setForm] = useState({
     phone_number: "",
@@ -17,10 +17,6 @@ const AuthPage = () => {
     confirm_password: "",
   });
   const [generalError, setGeneralError] = useState("");
-
-  const changeHandler = (event) => {
-    setForm({ ...form, [event.target.name]: event.target.value });
-  };
 
   const validateForm = () => {
     const errors = {};
@@ -43,43 +39,39 @@ const AuthPage = () => {
 
   const authHandler = async () => {
     setValidationErrors({
-        phone_number: "",
-        password: "",
-        confirm_password: "",
+      phone_number: "",
+      password: "",
+      confirm_password: "",
     });
     setGeneralError("");
 
     if (!validateForm()) {
-        return;
+      return;
     }
 
     try {
-        const endpoint = isLoginMode ? "/api/auth/login" : "/api/auth/register";
-        const data = await request(`http://localhost:5000${endpoint}`, "POST", { ...form });
+      const endpoint = isLoginMode
+        ? "http://localhost:5000/api/auth/login"
+        : "http://localhost:5000/api/auth/register";
+      const data = await request(endpoint, "POST", { ...form });
 
-        if (isLoginMode) {
-            auth.login(data.token, data.userId);
-        } else {
-            console.log("Регистрация успешна:", data.message);
-        }
+      if (data.message) { 
+        setGeneralError(data.message);
+        return;
+      }
+
+      if (isLoginMode) {
+        auth.login(data.token, data.userId);
+      } 
     } catch (e) {
-        console.error("Ошибка с сервера:", e);
-
-        if (e.errors) {
-            const errors = {};
-            e.errors.forEach((err) => {
-                errors[err.param] = err.msg;
-            });
-            setValidationErrors(errors);
-        }
-
-        if (e.message) {
-            console.log("Ошибка для отображения:", e.message);
-            setGeneralError(e.message); // Должно обновлять generalError
-        }
-    }
+      setGeneralError(e.message || "Ошибка сервера. Попробуйте снова.");
+      }
 };
 
+
+  const changeHandler = (event) => {
+    setForm({ ...form, [event.target.name]: event.target.value });
+  };
 
   const switchModeHandler = () => {
     setIsLoginMode((prevMode) => !prevMode);
@@ -102,7 +94,7 @@ const AuthPage = () => {
         <div className="name">
           <label>{isLoginMode ? "Вход" : "Регистрация"}</label>
         </div>
-        <div className="general-error">{generalError}</div>
+        {generalError && <div className="general-error">{generalError}</div>}
         <form className="form-authentication">
           <label htmlFor="phone_number">Номер телефона</label>
           <input
@@ -142,11 +134,7 @@ const AuthPage = () => {
           )}
 
           <div className="auth-button">
-            <button
-              type="button"
-              disabled={loading}
-              onClick={authHandler}
-            >
+            <button type="button" disabled={loading} onClick={authHandler}>
               {isLoginMode ? "Войти" : "Зарегистрироваться"}
             </button>
           </div>

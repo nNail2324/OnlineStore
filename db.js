@@ -1,11 +1,19 @@
 const mysql = require("mysql2");
 const config = require("config");
 
-const pool = mysql.createPool({
-    host: config.get("host"),
-    user: config.get("user"),
-    database: config.get("database"),
-    password: config.get("password")
-}).promise();
+const db = mysql.createConnection({
+  host: config.get("host"),
+  user: config.get("user"),
+  password: config.get("password"),
+  database: config.get("database"),
+});
 
-module.exports = pool;
+db.connect((err) => {
+  if (err) {
+    console.error("Ошибка подключения к базе данных:", err);
+    process.exit(1);
+  }
+  console.log("Успешное подключение к базе данных");
+});
+
+module.exports = db;

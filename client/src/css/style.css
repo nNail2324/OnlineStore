@@ -460,10 +460,10 @@ input:focus {
   }
   
 .general-error {
-    color: red;
+    color: black;
     font-family: 'Inter-Medium';
-    font-size: 14px;
-    margin-bottom: 10px;
+    font-size: 15px;
+    margin-bottom: 15px;
     text-align: center;
 }
 
