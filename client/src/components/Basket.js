@@ -28,48 +28,6 @@ const Basket = () => {
                         </div>
                     </div>
                 </div>
-                <div className="type">
-                    <div className="orange-title">
-                        <label>Уголок стальной 25x25</label>
-                    </div>
-                    <div className="black-title">
-                        <label>120 руб./м</label>
-                    </div>
-                    <div className="quantity-button">
-                        <button id="plus">+</button>
-                        <input type="text" placeholder="1" id="print"/>
-                        <button id="minus">-</button>
-                    </div>
-                    <div className="left-row">
-                        <div className="white-button">
-                            <button>Перейти</button>
-                        </div>
-                        <div className="add-button">
-                            <button>&times;</button>
-                        </div>
-                    </div>
-                </div>
-                <div className="type">
-                    <div className="orange-title">
-                        <label>Уголок стальной 25x25</label>
-                    </div>
-                    <div className="black-title">
-                        <label>120 руб./м</label>
-                    </div>
-                    <div className="quantity-button">
-                        <button id="plus">+</button>
-                        <input type="text" placeholder="1" id="print" />
-                        <button id="minus">-</button>
-                    </div>
-                    <div className="left-row">
-                        <div className="white-button">
-                            <button>Перейти</button>
-                        </div>
-                        <div className="add-button">
-                            <button>&times;</button>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div className="char">
                 <div className="column">
@@ -98,7 +56,7 @@ const Basket = () => {
                                 <label>Общая сумма к оплате</label>
                             </div>
                             <div className="black-text">
-                                <label>3750 &#8381;</label>
+                                <label>120 &#8381;</label>
                             </div>
                         </div>
                 </div>

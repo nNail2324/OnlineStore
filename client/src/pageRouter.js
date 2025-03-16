@@ -15,7 +15,7 @@ export const useRoutes = (isAuthenticated) => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/basket" element={<Basket />} />
                 <Route path="/favorite" element={<Favorite />} />
-                <Route path="/category/:name" element={<Category />} />
+                <Route path="/category/:image" element={<Category />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
@@ -24,7 +24,7 @@ export const useRoutes = (isAuthenticated) => {
     return (
         <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route path="/category/:name" element={<Category />} />
+            <Route path="/category/:image" element={<Category />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>

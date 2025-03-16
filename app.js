@@ -9,9 +9,11 @@ app.use(cors())
 
 app.use(express.json({ extended: true }))
 
+console.log("Регистрация маршрута: /api/auth");
+app.use("/api/auth", require("./routes/auth"));
+console.log("Маршрут /api/auth зарегистрирован");
 app.use("/api/category", require("./routes/category"))
-app.use('/api/auth', require('./routes/auth'))
-app.use("/api/products", require("./routes/product"));
+app.use("/api/products", require("./routes/product"))
 
 const PORT = config.get("port") || 3000
 

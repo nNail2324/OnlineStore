@@ -2,32 +2,37 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const Category = () => {
-    const { name } = useParams(); // Получаем параметр из URL
+    const { image } = useParams(); // Получаем image категории из URL
     const [categoryName, setCategoryName] = useState("");
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        const fetchCategory = async () => {
+        const fetchCategoryAndProducts = async () => {
             try {
-                // Получаем все категории
-                const response = await fetch("http://localhost:5000/api/category");
-                const data = await response.json();
-
-                // Находим категорию по совпадению с image
-                const foundCategory = data.find((category) => category.image === name);
-
-                if (foundCategory) {
-                    setCategoryName(foundCategory.name); // Устанавливаем название категории
-                } else {
-                    setCategoryName("Категория не найдена");
+                // Получаем данные о категории по image
+                const categoryResponse = await fetch(`http://localhost:5000/api/category/image/${image}`);
+                if (!categoryResponse.ok) {
+                    throw new Error("Категория не найдена");
                 }
+                const categoryData = await categoryResponse.json();
+    
+                setCategoryName(categoryData.name); // Устанавливаем название категории
+    
+                // Получаем товары по ID категории
+                const productsResponse = await fetch(`http://localhost:5000/api/products/${categoryData.ID}`);
+                if (!productsResponse.ok) {
+                    throw new Error("Товары не найдены");
+                }
+                const productsData = await productsResponse.json();
+                setProducts(productsData);
             } catch (error) {
-                console.error("Ошибка при загрузке категории:", error);
+                console.error("Ошибка при загрузке данных:", error);
                 setCategoryName("Ошибка загрузки");
             }
         };
-
-        fetchCategory();
-    }, [name]);
+    
+        fetchCategoryAndProducts();
+    }, [image]);
 
     return (
         <div className="body-page">
@@ -35,57 +40,27 @@ const Category = () => {
                 <label>{categoryName}</label>
             </div>
             <div className="types">
-                <div className="type">
-                    <div className="orange-title">
-                        <label>Уголок стальной 25x25</label>
-                    </div>
-                    <div className="black-title">
-                        <label>120 руб./м</label>
-                    </div>
-                    <div className="left-row">
-                        <div className="orange-button">
-                            <button>Перейти</button>
+                {products.map((product) => (
+                    <div className="type" key={product.ID}>
+                        <div className="orange-title">
+                            <label>{product.name}</label>
                         </div>
-                        <div className="add-button">
-                            <button>+</button>
+                        <div className="black-title">
+                            <label>{product.price} &#8381;</label>
                         </div>
-                    </div>
-                </div>
-                <div className="type">
-                    <div className="orange-title">
-                        <label>Уголок стальной 25x25</label>
-                    </div>
-                    <div className="black-title">
-                        <label>120 руб./м</label>
-                    </div>
-                    <div className="left-row">
-                        <div className="orange-button">
-                            <button>Перейти</button>
-                        </div>
-                        <div className="add-button">
-                            <button>+</button>
+                        <div className="left-row">
+                            <div className="orange-button">
+                                <button>Перейти</button>
+                            </div>
+                            <div className="add-button">
+                                <button>+</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="type">
-                    <div className="orange-title">
-                        <label>Уголок стальной 25x25</label>
-                    </div>
-                    <div className="black-title">
-                        <label>120 руб./м</label>
-                    </div>
-                    <div className="left-row">
-                        <div className="orange-button">
-                            <button>Перейти</button>
-                        </div>
-                        <div className="add-button">
-                            <button>+</button>
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Category;
