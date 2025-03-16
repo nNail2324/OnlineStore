@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { useRoutes } from "./routes";
+import { useRoutes } from "./pageRouter";
 import { AuthContext } from "./context/auth-context";
 
 const App = () => {
