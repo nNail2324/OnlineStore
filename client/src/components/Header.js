@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import { VscAccount } from "react-icons/vsc";
 import { VscHeart } from "react-icons/vsc";
-import { FaTruckArrowRight } from "react-icons/fa6";
 import { VscAdd } from "react-icons/vsc";
 
 const Header = () => {
@@ -33,36 +32,41 @@ const Header = () => {
 
     return (
         <header className="header">
-            <div className="logo-search">
-                <div className="logo" onClick={onClickLogo}>
-                    <FaTruckArrowRight className="logo-react"/>
-                    <label>стройматериалы</label>
+            <div className="logo" onClick={onClickLogo}>
+                <div className="logo-text">
+                    <label className="company-title">ИП Шарипов</label>
+                    <label className="company-name">стройматериалы</label>
                 </div>
+            </div>
+
+            <div className="header-right">
                 <div className="search">
                     <input type="text" placeholder="Поиск" />
                 </div>
-            </div>
-            <div className="center-row">
-                <div className="orange-button">
-                    <button>Обратная связь</button>
-                </div>
-                    <div className="orange-button">
-                            <button onClick={onClickBasket}>Корзина</button>
-                    </div>
-                    <div className="logo-button">
-                            <VscHeart className="logo-from-react" onClick={onClickFavorite} />
-                    </div>
-                    <div className="logo-button">
-                        {isAuthenticated ? (
-                            <VscAccount className="logo-from-react" onClick={onClickProfile} />
-                        ) : (
-                            <VscAdd className="logo-from-react" onClick={onClickAuth} />
-                        )}
-                </div>
-                </div>
-        </header>
-    )
-  }
-  
-  export default Header;
 
+                <div className="orange-button">
+                    <button>Оставить заявку</button>
+                </div>
+
+                <div className="orange-button">
+                    <button onClick={onClickBasket}>Корзина</button>
+                </div>
+
+                <div className="logo-button">
+                    <VscHeart className="logo-from-react" onClick={onClickFavorite} />
+                </div>
+
+                <div className="logo-button">
+                    {isAuthenticated ? (
+                        <VscAccount className="logo-from-react" onClick={onClickProfile} />
+                    ) : (
+                        <VscAdd className="logo-from-react" onClick={onClickAuth} />
+                    )}
+                </div>
+            </div>
+        </header>
+
+    )
+}
+
+export default Header;

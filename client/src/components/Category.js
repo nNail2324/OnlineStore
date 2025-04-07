@@ -1,38 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Category = () => {
-    const { image } = useParams(); // Получаем image категории из URL
+    const { image } = useParams();
     const [categoryName, setCategoryName] = useState("");
-    const [products, setProducts] = useState([]);
+    const [subcategories, setSubcategories] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchCategoryAndProducts = async () => {
+        const fetchCategoryAndSubcategories = async () => {
             try {
-                // Получаем данные о категории по image
+                console.log(`Запрашиваем данные категории: ${image}`);
+    
+                // Получаем категорию по image
                 const categoryResponse = await fetch(`http://localhost:5000/api/category/image/${image}`);
-                if (!categoryResponse.ok) {
-                    throw new Error("Категория не найдена");
-                }
+                if (!categoryResponse.ok) throw new Error("Категория не найдена");
+    
                 const categoryData = await categoryResponse.json();
+                console.log(`Категория найдена: ${categoryData.name} (ID: ${categoryData.ID})`);
     
-                setCategoryName(categoryData.name); // Устанавливаем название категории
+                // Запрашиваем подкатегории с количеством товаров
+                const subcategoriesUrl = `http://localhost:5000/api/subcategory/${categoryData.ID}`;
+                console.log(`Запрос на подкатегории: ${subcategoriesUrl}`);
     
-                // Получаем товары по ID категории
-                const productsResponse = await fetch(`http://localhost:5000/api/products/${categoryData.ID}`);
-                if (!productsResponse.ok) {
-                    throw new Error("Товары не найдены");
-                }
-                const productsData = await productsResponse.json();
-                setProducts(productsData);
+                const subcategoriesResponse = await fetch(subcategoriesUrl);
+                if (!subcategoriesResponse.ok) throw new Error("Подкатегории не найдены");
+    
+                const subcategoriesData = await subcategoriesResponse.json();
+                console.log(`Найдено подкатегорий: ${subcategoriesData.length}`);
+    
+                setCategoryName(categoryData.name);
+                setSubcategories(subcategoriesData);
             } catch (error) {
                 console.error("Ошибка при загрузке данных:", error);
                 setCategoryName("Ошибка загрузки");
             }
         };
     
-        fetchCategoryAndProducts();
+        fetchCategoryAndSubcategories();
     }, [image]);
+    
+    const onClickSubcategory = (subcategoryId) => {
+        navigate(`/subcategory/${subcategoryId}`);
+    };
 
     return (
         <div className="body-page">
@@ -40,21 +50,15 @@ const Category = () => {
                 <label>{categoryName}</label>
             </div>
             <div className="types">
-                {products.map((product) => (
-                    <div className="type" key={product.ID}>
-                        <div className="orange-title">
-                            <label>{product.name}</label>
-                        </div>
-                        <div className="black-title">
-                            <label>{product.price} &#8381;</label>
-                        </div>
-                        <div className="left-row">
-                            <div className="orange-button">
-                                <button>Перейти</button>
-                            </div>
-                            <div className="add-button">
-                                <button>+</button>
-                            </div>
+                {subcategories.map((subcategory) => (
+                    <div 
+                        className="subcategory" 
+                        key={subcategory.ID} 
+                        onClick={() => onClickSubcategory(subcategory.ID)}
+                    >
+                        <div className="black-title" style={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+                            <label>{subcategory.name}</label>
+                            <label>{subcategory.product_count}</label>
                         </div>
                     </div>
                 ))}

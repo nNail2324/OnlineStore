@@ -1,11 +1,11 @@
 const { Router } = require("express");
-const db = require("../db");  // Подключаем базу данных
+const db = require("../db");  
 const router = Router();
 
 // Получение всех категорий
 router.get("/", async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT * FROM category");  // Асинхронный запрос
+        const [rows] = await db.query("SELECT * FROM category");  
         res.json(rows);
     } catch (err) {
         console.error("Ошибка при получении категорий:", err);
@@ -13,13 +13,13 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Получение категории по image
+// Получение категории по `image`
 router.get("/image/:image", async (req, res) => {
     try {
         const { image } = req.params;
         const [rows] = await db.query("SELECT * FROM category WHERE image = ?", [image]);
         if (rows.length > 0) {
-            res.json(rows[0]);
+            res.json(rows[0]); // Возвращаем найденную категорию
         } else {
             res.status(404).json({ message: "Категория не найдена" });
         }

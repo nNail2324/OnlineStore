@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import brick from "../image/brick.png";
-import cement from "../image/cement.png";
-import profile from "../image/profile.png";
-import armature from "../image/armature.png";
-import sand from "../image/sand.png";
-import corner from "../image/corner.png";
-import block from "../image/block.png";
+import sheet_materials from "../image/sheet_materials.png";
+import bulk_mixtures from "../image/bulk_mixtures.png";
+import metal_meterials from "../image/metal_meterials.png";
+import wall_materials from "../image/wall_materials.png";
+import reinforced_concrete from "../image/reinforced_concrete.png";
 
 const images = {
-    brick,
-    cement,
-    profile,
-    armature,
-    sand,
-    corner,
-    block,
+    sheet_materials,
+    bulk_mixtures,
+    metal_meterials,
+    wall_materials,
+    reinforced_concrete,
 };
 
 const MainPage = () => {
@@ -37,8 +33,8 @@ const MainPage = () => {
         fetchCategories();
     }, []);
 
-    const handleCategoryClick = (name) => {
-        navigate(`/category/${name}`);
+    const onClickCategory = (image) => {
+        navigate(`/category/${image}`);
     };
 
     return (
@@ -50,10 +46,14 @@ const MainPage = () => {
                 {categories.map((category) => (
                     <div
                         className="item"
-                        key={category.id} 
-                        onClick={() => handleCategoryClick(category.image)} 
+                        key={category.ID}
+                        onClick={() => onClickCategory(category.image)}
                     >
-                        <img src={images[category.image]} alt={category.name} />
+                        <div className="center-row">
+                            {/* <img src={images[category.image]} alt={category.name} /> */}
+                            <label>{category.name}</label>
+                        </div>
+
                     </div>
                 ))}
             </div>

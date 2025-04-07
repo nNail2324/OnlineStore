@@ -15,6 +15,7 @@
 
 body {
     margin: 0px;
+    background-color: white;
 }
 
 input::placeholder {
@@ -38,7 +39,7 @@ input:focus {
     font-size: 15px;
     padding-left: 25px;
     padding-right: 25px;
-    transition: 0.5s ease;
+    transition: 0.3s ease;
 }
 
 .orange-button button:hover {
@@ -64,7 +65,7 @@ input:focus {
     font-size: 15px;
     padding-left: 25px;
     padding-right: 25px;
-    transition: 0.5s ease;
+    transition: 0.3s ease;
 }
 
 .white-button button:hover {
@@ -95,6 +96,7 @@ input:focus {
     justify-content: center;
     align-items: center;
     gap: 10px;
+    text-align: center;
 }
 
 .column {
@@ -102,6 +104,14 @@ input:focus {
     justify-content: space-between; 
     align-items: flex-start; 
     gap: 10px;
+}
+
+.center-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 
 .orange-title label {
@@ -139,62 +149,71 @@ input:focus {
 /*Шапка*/
 
 .header {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 110px;
-    padding-right: 110px;
+    padding: 10px 110px;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 10px;
-}
-
-.header .logo-search {
-    gap: 120px;
-    display: flex;
-    flex-direction: row;
+    justify-content: space-between; 
     align-items: center;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
-.header .logo {
-    align-items: center;
+.logo {
     display: flex;
-    flex-direction: row;
-    gap: 3px;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
 }
 
-.header .logo label {
+.logo-react {
+    color: #FF7F00;
+    font-size: 25px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.company-title {
+    font-size: 13px;
     font-family: 'Asimplerdnm';
-    font-size: 15px;
     color: #FF7F00;
 }
 
-.header .logo-react {
-    color: #FF7F00;
-    font-size: 20px;
+.company-name {
+    font-size: 12px;
+    font-family: 'Asimplerdnm';
+    color: #000000;
 }
 
-.header .search input {
-    width: 500px;
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search {
+    flex: 1 1 auto; 
+    max-width: 800px; 
+}
+
+.search input {
+    width: 500px; 
     height: 30px;
     border-radius: 10px;
-    border-width: 3px;
-    border-color: #FF7F00;
-    border-style: solid;
+    border: 3px solid #FF7F00;
     padding-left: 30px;
-    padding-right: 10px;
-    background: url("../image/icon-search.png") no-repeat;
-    background-size: auto 17px;
-    background-position: 8px;
-    transition: 0.5s ease;
+    background: url("../image/icon-search.png") no-repeat 8px center;
+    background-size: 17px;
 }
 
-.header .search input::placeholder {
+.search input::placeholder {
     color: #FF7F00;
     font-size: 15px;
 }
 
-.header .logo-button {
+.logo-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -202,58 +221,108 @@ input:focus {
     height: 33px;
 }
 
-.header .logo-from-react {
+.logo-from-react {
     height: 100%;
     width: 100%;
     transition: 0.5s ease;
     color: #FF7F00;
 }
 
-.header .logo-from-react:hover {
+.logo-from-react:hover {
     color: #000000;
 }
 
 /*Подвал*/
 
 .footer {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 110px;
-    padding-right: 110px;
+    padding: 40px 110px;
     display: flex;
-    flex-direction: row;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 40px; /* Уменьшил расстояние между колонками */
     background-color: black;
     margin-bottom: auto;
-    align-items: center;
+    align-items: flex-start; /* Колонки не тянут друг друга по высоте */
+    flex-wrap: wrap; /* Позволяет колонкам переноситься, если не влезают */
 }
 
-.footer .description label {
-    color: white;
-    font-family: Arial;
-    font-weight: bold;
-    transition: 0.5s ease;
-}
-
-.footer .description label:hover {
-    color: #FF7F00;
-}
-
-.footer .network {
+.column {
     display: flex;
-    flex-direction: row;
-    gap: 5px;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1; /* Колонки занимают равное пространство, но не растягиваются */
+    max-width: 400px; /* Чтобы колонки не были слишком широкими */
 }
 
-.footer .logo-react-description {
+.footer-title label {
     color: #FFFFFF;
-    font-size: 33px;
-    transition: 0.5s ease;
+    font-family: 'Inter-Bold';
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
-.footer .logo-react-description:hover {
-    color: #FF7F00;
-    transform: scale(1.05);
+.contact-item, .work-schedule span {
+    display: block;
+    color: white;
+    font-family: 'Inter-Medium';
+    font-size: 14px;
+}
+
+.network {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.logo-react-description {
+    color: #FFFFFF;
+    font-size: 30px;
+    transition: 0.3s ease;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 600px;
+    text-align: center;
+    z-index: 1001; 
+    position: relative; 
+}
+
+.modal-title {
+    font-size: 20px;
+    font-family: 'Inter-Bold';
+    margin-bottom: 10px;
+}
+
+.modal-text {
+    font-size: 16px;
+    font-family: 'Inter-Medium';
+    white-space: pre-line;
+    line-height: 1.5;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
 }
 
 /*Тело*/
@@ -303,40 +372,61 @@ input:focus {
 
 .body-page .products {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 элемента в строке */
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
 }
 
 .body-page .item {
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    border-color: #FFFFFF;
-    border-style: solid;
-    width: 100%;
+    position: relative;
+    border-radius: 16px;
     height: 160px;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    display: flex;
-    transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.4s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+
 .body-page .item:hover {
-    transform: translateY(-4px) rotateX(3deg) rotateY(3deg) scale(1.02);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.body-page .item:hover::before {
+    opacity: 1;
 }
 
 .body-page .item img {
-    width: 70%;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 15px;
     transition: transform 0.4s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .body-page .item:hover img {
-    transform: scale(1.05);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.body-page .item label {
+    font-family: 'Asimplerdnm';
+    font-size: 20px;
+    color: #000000;
+    text-align: center;
+    padding: 0 15px;
+    position: relative;
+    z-index: 1;
+    transition: color 0.3s ease;
 }
 
 
-/*Подкатегория*/
+/*Категории*/
 
 .body-page .name {
     padding-top: 10px;
@@ -394,6 +484,43 @@ input:focus {
     color: #FFFFFF;
 }
 
+/*Подкатегории*/
+
+.body-page .types {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.body-page .subcategory {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 0px;
+    gap: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: color 0.3s ease;
+}
+
+.body-page .subcategory * {
+    transition: color 0.3s ease;
+}
+
+.body-page .subcategory:hover {
+    color: #FF7F00;
+}
+
+.body-page .subcategory:hover,
+.body-page .subcategory:hover * {
+    color: #FF7F00;
+}
+
 /*Товар*/
 
 .body-page .line {
@@ -409,12 +536,13 @@ input:focus {
 }
 
 .body-page .image-product {
-    background-color: #F2F2F2;
+    background-color: #ffffff;
     border-radius: 10px;
-    border-color: #EBEBEB;
+    border-color: #ffffff;
     border-style: solid;
-    height: 500px;
-    width: 500px;
+    height: 400px;
+    width: 400px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .body-page .title label {
@@ -428,6 +556,13 @@ input:focus {
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.logo-heart {
+    color: #FF7F00;
+    font-size: 37px;
+    align-items: center;
+    text-align: center;
 }
 
 /*Корзина*/
@@ -464,6 +599,7 @@ input:focus {
 }
 
 .body-page .quantity-button input {
+    font-family: 'Inter-Medium';
     background-color: #ffffff;
     border-style: none;
     justify-content: center;
@@ -593,7 +729,62 @@ input:focus {
 
 /*Профиль*/
 
-.body-page .order-item {
+.form-profile {
+    flex-direction: column;
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.input-group {
+    width: 50%;
+    flex-direction: column;
+    display: flex;
+}
+
+.input-with-edit {
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.input-group label {
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    padding-left: 10px;
+}
+
+.input-with-edit input {
+    border-style: solid;
+    border-color: #FFFFFF;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FFFFFF;
+    height: 30px;
+    width: 100%;
+    display: flex;
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.input-with-edit.active input {
+    border-color: #EBEBEB !important; /* Серый цвет */
+}
+
+.edit-button {
+    font-family: 'Inter-Medium';
+    transition: color 0.3s ease;
+}
+
+.edit-button:hover {
+    color: #FF7F00;
+}
+
+.order-item {
     background-color: #f6f6f666;
     border-radius: 10px;
     width: 100%;
@@ -607,7 +798,7 @@ input:focus {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.body-page .order-item:hover {
+.order-item:hover {
     transform: translateY(-4px) rotateX(3deg) rotateY(3deg) scale(1.02);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
 }
