@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/auth-context"; // Импорт контекста
+import { AuthContext } from "../context/auth-context";
 
 const Basket = () => {
-    const { userId } = useContext(AuthContext); // Получаем userId из контекста
+    const { userId } = useContext(AuthContext);
     const [cart, setCart] = useState([]);
+    const [userProfile, setUserProfile] = useState(null);
+    const [deliveryMethod, setDeliveryMethod] = useState("pickup"); // pickup | courier
+    const [addressError, setAddressError] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!userId) {
-            console.error("Ошибка: userId отсутствует");
-            return;
-        }
+        if (!userId) return;
 
         const fetchCart = async () => {
             try {
-                console.log("🔄 Загружаем корзину для userId:", userId);
                 const response = await fetch(`http://localhost:5000/api/cart/${userId}`);
                 if (!response.ok) throw new Error("Ошибка при получении корзины");
-
                 const data = await response.json();
                 setCart(data);
             } catch (error) {
@@ -26,13 +24,36 @@ const Basket = () => {
             }
         };
 
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/profile/${userId}`);
+                if (!response.ok) throw new Error("Ошибка получения профиля");
+                const data = await response.json();
+                setUserProfile(data);
+            } catch (error) {
+                console.error("❌ Ошибка загрузки профиля:", error);
+            }
+        };
+
         fetchCart();
-    }, [userId]); // Перезагружать корзину при изменении userId
+        fetchUserProfile();
+    }, [userId]);
+
+    useEffect(() => {
+        if (userProfile) {
+            const { phone_number, name, surname, city, street, house_number } = userProfile;
+            if (!phone_number || !name || !surname || !city || !street || !house_number) {
+                setAddressError("❗ Адрес не указан в профиле. Оформление доставки невозможно.");
+            } else {
+                setAddressError("");
+            }
+        } else {
+            setAddressError("");
+        }
+    }, [deliveryMethod, userProfile]);
 
     const removeFromCart = async (productId) => {
-        if (!userId) return;
         try {
-            console.log(`🗑 Удаление товара ${productId} из корзины пользователя ${userId}`);
             const response = await fetch("http://localhost:5000/api/cart/remove", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
@@ -49,9 +70,7 @@ const Basket = () => {
     };
 
     const updateQuantity = async (productId, change) => {
-        if (!userId) return;
         try {
-            console.log(`🔄 Изменение количества товара ${productId} у пользователя ${userId}`);
             const response = await fetch("http://localhost:5000/api/cart/update", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -78,58 +97,102 @@ const Basket = () => {
             <div className="types">
                 {cart.length === 0 ? (
                     <div className="type">
-                        <div class="bold-text">
+                        <div className="bold-text">
                             <label>Ваша корзина пока пуста</label>
                         </div>
-                        <div class="black-text">
+                        <div className="black-text">
                             <label>Чтобы пополнить список, воспользуйтесь поиском или каталогом.</label>
                         </div>
                     </div>
-                    
-                    ) : (
-                        cart.map((product) => (
-                            <div className="type" key={product.ID}>
-                                <div className="orange-title">
-                                    <label>{product.name}</label>
-                                </div>
-                                <div className="black-title">
-                                    <label>{product.price} &#8381;</label>
-                                </div>
-                                <div className="quantity-button">
-                                    <button onClick={() => updateQuantity(product.ID, 1)}>+</button>
-                                    <input type="text" value={product.quantity} readOnly />
-                                    <button onClick={() => updateQuantity(product.ID, -1)}>-</button>
-                                </div>
-                                <div className="left-row">
-                                    <div className="orange-button">
-                                        <button onClick={() => navigate(`/product/${product.ID}`)}>Перейти</button>
-                                    </div>
-                                    <div className="add-button">
-                                        <button onClick={() => removeFromCart(product.ID)}>&times;</button>
-                                    </div>
-                                </div>
+                ) : (
+                    cart.map((product) => (
+                        <div className="type" key={product.ID}>
+                            <div className="orange-title">
+                                <label>{product.name}</label>
                             </div>
-                        ))
-                )}
-            </div>
-            {cart.length > 0 && (
-                <div>
-                    <div className="basket-column">
-                        <div className="delivery-column">
-                            <div class="black-title">
-                                <label>Общая сумма к оплате</label>
+                            <div className="black-title">
+                                <label>{product.price} &#8381;</label>
                             </div>
-                            <div class="black-text">
-                                <label>{totalSum.toLocaleString()} &#8381;</label>
+                            <div className="quantity-button">
+                                <button onClick={() => updateQuantity(product.ID, 1)}>+</button>
+                                <input type="text" value={product.quantity} readOnly />
+                                <button onClick={() => updateQuantity(product.ID, -1)}>-</button>
+                            </div>
+                            <div className="left-row">
+                                <div className="orange-button">
+                                    <button onClick={() => navigate(`/product/${product.ID}`)}>Перейти</button>
+                                </div>
+                                <div className="add-button">
+                                    <button onClick={() => removeFromCart(product.ID)}>&times;</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="summary-column">
-                            <div class="black-title">
-                                <label>Общая сумма к оплате</label>
+                    ))
+                )}
+            </div>
+
+            {cart.length > 0 && (
+                <div className="basket-column">
+                    <div className="delivery-column">
+                    <div className="black-title">
+                            <label>Контактные данные</label>
+                        </div>
+                        {userProfile && userProfile.phone_number && userProfile.name && userProfile.surname && userProfile.city && userProfile.street && userProfile.house_number ? (
+                        <div className="delivery-label">
+                            <label>{userProfile.surname} {userProfile.name}</label>
+                            <label>{userProfile.phone_number}</label>
+                            <label>{userProfile.city}, ул. {userProfile.street}, д. {userProfile.house_number}</label>
+                        </div>
+                        ) : (
+                        <div className="black-text">
+                            <label>Чтобы оформить заказ необходимо заполнить все поля в личном кабинете</label>
+                        </div>
+                        )}
+
+                        <div className="black-title">
+                            <label>Выберите способ доставки</label>
+                        </div>
+
+                        <div className="left-row">
+                            <div className="radio-group">
+                                    <input
+                                        type="radio"
+                                        value="pickup"
+                                        id="pickup"
+                                        checked={deliveryMethod === "pickup"}
+                                        onChange={(e) => setDeliveryMethod(e.target.value)} />
+                                    <label htmlFor="pickup">Самовывоз</label>
+
+                                </div>
+
+                                <div className="radio-group">
+                                    <input
+                                        type="radio"
+                                        value="courier"
+                                        id="courier"
+                                        checked={deliveryMethod === "courier"}
+                                        onChange={(e) => setDeliveryMethod(e.target.value)} />
+                                    <label htmlFor="courier">Курьер</label>
+
+                                </div>
+                        </div>
+
+                    </div>
+
+                    <div className="summary-column">
+                        {deliveryMethod === "courier" && (
+                            <div>
+                                <div className="black-title">
+                                    <label>Стоимость доставки</label>
+                                </div>
                             </div>
-                            <div class="black-text">
-                                <label>{totalSum.toLocaleString()} &#8381;</label>
-                            </div>
+                        )}
+
+                        <div className="black-title">
+                            <label>Общая сумма к оплате</label>
+                        </div>
+                        <div className="black-text">
+                            <label>{totalSum.toLocaleString()} &#8381;</label>
                         </div>
                     </div>
                 </div>

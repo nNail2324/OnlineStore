@@ -166,7 +166,7 @@ const Profile = () => {
             </div>
 
             {showPasswordForm && (
-                <div className="types">
+                <div className="form-profile">
                     <div className="input-group">
                         <div className="input-with-edit active">
                             <input
