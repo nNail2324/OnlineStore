@@ -113,8 +113,9 @@ const Basket = () => {
                 )}
             </div>
             {cart.length > 0 && (
-                <div class="product-desc" style={{textAlign: "right"}}>
-                        <div>
+                <div>
+                    <div className="basket-column">
+                        <div className="delivery-column">
                             <div class="black-title">
                                 <label>Общая сумма к оплате</label>
                             </div>
@@ -122,6 +123,15 @@ const Basket = () => {
                                 <label>{totalSum.toLocaleString()} &#8381;</label>
                             </div>
                         </div>
+                        <div class="summary-column">
+                            <div class="black-title">
+                                <label>Общая сумма к оплате</label>
+                            </div>
+                            <div class="black-text">
+                                <label>{totalSum.toLocaleString()} &#8381;</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

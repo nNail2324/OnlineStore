@@ -21,7 +21,7 @@ const Footer = () => {
     return (
         <>
             <footer className="footer">
-                <div className="column">
+                <div className="footer-column">
                     <div className="footer-title">
                         <label>Контактные данные</label>
                     </div>
@@ -45,7 +45,7 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="column">
+                <div className="footer-column">
                     <div className="footer-title">
                         <label>Покупателям</label>
                     </div>

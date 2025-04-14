@@ -32,11 +32,9 @@ const Header = () => {
 
     return (
         <header className="header">
-            <div className="logo" onClick={onClickLogo}>
-                <div className="logo-text">
-                    <label className="company-title">ИП Шарипов</label>
-                    <label className="company-name">стройматериалы</label>
-                </div>
+            <div className="logo-text" onClick={onClickLogo}>
+                <label className="company-title">ИП Шарипов</label>
+                <label className="company-name">стройматериалы</label>
             </div>
 
             <div className="header-right">

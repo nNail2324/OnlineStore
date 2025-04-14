@@ -20,7 +20,7 @@ body {
 
 input::placeholder {
     font-family: 'Inter-Medium';
-    color: #EBEBEB; 
+    color: gray; 
     font-size: 15px; 
 }
 
@@ -39,7 +39,7 @@ input:focus {
     font-size: 15px;
     padding-left: 25px;
     padding-right: 25px;
-    transition: 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .orange-button button:hover {
@@ -65,13 +65,101 @@ input:focus {
     font-size: 15px;
     padding-left: 25px;
     padding-right: 25px;
-    transition: 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .white-button button:hover {
     background-color: white;
     border-color: #000000;
     color: #000000;
+}
+
+.black-button button {
+    font-family: 'Inter-Medium';
+    height: 37px;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    border-color: grey;
+    border-style: solid;
+    color: grey;
+    font-size: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.black-button button:hover {
+    background-color: #FFFFFF;
+    border-color: #000000;
+    color: #000000;
+}
+
+.add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-button button {
+    height: 37px;
+    width: 37px;
+    background-color: #FF7F00;
+    border-radius: 10px;
+    border-color: #FF7F00;
+    border-style: solid;
+    color: white;
+    font-size: 30px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.add-button button:hover {
+    background-color: #000000;
+    border-color: #000000;
+    border-width: 2px;
+    color: #FFFFFF;
+}
+
+.quantity-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100px;
+    height: 37px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.quantity-button button {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border-color: #ffffff;
+    justify-content: center;
+    width: 37px;
+    font-size: 18px;
+    font-family: 'Inter-Bold';
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-style: none;
+    color: #FF7F00;
+}
+
+.quantity-button button:hover {
+    color: #000000;
+}
+
+.quantity-button input {
+    font-family: 'Inter-Medium';
+    background-color: #ffffff;
+    border-style: none;
+    justify-content: center;
+    width: 2rem;
+    outline: none;
+    text-align: center;
+    font-size: 18px;
 }
 
 .left-row {
@@ -99,13 +187,6 @@ input:focus {
     text-align: center;
 }
 
-.column {
-    display: flex;
-    justify-content: space-between; 
-    align-items: flex-start; 
-    gap: 10px;
-}
-
 .center-column {
     display: flex;
     flex-direction: column;
@@ -114,17 +195,16 @@ input:focus {
     gap: 5px;
 }
 
-.orange-title label {
+.orange-title {
     color: #FF7F00;
     font-family: 'Inter-Bold';
     font-weight: bold;
     font-size: 25px;
 }
 
-.black-title label {
+.black-title {
     color: #000000;
     font-family: 'Inter-Bold';
-    font-weight: bold;
     font-size: 20px;
 }
 
@@ -146,6 +226,32 @@ input:focus {
     font-size: 25px;
 }
 
+.name label {
+    font-family: 'Asimplerdnm';
+    font-size: 40px;
+}
+
+.types {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.type {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    gap: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
 /*Шапка*/
 
 .header {
@@ -155,18 +261,6 @@ input:focus {
     align-items: center;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
     background-color: white;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-}
-
-.logo-react {
-    color: #FF7F00;
-    font-size: 25px;
 }
 
 .logo-text {
@@ -206,6 +300,11 @@ input:focus {
     padding-left: 30px;
     background: url("../image/icon-search.png") no-repeat 8px center;
     background-size: 17px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.search input:focus {
+    background-image: url("../image/icon-search-black.png");
 }
 
 .search input::placeholder {
@@ -224,7 +323,7 @@ input:focus {
 .logo-from-react {
     height: 100%;
     width: 100%;
-    transition: 0.5s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     color: #FF7F00;
 }
 
@@ -238,19 +337,19 @@ input:focus {
     padding: 40px 110px;
     display: flex;
     justify-content: flex-start;
-    gap: 40px; /* Уменьшил расстояние между колонками */
+    gap: 40px; 
     background-color: black;
     margin-bottom: auto;
-    align-items: flex-start; /* Колонки не тянут друг друга по высоте */
-    flex-wrap: wrap; /* Позволяет колонкам переноситься, если не влезают */
+    align-items: flex-start; 
+    flex-wrap: wrap; 
 }
 
-.column {
+.footer-column {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    flex: 1; /* Колонки занимают равное пространство, но не растягиваются */
-    max-width: 400px; /* Чтобы колонки не были слишком широкими */
+    flex: 1; 
+    max-width: 400px; 
 }
 
 .footer-title label {
@@ -278,7 +377,6 @@ input:focus {
 .logo-react-description {
     color: #FFFFFF;
     font-size: 30px;
-    transition: 0.3s ease;
 }
 
 .modal {
@@ -328,8 +426,8 @@ input:focus {
 /*Тело*/
 
 .body-page {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     padding-left: 180px;
     padding-right: 180px;
     display: flex;
@@ -340,7 +438,7 @@ input:focus {
 
 /*Главная страница*/
 
-.body-page .banner {
+.banner {
     position: relative;
     width: 100%;
     height: 240px;
@@ -351,7 +449,7 @@ input:focus {
     align-items: center;
 }
 
-.body-page .banner::before {
+.banner::before {
     content: "";
     position: absolute;
     inset: -20px;
@@ -362,7 +460,7 @@ input:focus {
     z-index: 0;
 }
 
-.body-page .banner label {
+.banner label {
     font-family: 'Asimplerdnm';
     font-size: 80px;
     color: #FFFFFF;
@@ -370,14 +468,14 @@ input:focus {
     z-index: 1;
 }
 
-.body-page .products {
+.products {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     padding: 20px 0;
 }
 
-.body-page .item {
+.item {
     position: relative;
     border-radius: 16px;
     height: 160px;
@@ -392,29 +490,16 @@ input:focus {
 }
 
 
-.body-page .item:hover {
+.item:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
-.body-page .item:hover::before {
+.item:hover::before {
     opacity: 1;
 }
 
-.body-page .item img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    margin-bottom: 15px;
-    transition: transform 0.4s ease;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.body-page .item:hover img {
-    transform: scale(1.1) rotate(5deg);
-}
-
-.body-page .item label {
+.item label {
     font-family: 'Asimplerdnm';
     font-size: 20px;
     color: #000000;
@@ -425,74 +510,9 @@ input:focus {
     transition: color 0.3s ease;
 }
 
-
 /*Категории*/
 
-.body-page .name {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.body-page .name label {
-    font-family: 'Asimplerdnm';
-    font-size: 50px;
-}
-
-.body-page .types {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.body-page .type {
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    margin: 0px;
-    gap: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.body-page .add-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.body-page .add-button button {
-    height: 37px;
-    width: 37px;
-    background-color: #FF7F00;
-    border-radius: 10px;
-    border-color: #FF7F00;
-    border-style: solid;
-    color: white;
-    font-size: 30px;
-    transition: 0.5s ease;
-}
-
-.body-page .add-button button:hover {
-    background-color: #000000;
-    border-color: #000000;
-    border-width: 2px;
-    color: #FFFFFF;
-}
-
-/*Подкатегории*/
-
-.body-page .types {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.body-page .subcategory {
+.category {
     background-color: #FFFFFF;
     border-radius: 10px;
     height: 100%;
@@ -505,37 +525,41 @@ input:focus {
     padding-left: 20px;
     padding-right: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: color 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.body-page .subcategory * {
-    transition: color 0.3s ease;
+.category * {
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.body-page .subcategory:hover {
+.category:hover {
     color: #FF7F00;
 }
 
-.body-page .subcategory:hover,
-.body-page .subcategory:hover * {
+.category:hover,
+.category:hover * {
     color: #FF7F00;
+}
+
+.category-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    color: #000000;
+    font-family: 'Inter-Bold';
+    font-weight: bold;
+    font-size: 20px;
 }
 
 /*Товар*/
 
-.body-page .line {
+.line {
     display: flex;
     flex-direction: row;
     gap: 70px;
+    padding-top: 10px;
 }
-
-.body-page .char {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.body-page .image-product {
+.image-product {
     background-color: #ffffff;
     border-radius: 10px;
     border-color: #ffffff;
@@ -545,14 +569,7 @@ input:focus {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.body-page .title label {
-    color: #000000;
-    font-family: 'Inter-Bold';
-    font-weight: 700;
-    font-size: 30px;
-}
-
-.body-page .product-desc {
+.characteristics {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -565,48 +582,105 @@ input:focus {
     text-align: center;
 }
 
+.feedback {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.input-feedback {
+    border-color: grey;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    resize: none;
+    font-family: 'Inter-Medium';
+    padding: 5px;
+}
+
+.date-text {
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    color: gray;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: gray;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    flex-shrink: 0;
+    font-family: 'Inter-Bold';
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.description-text {
+    color: #000000;
+    font-family: 'Inter-Medium';
+    font-size: 17px;
+}
+
+.spec-line {
+    display: flex;
+    align-items: center;
+    font-family: 'Inter-Medium';
+    font-size: 17px;
+    padding: 4px 0;
+    white-space: nowrap;
+}
+
+.spec-label {
+    margin-right: 8px;
+    color: gray;
+}
+
+.spec-value {
+    margin-left: 8px;
+}
+
+.spec-dots {
+    flex-grow: 1;
+    border-bottom: 1px dotted #ccc;
+    height: 1px;
+}
+
+
 /*Корзина*/
 
-.body-page .quantity-button {
+.basket-column {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    user-select: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    justify-content: space-between;
 }
 
-.body-page .quantity-button button {
-    background-color: #ffffff;
-    border-radius: 10px;
-    border-color: #ffffff;
-    justify-content: center;
-    width: 37px;
-    font-size: 18px;
-    font-family: 'Inter-Bold';
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-style: none;
-    color: #FF7F00;
+.summary-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: right;
 }
 
-.body-page .quantity-button button:hover {
-    color: #000000;
-}
-
-.body-page .quantity-button input {
-    font-family: 'Inter-Medium';
-    background-color: #ffffff;
-    border-style: none;
-    justify-content: center;
-    width: 2rem;
-    outline: none;
-    text-align: center;
-    font-size: 18px;
+.delivery-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 /*Аутентификация*/
@@ -642,15 +716,15 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: center; 
-    background-color: #000000;
+    background-color: #FFFFFF;
     border-radius: 10px;
-    border-color: #000000;
+    border-color: grey;
     border-style: solid;
-    color: white;
+    color: grey;
     font-size: 15px;
     padding-left: 25px;
     padding-right: 25px;
-    transition: 0.5s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     width: 75%; 
 }
 
@@ -661,17 +735,17 @@ input:focus {
 }
 
 .auth-label label{
-    color: #000000;
+    color: grey;
     font-family: 'Inter-Medium';
     font-size: 16px;
-    transition: 0.5s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .auth-label label:hover {
-    color: #2d2d2d;
+    color: #000000;
 }
 
-.body-page .authentication {
+.authentication {
     padding-top: 30px;
     padding-bottom: 50px;
     background-color: #FFFFFF;
@@ -688,21 +762,21 @@ input:focus {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.body-page .form-authentication {
+.form-authentication {
     flex-direction: column;
     display: flex;
     width: 75%;
 }
 
-.body-page .form-authentication label {
+.form-authentication label {
     font-family: 'Inter-Medium';
     font-size: 15px;
     padding-left: 10px;
 }
 
-.body-page .form-authentication input {
+.form-authentication input {
     border-style: solid;
-    border-color: #EBEBEB;
+    border-color: grey;
     border-radius: 10px;
     padding-left: 10px;
     padding-right: 10px;
@@ -711,19 +785,19 @@ input:focus {
     display: flex;
     font-family: 'Inter-Medium';
     font-size: 15px;
-    transition: border-color 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.body-page .form-authentication input:focus {
+.form-authentication input:focus {
     border-color: #000000; 
     outline: none; 
 }
 
-.body-page .form-authentication input::placeholder {
-    transition: color 0.3s ease;
+.form-authentication input::placeholder {
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.body-page .form-authentication input:focus::placeholder {
+.form-authentication input:focus::placeholder {
     color: #000000;
 }
 
@@ -734,6 +808,7 @@ input:focus {
     display: flex;
     width: 100%;
     gap: 10px;
+    padding-top: 10px;
 }
 
 .input-group {
@@ -768,7 +843,7 @@ input:focus {
     display: flex;
     font-family: 'Inter-Medium';
     font-size: 15px;
-    transition: border-color 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .input-with-edit.active input {
@@ -777,10 +852,15 @@ input:focus {
 
 .edit-button {
     font-family: 'Inter-Medium';
-    transition: color 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .edit-button:hover {
+    color: #FF7F00;
+}
+
+.orange-icon {
+    font-size: 20px;
     color: #FF7F00;
 }
 
@@ -805,15 +885,18 @@ input:focus {
 
 /*Заказ*/
 
-.body-page .small-name {
+.small-name {
     display: flex;
     align-items: center;
 }
 
-.body-page .small-name label {
+.small-name label {
     font-family: 'Asimplerdnm';
     font-size: 25px;
 }
+
+
+
 
 
 

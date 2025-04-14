@@ -52,11 +52,11 @@ const Category = () => {
             <div className="types">
                 {subcategories.map((subcategory) => (
                     <div 
-                        className="subcategory" 
+                        className="category" 
                         key={subcategory.ID} 
                         onClick={() => onClickSubcategory(subcategory.ID)}
                     >
-                        <div className="black-title" style={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+                        <div className="category-title">
                             <label>{subcategory.name}</label>
                             <label>{subcategory.product_count}</label>
                         </div>

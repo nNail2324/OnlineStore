@@ -50,7 +50,6 @@ const MainPage = () => {
                         onClick={() => onClickCategory(category.image)}
                     >
                         <div className="center-row">
-                            {/* <img src={images[category.image]} alt={category.name} /> */}
                             <label>{category.name}</label>
                         </div>
 

@@ -7,11 +7,20 @@ import { MdLogout } from "react-icons/md";
 import { PiPasswordBold } from "react-icons/pi";
 
 const Profile = () => {
+    const navigate = useNavigate();
+
     const { isAuthenticated, logout } = useContext(AuthContext);
     const { userId } = useContext(AuthContext);
-    const navigate = useNavigate();
     const [userData, setUserData] = useState({});
-    const [isEditing, setIsEditing] = useState(null); // Хранит редактируемое поле
+    const [isEditing, setIsEditing] = useState(null);
+    
+    const [showPasswordForm, setShowPasswordForm] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
+
 
     useEffect(() => {
         if (!userId) return;
@@ -65,6 +74,47 @@ const Profile = () => {
         }
     };
 
+    const handlePasswordChange = (e) => {
+        const { name, value } = e.target;
+        setPasswordData((prev) => ({ ...prev, [name]: value }));
+    };    
+
+    const handlePasswordSubmit = async () => {
+        const { currentPassword, newPassword, confirmPassword } = passwordData;
+    
+        if (newPassword !== confirmPassword) {
+            alert("Новый пароль и подтверждение не совпадают");
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:5000/api/profile/change-password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId,
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+    
+            if (!response.ok) throw new Error("Ошибка при смене пароля");
+    
+            alert("Пароль успешно изменён");
+            setShowPasswordForm(false);
+            setPasswordData({
+                currentPassword: "",
+                newPassword: "",
+                confirmPassword: "",
+            });
+        } catch (error) {
+            console.error("Ошибка смены пароля:", error);
+            alert("Не удалось изменить пароль. Проверьте введённые данные.");
+        }
+    };    
+
     const onClickLogout = () => {
         logout();
         navigate("/");
@@ -76,7 +126,7 @@ const Profile = () => {
                 <label>Личный кабинет</label>
             </div>
             <div className="char">
-                <div className="title">
+                <div className="bold-text">
                     <label>Личные данные</label>
                 </div>
                 <div className="form-profile">
@@ -109,21 +159,62 @@ const Profile = () => {
             </div>
 
             <div className="left-row">
-                <div className="edit-button">
+                <div className="edit-button" onClick={() => setShowPasswordForm((prev) => !prev)}>
                     <label>Изменить пароль</label>
                 </div>
-                <PiPasswordBold className="orange-text" style={{fontSize: "20px"}}/>
+                <PiPasswordBold className="orange-icon"/>
             </div>
+
+            {showPasswordForm && (
+                <div className="types">
+                    <div className="input-group">
+                        <div className="input-with-edit active">
+                            <input
+                                type="password"
+                                name="currentPassword"
+                                placeholder="Текущий пароль"
+                                value={passwordData.currentPassword}
+                                onChange={handlePasswordChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="input-group">
+                        <div className="input-with-edit active">
+                            <input
+                                type="password"
+                                name="newPassword"
+                                placeholder="Новый пароль"
+                                value={passwordData.newPassword}
+                                onChange={handlePasswordChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="input-group">
+                        <div className="input-with-edit active">
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                placeholder="Подтвердите новый пароль"
+                                value={passwordData.confirmPassword}
+                                onChange={handlePasswordChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="edit-button" onClick={handlePasswordSubmit}>
+                        <label>Сохранить пароль</label>
+                    </div>
+                </div>
+            )}
 
             <div className="left-row">
                 <div className="edit-button">
                     <label onClick={onClickLogout}>Выйти</label>
                 </div>
-                <MdLogout className="orange-text" style={{fontSize: "20px"}}/>
+                <MdLogout className="orange-icon"/>
             </div>
 
-            <div className="char">
-                <div className="title">
+            <div className="types">
+                <div className="bold-text">
                     <label>Мои заказы</label>
                 </div>
             </div>
