@@ -2,6 +2,7 @@ const { Router } = require("express");
 const db = require("../db");
 const router = Router();
 
+// Добавление товара в корзину
 router.post("/add", async (req, res) => {
     try {
         const { user_id, product_id, quantity } = req.body;
@@ -13,17 +14,21 @@ router.post("/add", async (req, res) => {
         );
 
         if (existingItem.length > 0) {
-            // Если товар уже в корзине, увеличиваем количество
+            // Увеличиваем количество
             const newQuantity = existingItem[0].quantity + quantity;
-            await db.query("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?", 
-                [newQuantity, user_id, product_id]);
+            await db.query(
+                "UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?",
+                [newQuantity, user_id, product_id]
+            );
         } else {
-            // Если товара нет в корзине, добавляем
-            await db.query("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)", 
-                [user_id, product_id, quantity]);
+            // Добавляем новый товар
+            await db.query(
+                "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)",
+                [user_id, product_id, quantity]
+            );
         }
 
-        res.json({ success: true, message: "Товар добавлен в корзину" });  // ✅ Теперь клиент поймёт, что запрос успешен
+        res.json({ success: true, message: "Товар добавлен в корзину" });
     } catch (err) {
         console.error("Ошибка при добавлении товара в корзину:", err);
         res.status(500).json({ success: false, message: "Ошибка сервера" });
@@ -34,14 +39,15 @@ router.post("/add", async (req, res) => {
 router.get("/:user_id", async (req, res) => {
     try {
         const { user_id } = req.params;
+
         const [cartItems] = await db.query(`
-            SELECT c.product_id as ID, p.name, p.price, c.quantity 
+            SELECT c.product_id as ID, p.name, p.price, s.unit, c.quantity
             FROM cart c
             JOIN product p ON c.product_id = p.ID
+            JOIN subcategory s ON p.subcategory_id = s.ID
             WHERE c.user_id = ?
         `, [user_id]);
 
-        console.log("Корзина пользователя:", user_id, cartItems);
         res.json(cartItems);
     } catch (err) {
         console.error("Ошибка при получении корзины:", err);
@@ -49,30 +55,32 @@ router.get("/:user_id", async (req, res) => {
     }
 });
 
-// Обновление количества товара в корзине
+// Обновление количества товара
 router.put("/update", async (req, res) => {
     try {
         const { user_id, product_id, change } = req.body;
 
-        // Проверяем текущее количество
         const [existingItem] = await db.query(
             "SELECT quantity FROM cart WHERE user_id = ? AND product_id = ?",
             [user_id, product_id]
         );
 
-        if (existingItem.length === 0) return res.status(404).json({ message: "Товар не найден в корзине" });
+        if (existingItem.length === 0)
+            return res.status(404).json({ message: "Товар не найден в корзине" });
 
         let newQuantity = existingItem[0].quantity + change;
         if (newQuantity < 1) newQuantity = 1;
 
-        await db.query("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?", 
-            [newQuantity, user_id, product_id]);
+        await db.query(
+            "UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?",
+            [newQuantity, user_id, product_id]
+        );
 
-        // Возвращаем обновленную корзину
         const [updatedCart] = await db.query(`
-            SELECT c.product_id as ID, p.name, p.price, c.quantity 
+            SELECT c.product_id as ID, p.name, p.price, s.unit, c.quantity
             FROM cart c
             JOIN product p ON c.product_id = p.ID
+            JOIN subcategory s ON p.subcategory_id = s.ID
             WHERE c.user_id = ?
         `, [user_id]);
 
@@ -87,13 +95,14 @@ router.put("/update", async (req, res) => {
 router.delete("/remove", async (req, res) => {
     try {
         const { user_id, product_id } = req.body;
+
         await db.query("DELETE FROM cart WHERE user_id = ? AND product_id = ?", [user_id, product_id]);
 
-        // Возвращаем обновленную корзину
         const [updatedCart] = await db.query(`
-            SELECT c.product_id as ID, p.name, p.price, c.quantity 
+            SELECT c.product_id as ID, p.name, p.price, s.unit, c.quantity
             FROM cart c
             JOIN product p ON c.product_id = p.ID
+            JOIN subcategory s ON p.subcategory_id = s.ID
             WHERE c.user_id = ?
         `, [user_id]);
 

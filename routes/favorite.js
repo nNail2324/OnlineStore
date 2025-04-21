@@ -29,9 +29,10 @@ router.get("/:user_id", async (req, res) => {
     const { user_id } = req.params;
     try {
         const [favorites] = await db.query(`
-            SELECT p.ID, p.name, p.price
+            SELECT p.ID, p.name, p.price, s.unit
             FROM favorite f
             JOIN product p ON f.product_id = p.ID
+            JOIN subcategory s ON p.subcategory_id = s.ID
             WHERE f.user_id = ?
         `, [user_id]);
 
@@ -42,17 +43,18 @@ router.get("/:user_id", async (req, res) => {
     }
 });
 
+
 // Удалить из избранного
 router.delete("/remove", async (req, res) => {
     const { user_id, product_id } = req.body;
     try {
         await db.query("DELETE FROM favorite WHERE user_id = ? AND product_id = ?", [user_id, product_id]);
 
-        // Возвращаем обновлённый список
         const [updatedFavorites] = await db.query(`
-            SELECT p.ID, p.name, p.price
+            SELECT p.ID, p.name, p.price, s.unit
             FROM favorite f
             JOIN product p ON f.product_id = p.ID
+            JOIN subcategory s ON p.subcategory_id = s.ID
             WHERE f.user_id = ?
         `, [user_id]);
 
@@ -62,6 +64,7 @@ router.delete("/remove", async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 });
+
 
 router.post("/check", async (req, res) => {
     const { user_id, product_id } = req.body;

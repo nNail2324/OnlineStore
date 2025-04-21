@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
+import { NotificationContext } from "../context/notification-context";
 
 const Subcategory = () => {
     const { id } = useParams();
     const { userId } = useContext(AuthContext);
+    const { showNotification } = useContext(NotificationContext);
     const [products, setProducts] = useState([]);
     const [subcategoryName, setSubcategoryName] = useState("");
+    const [unit, setUnit] = useState("");
     const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchSubcategoryAndProducts = async () => {
@@ -19,6 +23,7 @@ const Subcategory = () => {
                 }
                 const subcategoryData = await subcategoryResponse.json();
                 setSubcategoryName(subcategoryData.name);
+                setUnit(subcategoryData.unit);
 
                 // Получаем товары
                 const productsResponse = await fetch(`http://localhost:5000/api/product/subcategory/${id}`);
@@ -57,9 +62,9 @@ const Subcategory = () => {
     
             const data = await response.json();
             if (data.success) {
-                alert(`${product.name} добавлен в корзину!`);
+                showNotification(`${product.name} добавлен в корзину!`);
             } else {
-                alert("Ошибка при добавлении товара.");
+                showNotification("Ошибка при добавлении товара.");
             }
         } catch (error) {
             console.error("Ошибка при добавлении товара в корзину:", error);
@@ -74,20 +79,33 @@ const Subcategory = () => {
             <div className="types">
                 {products.map((product) => (
                     <div className="type" key={product.ID}>
-                        <div className="orange-title">
-                            <label>{product.name}</label>
-                        </div>
-                        <div className="black-title">
-                            <label>{product.price} &#8381;</label>
-                        </div>
-                        <div className="left-row">
-                            <div className="orange-button">
-                                <button onClick={() => onClickCard(product.ID)}>Перейти</button>
+                        <div className="basket-column">
+                            <div className="delivery-column">
+                                <div className="orange-title">
+                                    <label>{product.name}</label>
+                                </div>
+
+                                <div className="left-row">
+                                    <div className="orange-button">
+                                        <button onClick={() => onClickCard(product.ID)}>Перейти</button>
+                                    </div>
+                                    <div className="add-button">
+                                        <button onClick={() => addToCart(product)}>+</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="add-button">
-                                <button onClick={() => addToCart(product)}>+</button>
+
+                            <div className="summary-column">
+                                <div className="black-title">
+                                    <label>{product.price.toLocaleString("ru-RU")} &#8381;/{unit}.</label>
+                                </div>
+
+                                <div className="black-text">
+                                    <label>На складе: {product.stock} шт.</label>
+                                </div>
                             </div>
                         </div>
+                       
                     </div>
                 ))}
             </div>

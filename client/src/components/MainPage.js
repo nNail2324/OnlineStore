@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import sheet_materials from "../image/sheet_materials.png";
-import bulk_mixtures from "../image/bulk_mixtures.png";
-import metal_meterials from "../image/metal_meterials.png";
-import wall_materials from "../image/wall_materials.png";
-import reinforced_concrete from "../image/reinforced_concrete.png";
-
-const images = {
-    sheet_materials,
-    bulk_mixtures,
-    metal_meterials,
-    wall_materials,
-    reinforced_concrete,
-};
-
 const MainPage = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();

@@ -8,6 +8,8 @@ import ProductCard from "./components/ProductCard";
 import Basket from "./components/Basket";
 import Favorite from "./components/Favorite";
 import AuthPage from "./components/AuthPage";
+import Order from "./components/Order"
+import Search from "./components/Search"
 
 export const useRoutes = (isAuthenticated) => {
     if (isAuthenticated) {
@@ -21,6 +23,8 @@ export const useRoutes = (isAuthenticated) => {
                 <Route path="/subcategory/:id" element={<Subcategory />} />
                 <Route path="/product/:id" element={<ProductCard />} />
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/order/:orderId" element={<Order />} />
+                <Route path="/search" element={<Search />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         );
@@ -32,6 +36,7 @@ export const useRoutes = (isAuthenticated) => {
             <Route path="/subcategory/:id" element={<Subcategory />} />
             <Route path="/product/:id" element={<ProductCard />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/search" element={<Search />} />
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>
     );

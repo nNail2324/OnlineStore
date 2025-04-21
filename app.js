@@ -2,6 +2,7 @@ const express = require("express")
 const config = require("config")
 const mysql = require("mysql2")
 const cors = require("cors")
+const path = require("path")
 
 const app = express()
 
@@ -16,7 +17,10 @@ app.use("/api/product", require("./routes/product"))
 app.use("/api/cart", require("./routes/cart"))
 app.use("/api/favorite", require("./routes/favorite"))
 app.use("/api/profile", require("./routes/profile"))
-
+app.use("/api/locations", require("./routes/locations"));
+app.use("/api/order", require("./routes/order"));
+app.use('/api/requests', require("./routes/request"));
+app.use("/images", express.static(path.join(__dirname, "server-image")));
 
 const PORT = config.get("port") || 3000
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
+import { NotificationContext } from "../context/notification-context";
 
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { FaStar, FaRegStar } from "react-icons/fa";
@@ -8,6 +9,7 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 const ProductCard = () => {
     const { id } = useParams();
     const { userId } = useContext(AuthContext);
+    const { showNotification } = useContext(NotificationContext);
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -17,6 +19,9 @@ const ProductCard = () => {
     const [reviews, setReviews] = useState([]);
     const [reviewText, setReviewText] = useState("");
     const [reviewMark, setReviewMark] = useState(5);
+
+    const [images, setImages] = useState([]);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const navigate = useNavigate();
 
@@ -59,6 +64,20 @@ const ProductCard = () => {
         fetchReviews();
     }, [id, userId]);
 
+    useEffect(() => {
+        const fetchImages = async () => {
+          try {
+            const res = await fetch(`http://localhost:5000/api/product/images/${id}`);
+            const data = await res.json();
+            setImages(data);
+          } catch (err) {
+            console.error("Ошибка при загрузке изображений:", err);
+          }
+        };
+      
+        fetchImages();
+      }, [id]);
+
     const handleQuantityChange = (value) => {
         const newQuantity = quantity + value;
         if (newQuantity >= 1) setQuantity(newQuantity);
@@ -66,7 +85,7 @@ const ProductCard = () => {
 
     const handleAddToCart = async () => {
         if (!userId) {
-            alert("Вы не авторизованы!");
+            showNotification("Требуется авторизация!");
             return;
         }
 
@@ -79,9 +98,9 @@ const ProductCard = () => {
 
             const data = await response.json();
             if (data.success) {
-                alert(`${product.name} добавлен в корзину!`);
+                showNotification(`${product.name} добавлен в корзину!`);
             } else {
-                alert("Ошибка при добавлении товара.");
+                showNotification("Ошибка при добавлении товара.");
             }
         } catch (error) {
             console.error("Ошибка при добавлении товара в корзину:", error);
@@ -90,7 +109,7 @@ const ProductCard = () => {
 
     const toggleFavorite = async () => {
         if (!userId) {
-            alert("Вы не авторизованы!");
+            showNotification("Требуется авторизация!");
             return;
         }
 
@@ -113,7 +132,7 @@ const ProductCard = () => {
 
     const submitFeedback = async () => {
         if (!userId) {
-            alert("Вы не авторизованы!");
+            showNotification("Требуется авторизация!");
             return;
         }
         if (!reviewText.trim()) return;
@@ -137,7 +156,7 @@ const ProductCard = () => {
                 const refreshed = await fetch(`http://localhost:5000/api/product/feedback/${id}`);
                 setReviews(await refreshed.json());
             } else {
-                alert("Ошибка при отправке отзыва");
+                showNotification("Ошибка при отправке отзыва");
             }
         } catch (err) {
             console.error("Ошибка отправки отзыва:", err);
@@ -155,6 +174,14 @@ const ProductCard = () => {
         return date.toLocaleDateString('ru-RU', options);
     };
 
+    const nextImage = () => {
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    };
+    
+    const prevImage = () => {
+        setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    };
+
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error}</div>;
     if (!product) return null;
@@ -162,9 +189,42 @@ const ProductCard = () => {
     return (
         <div className="body-page">
             <div className="line">
-                <div className="image-product">
-                    {/* Здесь может быть изображение */}
-                </div>
+            <div className="image-product-slider">
+  {images.length > 0 ? (
+    <>
+      <div className="slider-window">
+        <div
+          className="slider-track"
+          style={{
+            transform: `translateX(-${currentImageIndex * 100}%)`,
+          }}
+        >
+          {images.map((img, i) => (
+            <div className="slide" key={i}>
+              <img
+                src={`http://localhost:5000/images/${img.path}`}
+                alt={product.name}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="slider-dots">
+        {images.map((_, i) => (
+          <span
+            key={i}
+            className={`dot ${i === currentImageIndex ? "active" : ""}`}
+            onClick={() => setCurrentImageIndex(i)}
+          />
+        ))}
+      </div>
+    </>
+  ) : (
+    <div style={{ padding: "10px" }}>Изображение отсутствует</div>
+  )}
+</div>
+
 
                 <div className="types">
                     <div className="name">
@@ -201,10 +261,7 @@ const ProductCard = () => {
                     </div>
 
                     <div className="characteristics">
-                        <div className="black-title">
-                            <label>{product.price} руб.</label>
-                        </div>
-                        <div className="left-row">
+                        <div className="price-row">
                             <div className="quantity-button">
                                 <button onClick={() => handleQuantityChange(-1)}>-</button>
                                 <input
@@ -214,6 +271,12 @@ const ProductCard = () => {
                                 />
                                 <button onClick={() => handleQuantityChange(1)}>+</button>
                             </div>
+                            <div className="black-title">
+                                <label>{product.price.toLocaleString("ru-RU")} руб./{product.unit}.</label>
+                            </div>
+                        </div>
+                            
+                        <div className="left-row">
                             <div className="orange-button">
                                 <button onClick={handleAddToCart}>Добавить в корзину</button>
                             </div>
@@ -264,7 +327,7 @@ const ProductCard = () => {
                         onChange={(e) => setReviewText(e.target.value)}
                     />
                     
-                    <div className="black-button">
+                    <div className="feedback-button">
                         <button onClick={submitFeedback} >Отправить отзыв</button>
                     </div>
                 </div>

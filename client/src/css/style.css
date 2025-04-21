@@ -16,6 +16,7 @@
 body {
     margin: 0px;
     background-color: white;
+    height: 100%;
 }
 
 input::placeholder {
@@ -74,26 +75,6 @@ input:focus {
     color: #000000;
 }
 
-.black-button button {
-    font-family: 'Inter-Medium';
-    height: 37px;
-    background-color: #FFFFFF;
-    border-radius: 5px;
-    border-color: grey;
-    border-style: solid;
-    color: grey;
-    font-size: 15px;
-    padding-left: 25px;
-    padding-right: 25px;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.black-button button:hover {
-    background-color: #FFFFFF;
-    border-color: #000000;
-    color: #000000;
-}
-
 .add-button {
     display: flex;
     align-items: center;
@@ -119,44 +100,49 @@ input:focus {
     color: #FFFFFF;
 }
 
+.price-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
 .quantity-button {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    width: 100px;
     height: 37px;
-    background-color: #ffffff;
+    gap: 5px;
     border-radius: 10px;
     user-select: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .quantity-button button {
-    background-color: #ffffff;
+    background-color: #EBEBEB;
     border-radius: 10px;
-    border-color: #ffffff;
-    justify-content: center;
-    width: 37px;
     font-size: 18px;
+    width: 37px;
     font-family: 'Inter-Bold';
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
     border-style: none;
-    color: #FF7F00;
+    color: #000000;
+
 }
 
 .quantity-button button:hover {
-    color: #000000;
+    color: #FF7F00;
 }
 
 .quantity-button input {
     font-family: 'Inter-Medium';
     background-color: #ffffff;
-    border-style: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: none;
+    border-radius: 10px;
     justify-content: center;
-    width: 2rem;
+    width: 37px;
     outline: none;
     text-align: center;
     font-size: 18px;
@@ -252,6 +238,31 @@ input:focus {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+/*Уведомления*/
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: white;
+    color: black;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    opacity: 0;
+    animation: fadeIn 0.4s forwards;
+    font-size: 15px;
+    font-family: 'Inter-Medium';
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
 /*Шапка*/
 
 .header {
@@ -288,29 +299,66 @@ input:focus {
 }
 
 .search {
-    flex: 1 1 auto; 
-    max-width: 800px; 
+    position: relative; 
+    max-width: 800px;
+}
+
+.search button {
+    position: absolute; 
+    top: 0;
+    right: 0px;
+    height: 37px;
+    border: none;
+    background: gray;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #FFFFFF;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .search input {
     width: 500px; 
     height: 30px;
     border-radius: 10px;
-    border: 3px solid #FF7F00;
+    border: 3px solid #EBEBEB;
     padding-left: 30px;
-    background: url("../image/icon-search.png") no-repeat 8px center;
+    background: url("../image/icon-search-gray.png") no-repeat 8px center;
     background-size: 17px;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .search input:focus {
-    background-image: url("../image/icon-search-black.png");
+    border-color: gray;
 }
 
 .search input::placeholder {
-    color: #FF7F00;
+    color: gray;
     font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
+
+.clear-icon {
+    position: absolute;
+    right: 80px; /* подгони по макету, если кнопка справа */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 30px;
+    color: gray;
+    padding: 0 5px;
+    z-index: 11;
+    user-select: none;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.clear-icon:hover {
+    color: #000000;
+}
+
 
 .logo-button {
     display: flex;
@@ -329,6 +377,120 @@ input:focus {
 
 .logo-from-react:hover {
     color: #000000;
+}
+
+.suggestions-list {
+    position: absolute;
+    background: white;
+    color: black;
+    list-style: none;
+    padding: 0;
+    margin: 2px 0 0;
+    border-radius: 5px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.suggestions-list li {
+    margin: 4px; /* отступы по бокам */
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: 'Inter-Medium';
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.suggestions-list li:hover {
+    background-color: #f5f5f5;
+}
+
+.request-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.request-modal-container {
+    position: relative;
+    background: #fff;
+    padding: 24px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.request-modal-form {
+    margin-top: 10px;
+}
+
+.request-modal-form input,
+.request-modal-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 2px solid #EBEBEB;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Inter-Medium';
+}
+
+.request-modal-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.request-modal-buttons button {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.request-modal-buttons button:first-child {
+    background-color: #f57c00;
+    color: white;
+}
+
+.request-modal-buttons button:last-child {
+    background-color: #e0e0e0;
+}
+
+.request-modal-status {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: green;
+}
+
+.request-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #777;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.request-modal-close:hover {
+    color: #000;
 }
 
 /*Подвал*/
@@ -559,15 +721,65 @@ input:focus {
     gap: 70px;
     padding-top: 10px;
 }
-.image-product {
-    background-color: #ffffff;
-    border-radius: 10px;
-    border-color: #ffffff;
-    border-style: solid;
-    height: 400px;
+
+.image-product-slider {
     width: 400px;
+    height: 400px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: #fff;
 }
+  
+.slider-window {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+  
+.slider-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+  
+.slide {
+    flex: 0 0 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.slide img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+  
+.slider-dots {
+    position: absolute;
+    bottom: 12px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+  
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+  
+.dot.active {
+    background-color: #333;
+}
+  
 
 .characteristics {
     display: flex;
@@ -597,6 +809,26 @@ input:focus {
     resize: none;
     font-family: 'Inter-Medium';
     padding: 5px;
+}
+
+.feedback-button button {
+    font-family: 'Inter-Medium';
+    height: 37px;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    border-color: grey;
+    border-style: solid;
+    color: grey;
+    font-size: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.feedback-button button:hover {
+    background-color: #FFFFFF;
+    border-color: #000000;
+    color: #000000;
 }
 
 .date-text {
@@ -719,6 +951,33 @@ input:focus {
 .radio-group input[type=radio]:disabled + label {
 	background: #FFFFFF;
 	color: gray;
+}
+
+.basket-button button {
+    font-family: 'Inter-Medium';
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: row;
+    display: flex;
+    gap: 5px;
+    height: 37px;
+    background-color: #EBEBEB;
+    border-radius: 10px;
+    border-color: #EBEBEB;
+    border-style: solid;
+    color: #FFFFFF;
+    font-size: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 40px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.basket-button button:hover {
+    background-color: gray;
+    border-color: gray;
+    color: #FFFFFF;
 }
 
 /*Аутентификация*/
@@ -885,7 +1144,55 @@ input:focus {
 }
 
 .input-with-edit.active input {
-    border-color: #EBEBEB !important; /* Серый цвет */
+    border-color: #EBEBEB !important; 
+}
+
+.input-with-edit select {
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    appearance: none; 
+}
+
+.input-with-edit select option {
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    padding: 5px;
+    background-color: #FFFFFF;
+    color: #000000;
+    border: none;
+}
+
+.input-with-edit select {
+    border: 2px solid #FFFFFF; 
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FFFFFF;
+    height: 37px;
+    width: 100%;
+    display: flex;
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    outline: none; 
+    box-shadow: none; 
+}
+
+.input-with-edit.active select {
+    border-color: #EBEBEB !important; 
+}
+
+.input-with-edit select::-ms-expand {
+    display: none;
+}
+
+.input-with-edit select:-moz-focusring {
+    outline: none; 
+}
+
+.input-with-edit select:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 .edit-button {
@@ -902,23 +1209,21 @@ input:focus {
     color: #FF7F00;
 }
 
+.orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 20px;
+}
+  
 .order-item {
-    background-color: #f6f6f666;
+    background-color: white;
     border-radius: 10px;
-    width: 100%;
-    height: 160px;
-    justify-content: center;
-    align-items: center;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.4s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.order-item:hover {
-    transform: translateY(-4px) rotateX(3deg) rotateY(3deg) scale(1.02);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /*Заказ*/

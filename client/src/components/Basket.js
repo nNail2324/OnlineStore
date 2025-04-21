@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
+import { NotificationContext } from "../context/notification-context";
+
+import { BsCartCheck } from "react-icons/bs";
+import { VscArrowRight } from "react-icons/vsc";
 
 const Basket = () => {
     const { userId } = useContext(AuthContext);
+    const { showNotification } = useContext(NotificationContext);
     const [cart, setCart] = useState([]);
     const [userProfile, setUserProfile] = useState(null);
-    const [deliveryMethod, setDeliveryMethod] = useState("pickup"); // pickup | courier
+    const [deliveryMethod, setDeliveryMethod] = useState("pickup");
     const [addressError, setAddressError] = useState("");
     const navigate = useNavigate();
 
@@ -86,7 +91,32 @@ const Basket = () => {
         }
     };
 
+    const onClickOrder = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/api/order/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: userId,
+                    delivery_method: deliveryMethod
+                })
+            });
+    
+            if (!response.ok)
+                showNotification("Ошибка при оформлении заказа");
+            else
+                showNotification("Заказ успешно оформлен");
+            const { orderId } = await response.json();
+            console.log("OrderID",orderId);
+            navigate(`/order/${orderId}`);
+        } catch (error) {
+            console.error("❌ Ошибка при оформлении заказа:", error);
+        }
+    };    
+
     const totalSum = cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
+    const deliveryPrice = deliveryMethod === "courier" ? userProfile?.delivery_price || 0 : 0;
+    const finalTotal = totalSum + deliveryPrice;
 
     return (
         <div className="body-page">
@@ -101,29 +131,38 @@ const Basket = () => {
                             <label>Ваша корзина пока пуста</label>
                         </div>
                         <div className="black-text">
-                            <label>Чтобы пополнить список, воспользуйтесь поиском или каталогом.</label>
+                            <label>Чтобы пополнить список, воспользуйтесь поиском или каталогом</label>
                         </div>
                     </div>
                 ) : (
                     cart.map((product) => (
                         <div className="type" key={product.ID}>
-                            <div className="orange-title">
-                                <label>{product.name}</label>
-                            </div>
-                            <div className="black-title">
-                                <label>{product.price} &#8381;</label>
-                            </div>
-                            <div className="quantity-button">
-                                <button onClick={() => updateQuantity(product.ID, 1)}>+</button>
-                                <input type="text" value={product.quantity} readOnly />
-                                <button onClick={() => updateQuantity(product.ID, -1)}>-</button>
-                            </div>
-                            <div className="left-row">
-                                <div className="orange-button">
-                                    <button onClick={() => navigate(`/product/${product.ID}`)}>Перейти</button>
+                            <div className="basket-column">
+                                <div className="delivery-column">
+                                    <div className="orange-title">
+                                        <label>{product.name}</label>
+                                    </div>
+
+                                    <div className="left-row">
+                                        <div className="orange-button">
+                                            <button onClick={() => navigate(`/product/${product.ID}`)}>Перейти</button>
+                                        </div>
+                                        <div className="add-button">
+                                            <button onClick={() => removeFromCart(product.ID)}>&times;</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="add-button">
-                                    <button onClick={() => removeFromCart(product.ID)}>&times;</button>
+
+                                <div className="summary-column">
+                                    <div className="black-title">
+                                        <label>{product.price.toLocaleString("ru-RU")} &#8381;/{product.unit}.</label>
+                                    </div>
+                                    
+                                    <div className="quantity-button">
+                                        <button onClick={() => updateQuantity(product.ID, 1)}>+</button>
+                                        <input type="text" value={product.quantity} readOnly />
+                                        <button onClick={() => updateQuantity(product.ID, -1)}>-</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -134,19 +173,19 @@ const Basket = () => {
             {cart.length > 0 && (
                 <div className="basket-column">
                     <div className="delivery-column">
-                    <div className="black-title">
+                        <div className="black-title">
                             <label>Контактные данные</label>
                         </div>
                         {userProfile && userProfile.phone_number && userProfile.name && userProfile.surname && userProfile.city && userProfile.street && userProfile.house_number ? (
-                        <div className="delivery-label">
-                            <label>{userProfile.surname} {userProfile.name}</label>
-                            <label>{userProfile.phone_number}</label>
-                            <label>{userProfile.city}, ул. {userProfile.street}, д. {userProfile.house_number}</label>
-                        </div>
+                            <div className="delivery-label">
+                                <label>{userProfile.name} {userProfile.surname}</label>
+                                <label>{userProfile.phone_number}</label>
+                                <label>{userProfile.location_name}, ул. {userProfile.street}, д. {userProfile.house_number}</label>
+                            </div>
                         ) : (
-                        <div className="black-text">
-                            <label>Чтобы оформить заказ необходимо заполнить все поля в личном кабинете</label>
-                        </div>
+                            <div className="black-text">
+                                <label>Чтобы оформить заказ необходимо заполнить все поля в личном кабинете</label>
+                            </div>
                         )}
 
                         <div className="black-title">
@@ -155,28 +194,25 @@ const Basket = () => {
 
                         <div className="left-row">
                             <div className="radio-group">
-                                    <input
-                                        type="radio"
-                                        value="pickup"
-                                        id="pickup"
-                                        checked={deliveryMethod === "pickup"}
-                                        onChange={(e) => setDeliveryMethod(e.target.value)} />
-                                    <label htmlFor="pickup">Самовывоз</label>
+                                <input
+                                    type="radio"
+                                    value="pickup"
+                                    id="pickup"
+                                    checked={deliveryMethod === "pickup"}
+                                    onChange={(e) => setDeliveryMethod(e.target.value)} />
+                                <label htmlFor="pickup">Самовывоз</label>
+                            </div>
 
-                                </div>
-
-                                <div className="radio-group">
-                                    <input
-                                        type="radio"
-                                        value="courier"
-                                        id="courier"
-                                        checked={deliveryMethod === "courier"}
-                                        onChange={(e) => setDeliveryMethod(e.target.value)} />
-                                    <label htmlFor="courier">Курьер</label>
-
-                                </div>
+                            <div className="radio-group">
+                                <input
+                                    type="radio"
+                                    value="courier"
+                                    id="courier"
+                                    checked={deliveryMethod === "courier"}
+                                    onChange={(e) => setDeliveryMethod(e.target.value)} />
+                                <label htmlFor="courier">Курьер</label>
+                            </div>
                         </div>
-
                     </div>
 
                     <div className="summary-column">
@@ -185,6 +221,13 @@ const Basket = () => {
                                 <div className="black-title">
                                     <label>Стоимость доставки</label>
                                 </div>
+                                <div className="black-text">
+                                    <label>
+                                        {deliveryPrice === 0
+                                            ? "Бесплатно"
+                                            : `${deliveryPrice.toLocaleString("ru-RU")} ₽`}
+                                    </label>
+                                </div>
                             </div>
                         )}
 
@@ -192,7 +235,13 @@ const Basket = () => {
                             <label>Общая сумма к оплате</label>
                         </div>
                         <div className="black-text">
-                            <label>{totalSum.toLocaleString()} &#8381;</label>
+                            <label>{finalTotal.toLocaleString("ru-RU")} ₽</label>
+                        </div>
+
+                        <div className="right-row" >
+                            <div className="white-button" >
+                                <button onClick={onClickOrder}>Оформить заказ</button>
+                            </div>
                         </div>
                     </div>
                 </div>

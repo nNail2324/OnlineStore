@@ -5,6 +5,13 @@ import Footer from "./components/Footer";
 import { useRoutes } from "./pageRouter";
 import { AuthContext } from "./context/auth-context";
 
+import { NotificationProvider } from "./context/notification-context";
+import Notification from "./components/Notification";
+import NotificationWrapper from "./components/NotificationWrapper";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -62,11 +69,14 @@ const App = () => {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, userId, login, logout, cart, setCart }}>
-      <BrowserRouter>
-        <Header />
-        <div>{routes}</div>
-        <Footer />
-      </BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
+          <Header />
+          <div>{routes}</div>
+          <Footer />
+          <NotificationWrapper />
+        </BrowserRouter>
+      </NotificationProvider>
     </AuthContext.Provider>
   );
 };
