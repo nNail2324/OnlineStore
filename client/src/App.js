@@ -15,7 +15,7 @@ import "slick-carousel/slick/slick-theme.css";
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [cart, setCart] = useState([]); // ✅ Добавляем состояние корзины
+  const [cart, setCart] = useState([]); 
 
   // Функция загрузки корзины
   const fetchCart = async (userId) => {
@@ -37,14 +37,14 @@ const App = () => {
     localStorage.setItem("userId", userId);
     localStorage.setItem("token", token);
     
-    fetchCart(userId); // ✅ Загружаем корзину при входе
+    fetchCart(userId); 
   }, []);
 
   // Логаут с очисткой токена и корзины
   const logout = useCallback(() => {
     setIsAuthenticated(false);
     setUserId(null);
-    setCart([]); // ✅ Очищаем корзину при выходе
+    setCart([]); 
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
   }, []);
@@ -58,10 +58,10 @@ const App = () => {
     console.log("Загружаем token из localStorage:", storedToken);
 
     if (storedUserId && storedToken) {
-      const numericUserId = parseInt(storedUserId, 10); // ✅ Преобразуем в число
+      const numericUserId = parseInt(storedUserId, 10);
       setIsAuthenticated(true);
       setUserId(numericUserId);
-      fetchCart(numericUserId); // ✅ Загружаем корзину
+      fetchCart(numericUserId);
     }
   }, []);
 

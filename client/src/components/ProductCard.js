@@ -189,42 +189,41 @@ const ProductCard = () => {
     return (
         <div className="body-page">
             <div className="line">
-            <div className="image-product-slider">
-  {images.length > 0 ? (
-    <>
-      <div className="slider-window">
-        <div
-          className="slider-track"
-          style={{
-            transform: `translateX(-${currentImageIndex * 100}%)`,
-          }}
-        >
-          {images.map((img, i) => (
-            <div className="slide" key={i}>
-              <img
-                src={`http://localhost:5000/images/${img.path}`}
-                alt={product.name}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+                <div className="image-product-slider">
+                    {images.length > 0 ? (
+                        <>
+                        <div className="slider-window">
+                            <div
+                            className="slider-track"
+                            style={{
+                                transform: `translateX(-${currentImageIndex * 100}%)`,
+                            }}
+                            >
+                            {images.map((img, i) => (
+                                <div className="slide" key={i}>
+                                <img
+                                    src={`http://localhost:5000/images/${img.path}`}
+                                    alt={product.name}
+                                />
+                                </div>
+                            ))}
+                            </div>
+                        </div>
 
-      <div className="slider-dots">
-        {images.map((_, i) => (
-          <span
-            key={i}
-            className={`dot ${i === currentImageIndex ? "active" : ""}`}
-            onClick={() => setCurrentImageIndex(i)}
-          />
-        ))}
-      </div>
-    </>
-  ) : (
-    <div style={{ padding: "10px" }}>Изображение отсутствует</div>
-  )}
-</div>
-
+                        <div className="slider-dots">
+                            {images.map((_, i) => (
+                            <span
+                                key={i}
+                                className={`dot ${i === currentImageIndex ? "active" : ""}`}
+                                onClick={() => setCurrentImageIndex(i)}
+                            />
+                            ))}
+                        </div>
+                        </>
+                    ) : (
+                        <div style={{ padding: "10px" }}>Изображение отсутствует</div>
+                    )}
+                </div>
 
                 <div className="types">
                     <div className="name">

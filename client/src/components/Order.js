@@ -23,6 +23,26 @@ const Order = () => {
         fetchOrder();
     }, [orderId]);
 
+    const handleCancelOrder = async () => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/order/${orderId}/cancel`, {
+                method: "PATCH",
+            });
+    
+            if (!res.ok) throw new Error("Не удалось отменить заказ");
+    
+            const updated = await res.json();
+            setOrderData((prev) => ({ ...prev, status: updated.status }));
+        } catch (err) {
+            console.error("Ошибка отмены заказа:", err);
+            alert("Ошибка при отмене заказа");
+        }
+    }; 
+    
+    const handleDownloadInvoice = () => {
+        window.open(`http://localhost:5000/api/order/${orderId}/invoices`, "_blank");
+    };
+
     if (!orderData) return <div>Загрузка...</div>;
 
     return (
@@ -98,9 +118,17 @@ const Order = () => {
                         <label>{orderData.total_price.toLocaleString("ru-RU")} ₽</label>
                     </div>
 
-                    <div className="right-row" >
-                        <div className="white-button" >
-                            <button>Отменить заказ</button>
+                    <div className="right-row">
+                        {orderData.status !== "Отменён" && (
+                            <div className="white-button">
+                                <button onClick={handleCancelOrder}>Отменить заказ</button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="right-row">
+                        <div className="gray-button">
+                            <button onClick={handleDownloadInvoice}>Скачать накладную</button>
                         </div>
                     </div>
                 </div>
