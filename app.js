@@ -23,6 +23,13 @@ app.use("/images", express.static(path.join(__dirname, "server-image")));
 
 app.use('/api/users', require("./routes/users"));
 
+app.use(express.static(path.join(__dirname, "client", "build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
+
+
 const PORT = config.get("port") || 3000
 
 async function start() {
