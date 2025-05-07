@@ -1,4 +1,8 @@
-CREATE DATABASE storedb;
+CREATE TABLE location_and_delivery (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    delivery_price INT
+);
 
 CREATE TABLE users (
     ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -6,7 +10,7 @@ CREATE TABLE users (
     phone_number VARCHAR(50),
     name VARCHAR(50),
     surname VARCHAR(50),
-	city INT,
+    city INT,
     street VARCHAR(50),
     house_number INT,
     role ENUM('user', 'admin') DEFAULT 'user',
@@ -40,7 +44,7 @@ CREATE TABLE product (
     name VARCHAR(50),
     price DECIMAL(15,2),
     description VARCHAR(500),
-    stock int,
+    stock INT,
     FOREIGN KEY (subcategory_id) REFERENCES subcategory(ID) ON DELETE CASCADE
 );
 
@@ -62,13 +66,13 @@ CREATE TABLE product_images (
 CREATE TABLE orders (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
-	total_price INT,
-	delivery_method ENUM('pickup', 'courier') DEFAULT 'pickup',
-	delivery_price INT DEFAULT 0,
+    total_price INT,
+    delivery_method ENUM('pickup', 'courier') DEFAULT 'pickup',
+    delivery_price INT DEFAULT 0,
     status ENUM('В обработке', 'В пути', 'Доставлен', 'Отменён') DEFAULT 'В обработке',
     contact_name VARCHAR(100),
-	contact_phone VARCHAR(50),
-	delivery_address VARCHAR(200),
+    contact_phone VARCHAR(50),
+    delivery_address VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(ID) ON DELETE CASCADE
 );
@@ -111,7 +115,6 @@ FOR EACH ROW
 BEGIN
     SET NEW.created_at = CURDATE();
 END $$
-
 DELIMITER ;
 
 CREATE TABLE favorite (
@@ -122,11 +125,6 @@ CREATE TABLE favorite (
     FOREIGN KEY (product_id) REFERENCES product(ID) ON DELETE CASCADE
 );
 
-CREATE TABLE location_and_delivery (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100),
-    delivery_price INT
-);
 
 INSERT INTO location_and_delivery (name, delivery_price)
 VALUES 
@@ -134,7 +132,37 @@ VALUES
     ('Рапат', 1000),
     ('Старокалмашево', 1700),
     ('Урняк', 2100);
-    
+
+INSERT INTO category (name, image) VALUES
+    ("Стеновые материалы", "sheet_materilas"),
+    ("Сыпучие смеси", "bulk_mixtures"),
+    ("Металлопрокат", "metal_meterials"),
+    ("Листовые материалы", "wall_materials"),
+    ("Железобетонные изделия", "reinforced_concrete");
+
+INSERT INTO subcategory (category_id, name, unit) VALUES 
+    (1, "Кирпич", "шт"),
+    (1, "Керамзитовый блок", "шт"),
+    (1, "Газобетонный блок", "шт"),
+    (2, "Цемент", "шт"),
+    (2, "Песок", "т"),
+    (2, "Щебень", "т"),
+    (2, "Песчано-гравийная смесь", "т"),
+    (3, "Уголок", "м"),
+    (3, "Арматура", "м"),
+    (3, "Трубы профильные", "м"),
+    (3, "Трубы круглые", "м"),
+    (3, "Швеллер", "м"),
+    (3, "Железный лист", "шт"),
+    (4, "Фанера", "шт"),
+    (4, "Гипсокартон", "шт"),
+    (4, "МДФ", "шт"),
+    (4, "ДВП", "шт"),
+    (4, "ОСП", "шт"),
+    (5, "Кольца", "шт"),
+    (5, "Крышки", "шт"),
+    (5, "Блоки", "шт");
+
 INSERT INTO product (subcategory_id, name, price, description)
 VALUES 
     (8, 'Уголок стальной 25х25', 120.00, 'Уголок'),
@@ -145,37 +173,7 @@ VALUES
     (4, 'Цемент М-500 (1 т.)', 11000.00, 'Цемент'),
     (4, 'Цемент М-500 (50 кг.)', 550.00, 'Цемент'),
     (4, 'Цемент М-500 (25 кг.)', 290.00, 'Цемент');
-        
-INSERT INTO category (name, image) VALUES
-		("Стеновые материалы", "sheet_materilas"),
-        ("Сыпучие смеси", "bulk_mixtures"),
-        ("Металлопрокат", "metal_meterials"),
-        ("Листовые материалы", "wall_materials"),
-        ("Железобетонные изделия", "reinforced_concrete");
-        
-INSERT INTO subcategory (category_id, name, unit) VALUES 
-		(1, "Кирпич", "шт"),
-        (1, "Керамзитовый блок", "шт"),
-        (1, "Газобетонный блок", "шт"),
-		(2, "Цемент", "шт"),
-        (2, "Песок", "т"),
-        (2, "Щебень", "т"),
-		(2, "Песчано-гравийная смесь", "т"),
-		(3, "Уголок", "м"),
-        (3, "Арматура", "м"),
-        (3, "Трубы профильные", "м"),
-        (3, "Трубы круглые", "м"),
-        (3, "Швеллер", "м"),
-        (3, "Железный лист", "шт"),
-        (4, "Фанера", "шт"),
-        (4, "Гипсокартон", "шт"),
-        (4, "МДФ", "шт"),
-        (4, "ДВП", "шт"),
-		(4, "ОСП", "шт"),
-        (5, "Кольца", "шт"),
-        (5, "Крышки", "шт"),
-        (5, "Блоки", "шт");
-        
+
 INSERT INTO product_attributes (product_id, attribute_name, attribute_value) VALUES
     (1, 'Высота', '25 мм'),
     (1, 'Ширина', '25 мм'),
@@ -189,13 +187,12 @@ INSERT INTO product_attributes (product_id, attribute_name, attribute_value) VAL
     (6, 'Бренд', 'Heidelbergcement'),
     (6, 'Марка', 'М500'),
     (6, 'Вес', '1000 кг'),
-	(7, 'Бренд', 'Heidelbergcement'),
+    (7, 'Бренд', 'Heidelbergcement'),
     (7, 'Марка', 'М500'),
     (7, 'Вес', '50 кг');
-    
-    
+
 INSERT INTO product_images (product_id, path) VALUES    
-	(1, "corner.png"),
+    (1, "corner.png"),
     (2, "corner.png"),
     (3, "corner.png"),
     (4, "corner.png"),
