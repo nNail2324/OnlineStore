@@ -16,7 +16,7 @@ const MainPage = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("http://localhost:5000/api/category");
+                const response = await fetch("/api/category");
                 const data = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -26,7 +26,7 @@ const MainPage = () => {
 
         const fetchLocations = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/locations");
+                const res = await fetch("/api/locations");
                 const data = await res.json();
                 setLocations(data);
             } catch (error) {
