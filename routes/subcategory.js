@@ -2,6 +2,27 @@ const { Router } = require("express");
 const db = require("../db");
 const router = Router();
 
+// Добавление подкатегории
+router.post("/create", async (req, res) => {
+    try {
+        const { category_id, name, unit } = req.body;
+
+        if (!category_id || !name || !unit) {
+            return res.status(400).json({ message: "Не все поля заполнены" });
+        }
+
+        const [result] = await db.query(
+            "INSERT INTO subcategory (category_id, name, unit) VALUES (?, ?, ?)",
+            [category_id, name, unit]
+        );
+
+        res.status(201).json({ subcategoryId: result.insertId });
+    } catch (error) {
+        console.error("Ошибка при добавлении подкатегории:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+});
+
 // Получение подкатегорий по ID категории с количеством товаров
 router.get("/:id", async (req, res) => {
     try {

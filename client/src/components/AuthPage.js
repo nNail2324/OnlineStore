@@ -65,7 +65,7 @@ const AuthPage = () => {
         return;
       }
 
-      auth.login(data.token, data.userId);
+      auth.login(data.token, data.userId, data.role);
       navigate("/");  // Переход на главную страницу
     } catch (e) {
       setGeneralError(e.message || "Ошибка сервера. Попробуйте снова.");
@@ -88,24 +88,24 @@ const AuthPage = () => {
     setGeneralError("");
   };
 
-    // Обработка ввода с проверкой префикса +7
-const changeHandler = (event) => {
-  const { name, value } = event.target;
+  // Обработка ввода с проверкой префикса +7
+  const changeHandler = (event) => {
+    const { name, value } = event.target;
 
-  // Если это поле телефона и пытаются удалить "+7", возвращаем старое значение
-  if (name === "phone_number" && !value.startsWith("+7")) {
-      return;
-  }
+    // Если это поле телефона и пытаются удалить "+7", возвращаем старое значение
+    if (name === "phone_number" && !value.startsWith("+7")) {
+        return;
+    }
 
-  setForm({ ...form, [name]: value });
-};
+    setForm({ ...form, [name]: value });
+  };
 
-// Добавляем префикс +7 при фокусе
-const handleFocus = () => {
-  if (form.phone_number === "") {
-      setForm({ ...form, phone_number: "+7" });
-  }
-};
+  // Добавляем префикс +7 при фокусе
+  const handleFocus = () => {
+    if (form.phone_number === "") {
+        setForm({ ...form, phone_number: "+7" });
+    }
+  };
 
 // Убираем префикс +7 при потере фокуса, если он единственный
 const handleBlur = () => {

@@ -1,7 +1,7 @@
 const db = require("../db");
 
 const User = {
-    create: async (phone_number, password, name = "", surname = "", city = "", street = "", house_number = 0) => {
+    create: async (phone_number, password, name = "", surname = "", city = null, street = "", house_number = 0) => {
         try {
             const sql = "INSERT INTO users (phone_number, password, name, surname, city, street, house_number) VALUES (?, ?, ?, ?, ?, ?, ?)";
             const [result] = await db.execute(sql, [phone_number, password, name, surname, city, street, house_number]);

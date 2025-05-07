@@ -92,6 +92,13 @@ const Basket = () => {
     };
 
     const onClickOrder = async () => {
+        // Проверка обязательных полей профиля
+        if (!userProfile || !userProfile.phone_number || !userProfile.name || !userProfile.surname ||
+            !userProfile.city || !userProfile.street || !userProfile.house_number) {
+            showNotification("Заполните личные данные в профиле для оформления заказа");
+            return;
+        }
+    
         try {
             const response = await fetch("http://localhost:5000/api/order/create", {
                 method: "POST",
@@ -102,17 +109,21 @@ const Basket = () => {
                 })
             });
     
-            if (!response.ok)
+            if (!response.ok) {
                 showNotification("Ошибка при оформлении заказа");
-            else
-                showNotification("Заказ успешно оформлен");
+                return;
+            }
+    
+            showNotification("Заказ успешно оформлен");
             const { orderId } = await response.json();
-            console.log("OrderID",orderId);
+            console.log("OrderID", orderId);
             navigate(`/order/${orderId}`);
         } catch (error) {
             console.error("❌ Ошибка при оформлении заказа:", error);
+            showNotification("Ошибка при оформлении заказа");
         }
-    };    
+    };
+        
 
     const totalSum = cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
     const deliveryPrice = deliveryMethod === "courier" ? userProfile?.delivery_price || 0 : 0;

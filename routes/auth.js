@@ -12,21 +12,31 @@ router.post("/register", async (req, res) => {
     const { phone_number, password } = req.body;
 
     const candidate = await User.findByNumber(phone_number);
-
     if (candidate) {
       return res.status(400).json({ message: "Такой пользователь уже существует" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const userId = await User.create(phone_number, hashedPassword);
-    console.log("Пользователь успешно создан с ID:", userId);
 
-    res.status(201).json({ userId });
+    // Получим нового пользователя для role
+    const newUser = await User.findByNumber(phone_number);
+
+    const token = jwt.sign(
+      { userId: newUser.ID },
+      config.get("jwtToken"),
+      { expiresIn: "1h" }
+    );
+
+    console.log("Пользователь успешно создан и залогинен с ID:", newUser.ID);
+
+    res.status(201).json({ token, userId: newUser.ID, role: newUser.role });
   } catch (e) {
     console.error("Ошибка на сервере при регистрации:", e);
     res.status(500).json({ message: "Ошибка сервера. Попробуйте снова." });
   }
 });
+
 
 // Вход
 router.post("/login", async (req, res) => {
@@ -61,7 +71,7 @@ router.post("/login", async (req, res) => {
       );
 
       console.log("Логин успешен! userId:", user.ID);
-      res.json({ token, userId: user.ID });
+      res.json({ token, userId: user.ID, role: user.role });
     } catch (e) {
       console.error("Ошибка на сервере:", e);
       res.status(500).json({ message: "Ошибка сервера. Попробуйте снова." });

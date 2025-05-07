@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
+
 import Profile from "./components/Profile";
 import MainPage from "./components/MainPage";
 import Category from "./components/Category";
@@ -11,8 +12,18 @@ import AuthPage from "./components/AuthPage";
 import Order from "./components/Order"
 import Search from "./components/Search"
 
-export const useRoutes = (isAuthenticated) => {
-    if (isAuthenticated) {
+import AdminCategory from "./components/AdminCategory";
+import AdminSubcategory from "./components/AdminSubcategory";
+import AdminMainPage from "./components/AdminMainPage";
+import AdminProductCard from "./components/AdminProductCard"
+import AdminUsers from "./components/AdminUsers";
+import AdminProfile from "./components/AdminProfile";
+import AdminOrder from "./components/AdminOrder";
+import AdminRequest from "./components/AdminRequest";
+import AdminSearch from "./components/AdminSearch";
+
+export const useRoutes = (isAuthenticated, role) => {
+    if (isAuthenticated && role === "user" ) {
         return (
             <Routes>
                 <Route path="/" element={<MainPage />} />
@@ -29,6 +40,25 @@ export const useRoutes = (isAuthenticated) => {
             </Routes>
         );
     }
+    
+    if (isAuthenticated && role === "admin") {
+        return (
+            <Routes>
+                <Route path="/" element={<AdminMainPage />} />
+                <Route path="/category/:image" element={<AdminCategory />} />
+                <Route path="/subcategory/:id" element={<AdminSubcategory />} />
+                <Route path="/product/:id" element={<AdminProductCard />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/users" element={<AdminUsers/>} />
+                <Route path="/requests" element={<AdminRequest/>} />
+                <Route path="/profile/:profile_id" element={<AdminProfile />} />
+                <Route path="/order/:orderId" element={<AdminOrder />} />
+                <Route path="/search" element={<AdminSearch />} />
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+        );
+    }
+
     return (
         <Routes>
             <Route path="/" element={<MainPage />} />

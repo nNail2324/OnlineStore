@@ -3,44 +3,20 @@ import { AuthContext } from "../context/auth-context";
 import { NotificationContext } from "../context/notification-context";
 import { useNavigate } from "react-router-dom";
 
-import { VscAccount, VscHeart, VscAdd } from "react-icons/vsc";
-
-let debounceTimeout;
+import {  VscAdd } from "react-icons/vsc";
+import { MdLogout } from "react-icons/md";
 
 const AdminHeader = () => {
-    const { isAuthenticated } = useContext(AuthContext);
+    const { isAuthenticated, logout } = useContext(AuthContext);
     const { showNotification } = useContext(NotificationContext);
     const navigate = useNavigate();
 
-    const [searchValue, setSearchValue] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
     const [formData, setFormData] = useState({
         name: "",
         phone_number: ""
     });
-
-    const [formStatus, setFormStatus] = useState(null);
-
-    const handleSearch = () => {
-        if (searchValue.trim()) {
-            navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
-            setSuggestions([]);
-        }
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === "Enter") {
-            handleSearch();
-        }
-    };
-
-    const handleSuggestionClick = (name) => {
-        setSearchValue(name);
-        navigate(`/search?q=${encodeURIComponent(name)}`);
-        setSuggestions([]);
-    };
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -72,79 +48,40 @@ const AdminHeader = () => {
         }
     };
 
-    useEffect(() => {
-        if (!searchValue.trim()) {
-            setSuggestions([]);
-            return;
-        }
 
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(async () => {
-            try {
-                const res = await fetch(`http://localhost:5000/api/product/suggest?q=${encodeURIComponent(searchValue)}`);
-                const data = await res.json();
-                setSuggestions(data);
-            } catch (err) {
-                console.error("Ошибка при получении подсказок:", err);
-            }
-        }, 300);
-    }, [searchValue]);
+    const onClickLogout = () => {
+        logout();
+        navigate("/");
+    };
+
+    const onClickUsers = () => {
+        navigate("/users");
+    };
+
+    const onClickRequests = () => {
+        navigate("/requests");
+    };
 
     return (
         <>
             <header className="header">
                 <div className="logo-text" onClick={() => navigate("/")}>
-                    <label className="company-title">ИП Шарипов</label>
-                    <label className="company-name">стройматериалы</label>
+                    <label className="company-title">Панель</label>
+                    <label className="company-name">администратора</label>
                 </div>
 
                 <div className="header-right">
-                    <div className="search">
-                        <input
-                            type="text"
-                            placeholder="Поиск"
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            onKeyDown={handleKeyPress}
-                        />
-
-                        {searchValue && (
-                            <span className="clear-icon" onClick={() => {
-                                setSearchValue("");
-                                setSuggestions([]);
-                            }}>
-                                &times;
-                            </span>
-                        )}
-
-                        <button onClick={handleSearch}>Найти</button>
-
-                        {suggestions.length > 0 && (
-                            <ul className="suggestions-list">
-                                {suggestions.map((item) => (
-                                    <li key={item.ID} onClick={() => handleSuggestionClick(item.name)}>
-                                        {item.name}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                    <div className="orange-button">
+                        <button onClick={() => onClickUsers()}>Пользователи</button>
                     </div>
 
-                    <div className="white-button">
-                        <button>Заявки</button>
-                    </div>
-
-                    <div className="white-button">
-                        <button>Пользователи</button>
-                    </div>
-
-                    <div className="logo-button">
-                        <VscHeart className="logo-from-react" onClick={() => navigate("/favorite")} />
+                    <div className="orange-button">
+                        <button onClick={() => onClickRequests()}>Заявки и заказы</button>
                     </div>
 
                     <div className="logo-button">
                         {isAuthenticated ? (
-                            <VscAccount className="logo-from-react" onClick={() => navigate("/profile")} />
+                            <MdLogout className="logo-from-react" onClick={() => onClickLogout()} />
                         ) : (
                             <VscAdd className="logo-from-react" onClick={() => navigate("/auth")} />
                         )}

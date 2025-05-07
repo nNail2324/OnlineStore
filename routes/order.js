@@ -5,10 +5,27 @@ const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 
+router.get("/", async (req, res) => {
+    try {
+        const [orders] = await db.query(`
+            SELECT o.ID, o.user_id, o.total_price, o.delivery_method, o.delivery_price, o.status, o.created_at, u.name, u.surname, u.phone_number
+            FROM orders o
+            JOIN users u ON o.user_id = u.ID
+            ORDER BY o.created_at DESC
+        `);
+
+        res.json(orders);
+    } catch (err) {
+        console.error("Ошибка при получении заказов:", err);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+});
+
 router.post("/create", async (req, res) => {
     try {
         const { user_id, delivery_method } = req.body;
 
+        // Получаем корзину пользователя
         const [cartItems] = await db.query(`
             SELECT c.product_id, c.quantity, p.price
             FROM cart c
@@ -20,24 +37,58 @@ router.post("/create", async (req, res) => {
             return res.status(400).json({ message: "Корзина пуста" });
         }
 
+        // Получаем профиль пользователя и название города
+        const [userProfileRows] = await db.query(`
+            SELECT u.name, u.surname, u.phone_number, u.street, u.house_number, l.name AS city_name, l.delivery_price
+            FROM users u
+            LEFT JOIN location_and_delivery l ON u.city = l.ID
+            WHERE u.ID = ?
+        `, [user_id]);
+
+        if (userProfileRows.length === 0) {
+            return res.status(404).json({ message: "Пользователь не найден" });
+        }
+
+        const userProfile = userProfileRows[0];
+
+        if (!userProfile.city_name) {
+            return res.status(400).json({ message: "Город пользователя не задан" });
+        }
+
+        // Формируем итоговую стоимость
         const total_price = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
-        const delivery_price = delivery_method === "courier" ? 500 : 0; // например
+        const delivery_price = delivery_method === "courier" ? userProfile.delivery_price : 0;
         const final_price = total_price + delivery_price;
 
-        const [orderResult] = await db.query(
-            "INSERT INTO orders (user_id, total_price, delivery_method, delivery_price, status) VALUES (?, ?, ?, ?, 'В обработке')",
-            [user_id, final_price, delivery_method, delivery_price]
-        );
+        // Формируем полный адрес
+        const delivery_address = `${userProfile.city_name}, ${userProfile.street}, дом ${userProfile.house_number}`;
+
+        // Создаем заказ
+        const [orderResult] = await db.query(`
+            INSERT INTO orders 
+            (user_id, total_price, delivery_method, delivery_price, status, contact_name, contact_phone, delivery_address) 
+            VALUES (?, ?, ?, ?, 'В обработке', ?, ?, ?)
+        `, [
+            user_id,
+            final_price,
+            delivery_method,
+            delivery_price,
+            `${userProfile.name} ${userProfile.surname}`,
+            userProfile.phone_number,
+            delivery_address
+        ]);
 
         const orderId = orderResult.insertId;
 
+        // Переносим товары из корзины в order_items
         for (const item of cartItems) {
-            await db.query(
-                "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)",
-                [orderId, item.product_id, item.quantity, item.price]
-            );
+            await db.query(`
+                INSERT INTO order_items (order_id, product_id, quantity, price) 
+                VALUES (?, ?, ?, ?)
+            `, [orderId, item.product_id, item.quantity, item.price]);
         }
 
+        // Очищаем корзину
         await db.query("DELETE FROM cart WHERE user_id = ?", [user_id]);
 
         res.status(201).json({ orderId });
@@ -46,6 +97,7 @@ router.post("/create", async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 });
+
 
 router.patch("/:orderId/cancel", async (req, res) => {
     try {
@@ -93,6 +145,28 @@ router.get("/:orderId", async (req, res) => {
         });
     } catch (err) {
         console.error("Ошибка получения заказа:", err);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+});
+
+router.patch("/:orderId/status", async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;  // Новый статус, передаваемый в теле запроса
+
+        const [check] = await db.query("SELECT status FROM orders WHERE ID = ?", [orderId]);
+        if (!check.length) return res.status(404).json({ message: "Заказ не найден" });
+
+        const currentStatus = check[0].status;
+        if (currentStatus === "Отменён") {
+            return res.status(400).json({ message: "Невозможно изменить статус этого заказа" });
+        }
+
+        // Обновление статуса заказа
+        await db.query("UPDATE orders SET status = ? WHERE ID = ?", [status, orderId]);
+        res.json({ status });
+    } catch (err) {
+        console.error("Ошибка при изменении статуса:", err);
         res.status(500).json({ message: "Ошибка сервера" });
     }
 });

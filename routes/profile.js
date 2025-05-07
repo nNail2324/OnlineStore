@@ -35,7 +35,6 @@ router.get("/:profile_id", async (req, res) => {
     }
 });
 
-
 // Обновление данных пользователя
 router.post("/update", async (req, res) => {
     try {

@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { NotificationContext } from "../context/notification-context";
 
-const Order = () => {
+const AdminOrder = () => {
     const { orderId } = useParams();
     const navigate = useNavigate();
     const [orderData, setOrderData] = useState(null);
+    const [newStatus, setNewStatus] = useState("");
+    
+    const { showNotification } = useContext(NotificationContext);
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -13,6 +17,7 @@ const Order = () => {
                 if (!res.ok) throw new Error("Ошибка загрузки заказа");
                 const data = await res.json();
                 setOrderData(data);
+                setNewStatus(data.status); 
             } catch (err) {
                 console.error("❌ Ошибка загрузки:", err);
             }
@@ -21,22 +26,26 @@ const Order = () => {
         fetchOrder();
     }, [orderId]);
 
-    const handleCancelOrder = async () => {
+    const handleChangeOrderStatus = async (status) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/order/${orderId}/cancel`, {
+            const res = await fetch(`http://localhost:5000/api/order/${orderId}/status`, {
                 method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ status }),
             });
-    
-            if (!res.ok) throw new Error("Не удалось отменить заказ");
-    
+
+            if (!res.ok) throw new Error("Не удалось изменить статус заказа");
+
             const updated = await res.json();
             setOrderData((prev) => ({ ...prev, status: updated.status }));
         } catch (err) {
-            console.error("Ошибка отмены заказа:", err);
-            alert("Ошибка при отмене заказа");
+            console.error("Ошибка изменения статуса:", err);
+            showNotification("Ошибка при изменении статуса");
         }
-    }; 
-    
+    };
+
     const handleDownloadInvoice = () => {
         window.open(`http://localhost:5000/api/order/${orderId}/invoices`, "_blank");
     };
@@ -83,7 +92,7 @@ const Order = () => {
                         <label>{orderData.contact_phone}</label>
                         <label>{orderData.delivery_address}</label>
                     </div>
-
+                    
                     <div className="black-title">
                         <label>Способ доставки</label>
                     </div>
@@ -97,8 +106,36 @@ const Order = () => {
                     <div className="black-title">
                         <label>Статус заказа</label>
                     </div>
-                    <div className="black-text">
-                        <label>{orderData.status}</label>
+                    <div className="left-row">
+                        <div className="radio-group">
+                            <input
+                                type="radio"
+                                value="В пути"
+                                id="transit"
+                                checked={newStatus === "В пути"}
+                                onChange={(e) => { setNewStatus(e.target.value); handleChangeOrderStatus(e.target.value); }} />
+                            <label htmlFor="transit">В пути</label>
+                        </div>
+
+                        <div className="radio-group">
+                            <input
+                                type="radio"
+                                value="Доставлен"
+                                id="delivered"
+                                checked={newStatus === "Доставлен"}
+                                onChange={(e) => { setNewStatus(e.target.value); handleChangeOrderStatus(e.target.value); }} />
+                            <label htmlFor="delivered">Доставлен</label>
+                        </div>
+
+                        <div className="radio-group">
+                            <input
+                                type="radio"
+                                value="Отменён"
+                                id="cancelled"
+                                checked={newStatus === "Отменён"}
+                                onChange={(e) => { setNewStatus(e.target.value); handleChangeOrderStatus(e.target.value); }} />
+                            <label htmlFor="cancelled">Отменён</label>
+                        </div>
                     </div>
                 </div>
 
@@ -126,14 +163,6 @@ const Order = () => {
                     </div>
 
                     <div className="right-row">
-                        {orderData.status !== "Отменён" && (
-                            <div className="white-button">
-                                <button onClick={handleCancelOrder}>Отменить заказ</button>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="right-row">
                         <div className="gray-button">
                             <button onClick={handleDownloadInvoice}>Скачать накладную</button>
                         </div>
@@ -144,4 +173,4 @@ const Order = () => {
     );
 };
 
-export default Order;
+export default AdminOrder;

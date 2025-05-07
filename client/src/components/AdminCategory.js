@@ -4,62 +4,118 @@ import { useParams, useNavigate } from "react-router-dom";
 const AdminCategory = () => {
     const { image } = useParams();
     const [categoryName, setCategoryName] = useState("");
+    const [categoryId, setCategoryId] = useState(null);
     const [subcategories, setSubcategories] = useState([]);
+    const [newSubcategoryName, setNewSubcategoryName] = useState("");
+    const [newSubcategoryUnit, setNewSubcategoryUnit] = useState("");
     const navigate = useNavigate();
+
+    const units = ["шт", "кг", "т", "м", "м²"];
 
     useEffect(() => {
         const fetchCategoryAndSubcategories = async () => {
             try {
-                console.log(`Запрашиваем данные категории: ${image}`);
-    
-                // Получаем категорию по image
                 const categoryResponse = await fetch(`http://localhost:5000/api/category/image/${image}`);
                 if (!categoryResponse.ok) throw new Error("Категория не найдена");
-    
+
                 const categoryData = await categoryResponse.json();
-                console.log(`Категория найдена: ${categoryData.name} (ID: ${categoryData.ID})`);
-    
-                // Запрашиваем подкатегории с количеством товаров
-                const subcategoriesUrl = `http://localhost:5000/api/subcategory/${categoryData.ID}`;
-                console.log(`Запрос на подкатегории: ${subcategoriesUrl}`);
-    
-                const subcategoriesResponse = await fetch(subcategoriesUrl);
-                if (!subcategoriesResponse.ok) throw new Error("Подкатегории не найдены");
-    
-                const subcategoriesData = await subcategoriesResponse.json();
-                console.log(`Найдено подкатегорий: ${subcategoriesData.length}`);
-    
                 setCategoryName(categoryData.name);
+                setCategoryId(categoryData.ID);
+
+                const subcategoriesResponse = await fetch(`http://localhost:5000/api/subcategory/${categoryData.ID}`);
+                if (!subcategoriesResponse.ok) throw new Error("Подкатегории не найдены");
+
+                const subcategoriesData = await subcategoriesResponse.json();
                 setSubcategories(subcategoriesData);
             } catch (error) {
                 console.error("Ошибка при загрузке данных:", error);
                 setCategoryName("Ошибка загрузки");
             }
         };
-    
+
         fetchCategoryAndSubcategories();
     }, [image]);
-    
+
     const onClickSubcategory = (subcategoryId) => {
         navigate(`/subcategory/${subcategoryId}`);
     };
 
+    const onAddSubcategory = async () => {
+        if (!newSubcategoryName || !newSubcategoryUnit) {
+            alert("Пожалуйста, заполните все поля");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/api/subcategory/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    category_id: categoryId,
+                    name: newSubcategoryName,
+                    unit: newSubcategoryUnit
+                })
+            });
+
+            if (!response.ok) throw new Error("Ошибка при создании подкатегории");
+
+            const newSubcategory = await response.json();
+            alert("Подкатегория добавлена!");
+
+            setNewSubcategoryName("");
+            setNewSubcategoryUnit("");
+
+            // Обновляем список подкатегорий
+            const updatedResponse = await fetch(`http://localhost:5000/api/subcategory/${categoryId}`);
+            const updatedData = await updatedResponse.json();
+            setSubcategories(updatedData);
+        } catch (error) {
+            console.error("Ошибка при добавлении подкатегории:", error);
+        }
+    };
+
     return (
         <div className="body-page">
-            <div className="left-row">
+            <div className="title-row">
                 <div className="name">
                     <label>{categoryName}</label>
                 </div>
+            </div>
 
-                <div className="white-button">
-                    <button>Добавить товар</button>
+            <div className="type">
+                <div className="black-title">
+                    <label>Подкатегория</label>
+                </div>
+
+                <div className="admin-form">
+                    <input
+                        type="text"
+                        placeholder="Название подкатегории"
+                        value={newSubcategoryName}
+                        onChange={(e) => setNewSubcategoryName(e.target.value)}
+                    />
+                    <select
+                        value={newSubcategoryUnit}
+                        onChange={(e) => setNewSubcategoryUnit(e.target.value)}
+                    >
+                        <option value="">Выберите единицу измерения</option>
+                        {units.map((unit) => (
+                            <option key={unit} value={unit}>
+                                {unit}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="admin-button">
+                        <button onClick={onAddSubcategory}>Добавить</button>
+                    </div>
                 </div>
             </div>
+
             <div className="types">
                 {subcategories.map((subcategory) => (
-                    <div 
-                        className="category" 
-                        key={subcategory.ID} 
+                    <div
+                        className="category"
+                        key={subcategory.ID}
                         onClick={() => onClickSubcategory(subcategory.ID)}
                     >
                         <div className="category-title">

@@ -6,19 +6,16 @@ import { NotificationContext } from "../context/notification-context";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { FaStar, FaRegStar } from "react-icons/fa";
 
-const ProductCard = () => {
+const AdminProductCard = () => {
     const { id } = useParams();
     const { userId } = useContext(AuthContext);
     const { showNotification } = useContext(NotificationContext);
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [quantity, setQuantity] = useState(1);
     const [isFavorite, setIsFavorite] = useState(false);
 
     const [reviews, setReviews] = useState([]);
-    const [reviewText, setReviewText] = useState("");
-    const [reviewMark, setReviewMark] = useState(5);
 
     const [images, setImages] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -78,90 +75,6 @@ const ProductCard = () => {
         fetchImages();
       }, [id]);
 
-    const handleQuantityChange = (value) => {
-        const newQuantity = quantity + value;
-        if (newQuantity >= 1) setQuantity(newQuantity);
-    };
-
-    const handleAddToCart = async () => {
-        if (!userId) {
-            showNotification("Требуется авторизация!");
-            return;
-        }
-
-        try {
-            const response = await fetch("http://localhost:5000/api/cart/add", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ user_id: userId, product_id: product.ID, quantity }),
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                showNotification(`${product.name} добавлен в корзину!`);
-            } else {
-                showNotification("Ошибка при добавлении товара.");
-            }
-        } catch (error) {
-            console.error("Ошибка при добавлении товара в корзину:", error);
-        }
-    };
-
-    const toggleFavorite = async () => {
-        if (!userId) {
-            showNotification("Требуется авторизация!");
-            return;
-        }
-
-        try {
-            const endpoint = isFavorite ? "remove" : "add";
-            const method = isFavorite ? "DELETE" : "POST";
-
-            const res = await fetch(`http://localhost:5000/api/favorite/${endpoint}`, {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ user_id: userId, product_id: product.ID }),
-            });
-
-            if (!res.ok) throw new Error("Ошибка изменения избранного");
-            setIsFavorite(!isFavorite);
-        } catch (error) {
-            console.error("Ошибка при изменении избранного:", error);
-        }
-    };
-
-    const submitFeedback = async () => {
-        if (!userId) {
-            showNotification("Требуется авторизация!");
-            return;
-        }
-        if (!reviewText.trim()) return;
-
-        try {
-            const res = await fetch("http://localhost:5000/api/product/feedback", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: userId,
-                    product_id: id,
-                    mark: reviewMark,
-                    description: reviewText,
-                }),
-            });
-
-            const data = await res.json();
-            if (data.success) {
-                setReviewText("");
-                setReviewMark(5);
-                const refreshed = await fetch(`http://localhost:5000/api/product/feedback/${id}`);
-                setReviews(await refreshed.json());
-            } else {
-                showNotification("Ошибка при отправке отзыва");
-            }
-        } catch (err) {
-            console.error("Ошибка отправки отзыва:", err);
-        }
-    };
     
     const averageRating =
     reviews.length > 0
@@ -182,12 +95,7 @@ const ProductCard = () => {
         setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    if (loading) return 
-        <div className="body-page">
-            <div className="loading-error">
-                Загрузка...
-            </div>
-        </div>;
+    if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error}</div>;
     if (!product) return null;
 
@@ -265,30 +173,8 @@ const ProductCard = () => {
                     </div>
 
                     <div className="characteristics">
-                        <div className="price-row">
-                            <div className="quantity-button">
-                                <button onClick={() => handleQuantityChange(-1)}>-</button>
-                                <input
-                                    value={quantity}
-                                    onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                    min="1"
-                                />
-                                <button onClick={() => handleQuantityChange(1)}>+</button>
-                            </div>
-                            <div className="black-title">
-                                <label>{product.price.toLocaleString("ru-RU")} руб./{product.unit}.</label>
-                            </div>
-                        </div>
-                            
-                        <div className="left-row">
-                            <div className="orange-button">
-                                <button onClick={handleAddToCart}>Добавить в корзину</button>
-                            </div>
-                            {isFavorite ? (
-                                <VscHeartFilled onClick={toggleFavorite} className="logo-heart" />
-                            ) : (
-                                <VscHeart onClick={toggleFavorite} className="logo-heart" />
-                            )}
+                        <div className="black-title">
+                            <label>{product.price.toLocaleString("ru-RU")} руб./{product.unit}.</label>
                         </div>
                     </div>
                 </div>
@@ -308,34 +194,6 @@ const ProductCard = () => {
                     <label>Отзывы</label>
                 </div>
 
-                <div className="types">
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "10px 0" }}>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                            <span key={star} onClick={() => setReviewMark(star)} style={{ cursor: "pointer" }}>
-                                {star <= reviewMark ? (
-                                    <FaStar color="gold" size={24} />
-                                ) : (
-                                    <FaRegStar color="gray" size={24} />
-                                )}
-                            </span>
-                        ))}
-                        <div className="black-text">
-                            {reviewMark === 0 ? "— не выбрано" : `${reviewMark} / 5`}
-                        </div>
-                    </div>
-
-                    <textarea className="input-feedback"
-                        rows="4"
-                        placeholder="Написать отзыв"
-                        value={reviewText}
-                        onChange={(e) => setReviewText(e.target.value)}
-                    />
-                    
-                    <div className="feedback-button">
-                        <button onClick={submitFeedback} >Отправить отзыв</button>
-                    </div>
-                </div>
-
                 <div className="feedback">
                     {reviews.length === 0 ? (
                         <div className="black-text">
@@ -343,7 +201,6 @@ const ProductCard = () => {
                         </div>
                     ) : (
                         reviews.map((rev, idx) => {
-                            // Получаем первую букву имени
                             const firstLetter = rev.username ? rev.username.charAt(0).toUpperCase() : 'A';
                             
                             return (
@@ -379,4 +236,4 @@ const ProductCard = () => {
     );
 };
 
-export default ProductCard;
+export default AdminProductCard;

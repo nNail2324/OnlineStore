@@ -13,10 +13,14 @@
     src: url("../font/Inter-Medium.woff") format("woff");
 }
 
-body {
-    margin: 0px;
-    background-color: white;
-    height: 100%;
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield; 
 }
 
 input::placeholder {
@@ -27,6 +31,12 @@ input::placeholder {
 
 input:focus {
     outline: none;
+}
+
+body {
+    margin: 0px;
+    background-color: white;
+    height: 100%;
 }
 
 .orange-button button {
@@ -110,6 +120,7 @@ input:focus {
     border-style: solid;
     color: white;
     font-size: 30px;
+    align-items: center;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -256,6 +267,13 @@ input:focus {
     padding-left: 20px;
     padding-right: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.loading-error {
+    display: flex;
+    justify-content: center;
+    font-family: 'Inter-Medium';
+    font-size: 20px;
 }
 
 /*Уведомления*/
@@ -717,7 +735,7 @@ input:focus {
 .city-tag {
     color: #FFFFFF;
     font-size: 18px;   
-    font-family: 'Inter-Medium';
+    font-family: 'Inter-Bold';
 }
 
 .city-label {
@@ -879,18 +897,27 @@ input:focus {
 .line {
     display: flex;
     flex-direction: row;
-    gap: 70px;
+    width: 100%;
+    gap: 40px; 
     padding-top: 10px;
+    flex-wrap: wrap; 
 }
 
 .image-product-slider {
-    width: 400px;
+    flex: 0 0 400px; 
+    max-width: 100%; 
     height: 400px;
     position: relative;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     background: #fff;
+}
+
+.attribute-block {
+    flex: 1; 
+    min-width: 300px; 
+    max-width: calc(100% - 440px); 
 }
   
 .slider-window {
@@ -1150,7 +1177,7 @@ input:focus {
     border-radius: 10px;
     border-color: grey;
     border-style: solid;
-    color: grey;
+    color: #000000;
     font-size: 15px;
     padding-left: 25px;
     padding-right: 25px;
@@ -1165,14 +1192,10 @@ input:focus {
 }
 
 .auth-label label{
-    color: grey;
+    color: #000000;
     font-family: 'Inter-Medium';
     font-size: 16px;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.auth-label label:hover {
-    color: #000000;
 }
 
 .authentication {
@@ -1361,6 +1384,163 @@ input:focus {
 
 /*Заказ*/
 
+/*Администратор*/
+
+.title-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; 
+    gap: 10px;
+}
+
+.admin-button button {
+    font-family: 'Inter-Medium';
+    height: 35px;
+    background-color: white;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: #EBEBEB;
+    border-style: solid;
+    color: gray;
+    font-size: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.admin-button button:hover {
+    background-color: white;
+    border-color: gray;
+    color: gray;
+}
+
+.attribute-button button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter-Medium';
+    height: 35px;
+    background-color: white;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: #EBEBEB;
+    border-style: solid;
+    color: black;
+    font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.attribute-button button:hover {
+    background-color: white;
+    border-color: gray;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+.admin-form input {
+    border-style: solid;
+    border-color: #EBEBEB;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FFFFFF;
+    height: 30px;
+    width: 100%;
+    display: flex;
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.admin-form select {
+    border: 2px solid #EBEBEB; 
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FFFFFF;
+    height: 35px;
+    width: 100%;
+    display: flex;
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    outline: none; 
+    box-shadow: none;
+    color: black; 
+}
+
+.admin-form select::-ms-expand {
+    display: none;
+}
+
+.admin-form select:-moz-focusring {
+    outline: none; 
+}
+
+.admin-form select:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: gray;
+}
+
+.admin-form select {
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    appearance: none; 
+}
+
+.admin-form select option {
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    padding: 5px;
+    background-color: #FFFFFF;
+    color: #000000;
+    border: none;
+}
+
+.admin-form.active select {
+    border-color: gray !important; 
+}
+
+.admin-form input:focus {
+    border-color: gray;
+}
+
+.request-titile {
+    color: #000000;
+    font-family: 'Inter-Bold';
+    font-size: 25px;
+    margin-top: 20px;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+.search-container input {
+    border-style: solid;
+    border-color: #EBEBEB;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FFFFFF;
+    height: 30px;
+    width: 100%;
+    display: flex;
+    font-family: 'Inter-Medium';
+    font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
 
 
 

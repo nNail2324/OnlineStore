@@ -98,7 +98,7 @@ const Profile = () => {
             });
 
             if (!response.ok) throw new Error("Ошибка при сохранении данных");
-            console.log(`✅ Поле ${field} успешно обновлено`);
+            console.log(`Поле ${field} успешно обновлено`);
             setIsEditing(null);
         } catch (error) {
             console.error("Ошибка при сохранении данных:", error);
@@ -272,7 +272,7 @@ const Profile = () => {
                     <label>Мои заказы</label>
                 </div>
                 {orders.length === 0 ? (
-                <div className="black-title">
+                <div className="black-text">
                     <label>У вас пока нет заказов</label>
                 </div>
                 ) : (

@@ -1,27 +1,25 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../context/auth-context";
 import { NotificationContext } from "../context/notification-context";
 import { useNavigate } from "react-router-dom";
-
 import { VscAccount, VscHeart, VscAdd } from "react-icons/vsc";
-
-let debounceTimeout;
 
 const Header = () => {
     const { isAuthenticated } = useContext(AuthContext);
     const { showNotification } = useContext(NotificationContext);
     const navigate = useNavigate();
+    const searchRef = useRef(null);
+    const suggestionsRef = useRef(null);
 
     const [searchValue, setSearchValue] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [showModal, setShowModal] = useState(false);
-
     const [formData, setFormData] = useState({
         name: "",
         phone_number: ""
     });
 
-    const [formStatus, setFormStatus] = useState(null);
+    const debounceTimeout = useRef(null);
 
     const handleSearch = () => {
         if (searchValue.trim()) {
@@ -38,8 +36,8 @@ const Header = () => {
 
     const handleSuggestionClick = (name) => {
         setSearchValue(name);
-        navigate(`/search?q=${encodeURIComponent(name)}`);
         setSuggestions([]);
+        navigate(`/search?q=${encodeURIComponent(name)}`);
     };
 
     const handleFormSubmit = async (e) => {
@@ -52,7 +50,7 @@ const Header = () => {
         }
 
         try {
-            const res = await fetch("http://localhost:5000/api/requests", {
+            const res = await fetch("http://localhost:5000/api/requests/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -73,21 +71,38 @@ const Header = () => {
     };
 
     useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (searchRef.current && !searchRef.current.contains(e.target)) {
+                setSuggestions([]);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
         if (!searchValue.trim()) {
             setSuggestions([]);
             return;
         }
 
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(async () => {
+        clearTimeout(debounceTimeout.current);
+        debounceTimeout.current = setTimeout(async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/product/suggest?q=${encodeURIComponent(searchValue)}`);
+                const res = await fetch(
+                    `http://localhost:5000/api/product/suggest?q=${encodeURIComponent(searchValue)}`
+                );
                 const data = await res.json();
                 setSuggestions(data);
             } catch (err) {
                 console.error("Ошибка при получении подсказок:", err);
             }
         }, 300);
+
+        return () => clearTimeout(debounceTimeout.current);
     }, [searchValue]);
 
     return (
@@ -99,20 +114,24 @@ const Header = () => {
                 </div>
 
                 <div className="header-right">
-                    <div className="search">
+                    <div className="search" ref={searchRef}>
                         <input
                             type="text"
                             placeholder="Поиск"
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                             onKeyDown={handleKeyPress}
+                            onFocus={() => searchValue.trim() && setSuggestions(suggestions)}
                         />
 
                         {searchValue && (
-                            <span className="clear-icon" onClick={() => {
-                                setSearchValue("");
-                                setSuggestions([]);
-                            }}>
+                            <span 
+                                className="clear-icon" 
+                                onClick={() => {
+                                    setSearchValue("");
+                                    setSuggestions([]);
+                                }}
+                            >
                                 &times;
                             </span>
                         )}
@@ -120,9 +139,15 @@ const Header = () => {
                         <button onClick={handleSearch}>Найти</button>
 
                         {suggestions.length > 0 && (
-                            <ul className="suggestions-list">
+                            <ul 
+                                className="suggestions-list"
+                                ref={suggestionsRef}
+                            >
                                 {suggestions.map((item) => (
-                                    <li key={item.ID} onClick={() => handleSuggestionClick(item.name)}>
+                                    <li 
+                                        key={item.ID} 
+                                        onClick={() => handleSuggestionClick(item.name)}
+                                    >
                                         {item.name}
                                     </li>
                                 ))}
@@ -139,14 +164,23 @@ const Header = () => {
                     </div>
 
                     <div className="logo-button">
-                        <VscHeart className="logo-from-react" onClick={() => navigate("/favorite")} />
+                        <VscHeart 
+                            className="logo-from-react" 
+                            onClick={() => navigate("/favorite")} 
+                        />
                     </div>
 
                     <div className="logo-button">
                         {isAuthenticated ? (
-                            <VscAccount className="logo-from-react" onClick={() => navigate("/profile")} />
+                            <VscAccount 
+                                className="logo-from-react" 
+                                onClick={() => navigate("/profile")} 
+                            />
                         ) : (
-                            <VscAdd className="logo-from-react" onClick={() => navigate("/auth")} />
+                            <VscAdd 
+                                className="logo-from-react" 
+                                onClick={() => navigate("/auth")} 
+                            />
                         )}
                     </div>
                 </div>
@@ -155,7 +189,12 @@ const Header = () => {
             {showModal && (
                 <div className="request-modal-overlay">
                     <div className="request-modal-container">
-                        <span className="request-modal-close" onClick={() => setShowModal(false)}>&times;</span>
+                        <span 
+                            className="request-modal-close" 
+                            onClick={() => setShowModal(false)}
+                        >
+                            &times;
+                        </span>
                         <div className="black-title">
                             <label>Оставить заявку</label>
                         </div>

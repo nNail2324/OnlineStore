@@ -2,12 +2,57 @@ const { Router } = require("express");
 const db = require("../db");
 const router = Router();
 
-// Получение товаров по ID подкатегории
+// Получение товаров по ID подкатегории с атрибутами и изображениями
 router.get("/subcategory/:subcategoryId", async (req, res) => {
     try {
         const { subcategoryId } = req.params;
-        const [rows] = await db.query("SELECT * FROM product WHERE subcategory_id = ?", [subcategoryId]);
-        res.json(rows);
+        
+        // 1. Получаем основные данные о товарах
+        const [products] = await db.query(`
+            SELECT p.*, s.unit 
+            FROM product p
+            JOIN subcategory s ON p.subcategory_id = s.ID
+            WHERE p.subcategory_id = ?
+        `, [subcategoryId]);
+
+        if (products.length === 0) return res.json([]);
+        
+        // 2. Получаем все атрибуты для этих товаров
+        const productIds = products.map(p => p.ID);
+        const [attributes] = await db.query(`
+            SELECT product_id, attribute_name as name, attribute_value as value 
+            FROM product_attributes 
+            WHERE product_id IN (?)
+        `, [productIds]);
+        
+        // 3. Получаем все изображения для этих товаров
+        const [images] = await db.query(`
+            SELECT product_id, path as url 
+            FROM product_images 
+            WHERE product_id IN (?)
+        `, [productIds]);
+        
+        // 4. Группируем данные
+        const attributesMap = attributes.reduce((acc, attr) => {
+            if (!acc[attr.product_id]) acc[attr.product_id] = [];
+            acc[attr.product_id].push({ name: attr.name, value: attr.value });
+            return acc;
+        }, {});
+        
+        const imagesMap = images.reduce((acc, img) => {
+            if (!acc[img.product_id]) acc[img.product_id] = [];
+            acc[img.product_id].push(img.url);
+            return acc;
+        }, {});
+        
+        // 5. Формируем результат
+        const result = products.map(product => ({
+            ...product,
+            attributes: attributesMap[product.ID] || [],
+            images: imagesMap[product.ID] || []
+        }));
+        
+        res.json(result);
     } catch (err) {
         console.error("Ошибка при получении товаров:", err);
         res.status(500).json({ message: "Ошибка сервера" });
@@ -161,6 +206,119 @@ router.get("/images/:productId", async (req, res) => {
     } catch (err) {
       console.error("Ошибка при получении изображений:", err);
       res.status(500).json({ message: "Ошибка сервера" });
+    }
+});
+
+router.post("/create", async (req, res) => {
+    const { subcategory_id, name, price, description, stock, attributes, images } = req.body;
+
+    if (!subcategory_id || !name || price === undefined || stock === undefined) {
+        return res.status(400).json({ message: "Обязательные поля не заполнены" });
+    }
+
+    const connection = await db.getConnection(); // Для транзакции
+
+    try {
+        await connection.beginTransaction();
+
+        // 1. Создание товара
+        const [result] = await connection.query(
+            `INSERT INTO product (subcategory_id, name, price, description, stock)
+             VALUES (?, ?, ?, ?, ?)`,
+            [subcategory_id, name, price, description || "", stock]
+        );
+        const productId = result.insertId;
+
+        // 2. Добавление атрибутов
+        if (attributes && Array.isArray(attributes)) {
+            for (const attr of attributes) {
+                await connection.query(
+                    `INSERT INTO product_attributes (product_id, attribute_name, attribute_value)
+                     VALUES (?, ?, ?)`,
+                    [productId, attr.name, attr.value]
+                );
+            }
+        }
+
+        // 3. Добавление изображений
+        if (images && Array.isArray(images)) {
+            for (const imgPath of images) {
+                await connection.query(
+                    `INSERT INTO product_images (product_id, path)
+                     VALUES (?, ?)`,
+                    [productId, imgPath]
+                );
+            }
+        }
+
+        await connection.commit();
+        res.json({ success: true, productId });
+
+    } catch (err) {
+        await connection.rollback();
+        console.error("Ошибка при создании товара:", err);
+        res.status(500).json({ message: "Ошибка сервера" });
+    } finally {
+        connection.release();
+    }
+});
+
+router.put("/update/:id", async (req, res) => {
+    const { id } = req.params;
+    const { name, price, description, stock, attributes, images } = req.body;
+
+    if (!name || price === undefined || stock === undefined) {
+        return res.status(400).json({ message: "Обязательные поля не заполнены" });
+    }
+
+    const connection = await db.getConnection(); // Используем транзакцию
+
+    try {
+        await connection.beginTransaction();
+
+        // 1. Обновление основной информации о товаре
+        await connection.query(
+            `UPDATE product SET name = ?, price = ?, description = ?, stock = ? WHERE ID = ?`,
+            [name, price, description || "", stock, id]
+        );
+
+        // 2. Удаление старых атрибутов
+        await connection.query(`DELETE FROM product_attributes WHERE product_id = ?`, [id]);
+
+        // 3. Добавление новых атрибутов
+        if (Array.isArray(attributes)) {
+            for (const attr of attributes) {
+                await connection.query(
+                    `INSERT INTO product_attributes (product_id, attribute_name, attribute_value)
+                     VALUES (?, ?, ?)`,
+                    [id, attr.name, attr.value]
+                );
+            }
+        }
+
+        // 4. Удаление старых изображений
+        await connection.query(`DELETE FROM product_images WHERE product_id = ?`, [id]);
+
+        // 5. Добавление новых изображений
+        if (Array.isArray(images)) {
+            for (const img of images) {
+                await connection.query(
+                    `INSERT INTO product_images (product_id, path)
+                     VALUES (?, ?)`,
+                    [id, img]
+                );
+            }
+        }
+
+        await connection.commit();
+        res.json({ success: true });
+
+    } catch (err) {
+        await connection.rollback();
+        console.error("Ошибка при обновлении товара:", err);
+        res.status(500).json({ message: "Ошибка сервера" });
+    } finally {
+        connection.release();
     }
 });
 

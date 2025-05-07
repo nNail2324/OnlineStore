@@ -89,6 +89,7 @@ const Subcategory = () => {
                                     <div className="orange-button">
                                         <button onClick={() => onClickCard(product.ID)}>Перейти</button>
                                     </div>
+                                    
                                     <div className="add-button">
                                         <button onClick={() => addToCart(product)}>+</button>
                                     </div>

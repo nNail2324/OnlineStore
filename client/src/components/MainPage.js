@@ -72,7 +72,7 @@ const MainPage = () => {
 
                         <div className="cities-grid">
                             {district.map((city, index) => (
-                                <div key={index} className="city-tag">&raquo; {city}</div>
+                                <div key={index} className="city-tag">{city}</div>
                             ))}
                         </div>
                     </div>
