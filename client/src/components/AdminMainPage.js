@@ -13,7 +13,7 @@ const AdminMainPage = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("http://localhost:5000/api/category");
+                const response = await fetch("/api/category");
                 const data = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -32,7 +32,7 @@ const AdminMainPage = () => {
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/product/suggest?q=${encodeURIComponent(searchValue)}`);
+                const res = await fetch(`/api/product/suggest?q=${encodeURIComponent(searchValue)}`);
                 const data = await res.json();
                 setSuggestions(data);
             } catch (err) {

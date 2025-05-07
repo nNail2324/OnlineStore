@@ -30,12 +30,12 @@ const AdminSubcategory = () => {
     useEffect(() => {
         const fetchSubcategoryAndProducts = async () => {
             try {
-                const subcategoryRes = await fetch(`http://localhost:5000/api/subcategory/single/${id}`);
+                const subcategoryRes = await fetch(`/api/subcategory/single/${id}`);
                 const subcategoryData = await subcategoryRes.json();
                 setSubcategoryName(subcategoryData.name);
                 setUnit(subcategoryData.unit);
 
-                const productsRes = await fetch(`http://localhost:5000/api/product/subcategory/${id}`);
+                const productsRes = await fetch(`/api/product/subcategory/${id}`);
                 const productsData = await productsRes.json();
                 setProducts(productsData);
             } catch (error) {
@@ -90,8 +90,8 @@ const AdminSubcategory = () => {
         }
 
         const url = editMode
-            ? `http://localhost:5000/api/product/update/${editingProductId}`
-            : "http://localhost:5000/api/product/create";
+            ? `/api/product/update/${editingProductId}`
+            : "/api/product/create";
 
         const method = editMode ? "PUT" : "POST";
 
@@ -120,7 +120,7 @@ const AdminSubcategory = () => {
             setEditMode(false);
             setEditingProductId(null);
 
-            const updatedProductsRes = await fetch(`http://localhost:5000/api/product/subcategory/${id}`);
+            const updatedProductsRes = await fetch(`/api/product/subcategory/${id}`);
             const updatedProducts = await updatedProductsRes.json();
             setProducts(updatedProducts);
         } catch (err) {

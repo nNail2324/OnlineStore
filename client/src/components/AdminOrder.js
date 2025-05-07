@@ -13,7 +13,7 @@ const AdminOrder = () => {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/order/${orderId}`);
+                const res = await fetch(`/api/order/${orderId}`);
                 if (!res.ok) throw new Error("Ошибка загрузки заказа");
                 const data = await res.json();
                 setOrderData(data);
@@ -28,7 +28,7 @@ const AdminOrder = () => {
 
     const handleChangeOrderStatus = async (status) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/order/${orderId}/status`, {
+            const res = await fetch(`/api/order/${orderId}/status`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const AdminOrder = () => {
     };
 
     const handleDownloadInvoice = () => {
-        window.open(`http://localhost:5000/api/order/${orderId}/invoices`, "_blank");
+        window.open(`/api/order/${orderId}/invoices`, "_blank");
     };
 
     if (!orderData) return <div>Загрузка...</div>;

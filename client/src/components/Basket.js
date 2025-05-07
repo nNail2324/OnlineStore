@@ -20,7 +20,7 @@ const Basket = () => {
 
         const fetchCart = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/cart/${userId}`);
+                const response = await fetch(`/api/cart/${userId}`);
                 if (!response.ok) throw new Error("Ошибка при получении корзины");
                 const data = await response.json();
                 setCart(data);
@@ -31,7 +31,7 @@ const Basket = () => {
 
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/profile/${userId}`);
+                const response = await fetch(`/api/profile/${userId}`);
                 if (!response.ok) throw new Error("Ошибка получения профиля");
                 const data = await response.json();
                 setUserProfile(data);
@@ -59,7 +59,7 @@ const Basket = () => {
 
     const removeFromCart = async (productId) => {
         try {
-            const response = await fetch("http://localhost:5000/api/cart/remove", {
+            const response = await fetch("/api/cart/remove", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: userId, product_id: productId }),
@@ -76,7 +76,7 @@ const Basket = () => {
 
     const updateQuantity = async (productId, change) => {
         try {
-            const response = await fetch("http://localhost:5000/api/cart/update", {
+            const response = await fetch("/api/cart/update", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: userId, product_id: productId, change }),
@@ -100,7 +100,7 @@ const Basket = () => {
         }
     
         try {
-            const response = await fetch("http://localhost:5000/api/order/create", {
+            const response = await fetch("/api/order/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

@@ -50,7 +50,7 @@ const Header = () => {
         }
 
         try {
-            const res = await fetch("http://localhost:5000/api/requests/create", {
+            const res = await fetch("/api/requests/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -93,7 +93,7 @@ const Header = () => {
         debounceTimeout.current = setTimeout(async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:5000/api/product/suggest?q=${encodeURIComponent(searchValue)}`
+                    `/api/product/suggest?q=${encodeURIComponent(searchValue)}`
                 );
                 const data = await res.json();
                 setSuggestions(data);

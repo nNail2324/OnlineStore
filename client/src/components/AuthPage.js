@@ -9,7 +9,7 @@ const AuthPage = () => {
   const { loading, request } = useHttp();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [form, setForm] = useState({
-    phone_number: "",  // Начальное значение пустое
+    phone_number: "",  
     password: "",
     confirm_password: "",
   });
@@ -20,7 +20,6 @@ const AuthPage = () => {
   });
   const [generalError, setGeneralError] = useState("");
 
-  // Валидация формы
   const validateForm = () => {
     const errors = {};
 
@@ -40,7 +39,6 @@ const AuthPage = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Обработка входа/регистрации
   const authHandler = async () => {
     setValidationErrors({
       phone_number: "",
@@ -55,8 +53,8 @@ const AuthPage = () => {
 
     try {
       const endpoint = isLoginMode
-        ? "http://localhost:5000/api/auth/login"
-        : "http://localhost:5000/api/auth/register";
+        ? "/api/auth/login"
+        : "/api/auth/register";
       const data = await request(endpoint, "POST", { ...form });
       console.log("Ответ от сервера:", data);
 
@@ -66,17 +64,16 @@ const AuthPage = () => {
       }
 
       auth.login(data.token, data.userId, data.role);
-      navigate("/");  // Переход на главную страницу
+      navigate("/"); 
     } catch (e) {
       setGeneralError(e.message || "Ошибка сервера. Попробуйте снова.");
     }
   };
 
-  // Переключение между режимами "Вход" и "Регистрация"
   const switchModeHandler = () => {
     setIsLoginMode((prevMode) => !prevMode);
     setForm({
-      phone_number: "",  // Начальное значение пустое
+      phone_number: "",  
       password: "",
       confirm_password: "",
     });
@@ -88,11 +85,9 @@ const AuthPage = () => {
     setGeneralError("");
   };
 
-  // Обработка ввода с проверкой префикса +7
   const changeHandler = (event) => {
     const { name, value } = event.target;
 
-    // Если это поле телефона и пытаются удалить "+7", возвращаем старое значение
     if (name === "phone_number" && !value.startsWith("+7")) {
         return;
     }
@@ -100,14 +95,12 @@ const AuthPage = () => {
     setForm({ ...form, [name]: value });
   };
 
-  // Добавляем префикс +7 при фокусе
   const handleFocus = () => {
     if (form.phone_number === "") {
         setForm({ ...form, phone_number: "+7" });
     }
   };
 
-// Убираем префикс +7 при потере фокуса, если он единственный
 const handleBlur = () => {
   if (form.phone_number === "+7") {
       setForm({ ...form, phone_number: "" });

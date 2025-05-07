@@ -14,7 +14,7 @@ const AdminProfile = () => {
 
         const fetchProfile = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/profile/${profile_id}`);
+                const response = await fetch(`/api/profile/${profile_id}`);
                 if (!response.ok) throw new Error("Ошибка при получении данных профиля");
                 const data = await response.json();
                 setUserData(data);
@@ -29,7 +29,7 @@ const AdminProfile = () => {
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/locations");
+                const res = await fetch("/api/locations");
                 if (!res.ok) throw new Error("Ошибка при получении населённых пунктов");
                 const data = await res.json();
                 setLocations(data);
@@ -46,7 +46,7 @@ const AdminProfile = () => {
 
         const fetchOrders = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/profile/${profile_id}/orders`);
+                const response = await fetch(`/api/profile/${profile_id}/orders`);
                 if (!response.ok) throw new Error("Ошибка при получении заказов");
                 const data = await response.json();
                 setOrders(data);

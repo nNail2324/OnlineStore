@@ -20,7 +20,7 @@ const Search = () => {
 
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:5000/api/product/search?q=${query}`);
+                const response = await fetch(`/api/product/search?q=${query}`);
                 const data = await response.json();
                 setProducts(data);
             } catch (err) {
@@ -43,7 +43,7 @@ const Search = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/cart/add", {
+            const response = await fetch("/api/cart/add", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -9,7 +9,7 @@ const Order = () => {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/order/${orderId}`);
+                const res = await fetch(`/api/order/${orderId}`);
                 if (!res.ok) throw new Error("Ошибка загрузки заказа");
                 const data = await res.json();
                 setOrderData(data);
@@ -23,7 +23,7 @@ const Order = () => {
 
     const handleCancelOrder = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/api/order/${orderId}/cancel`, {
+            const res = await fetch(`/api/order/${orderId}/cancel`, {
                 method: "PATCH",
             });
     
@@ -38,7 +38,7 @@ const Order = () => {
     }; 
     
     const handleDownloadInvoice = () => {
-        window.open(`http://localhost:5000/api/order/${orderId}/invoices`, "_blank");
+        window.open(`/api/order/${orderId}/invoices`, "_blank");
     };
 
     if (!orderData) return <div>Загрузка...</div>;

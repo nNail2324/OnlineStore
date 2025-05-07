@@ -22,7 +22,7 @@ const App = () => {
   // Функция загрузки корзины
   const fetchCart = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/cart/${userId}`);
+      const response = await fetch(`/api/cart/${userId}`);
       if (!response.ok) throw new Error("Ошибка при загрузке корзины");
       const data = await response.json();
       setCart(data);
@@ -69,6 +69,7 @@ const App = () => {
       fetchCart(numericUserId);
     }
   }, []);
+
   
   const routes = useRoutes(isAuthenticated, role);
 

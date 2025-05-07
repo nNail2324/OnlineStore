@@ -17,7 +17,7 @@ const Subcategory = () => {
         const fetchSubcategoryAndProducts = async () => {
             try {
                 // Получаем подкатегорию
-                const subcategoryResponse = await fetch(`http://localhost:5000/api/subcategory/single/${id}`);
+                const subcategoryResponse = await fetch(`/api/subcategory/single/${id}`);
                 if (!subcategoryResponse.ok) {
                     throw new Error("Подкатегория не найдена");
                 }
@@ -26,7 +26,7 @@ const Subcategory = () => {
                 setUnit(subcategoryData.unit);
 
                 // Получаем товары
-                const productsResponse = await fetch(`http://localhost:5000/api/product/subcategory/${id}`);
+                const productsResponse = await fetch(`/api/product/subcategory/${id}`);
                 if (!productsResponse.ok) {
                     throw new Error("Товары не найдены");
                 }
@@ -52,7 +52,7 @@ const Subcategory = () => {
         }
         console.log("Отправляем userId в корзину:", userId);
         try {
-            const response = await fetch("http://localhost:5000/api/cart/add", {
+            const response = await fetch("/api/cart/add", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

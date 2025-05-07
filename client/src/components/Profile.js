@@ -27,7 +27,7 @@ const Profile = () => {
 
         const fetchProfile = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/profile/${userId}`);
+                const response = await fetch(`/api/profile/${userId}`);
                 if (!response.ok) throw new Error("Ошибка при получении данных");
                 const data = await response.json();
                 setUserData(data);
@@ -42,7 +42,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/locations");
+                const res = await fetch("/api/locations");
                 if (!res.ok) {
                     throw new Error(`Ошибка при получении данных: ${res.statusText}`);
                 }
@@ -60,7 +60,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/profile/${userId}/orders`);
+                const response = await fetch(`/api/profile/${userId}/orders`);
                 if (!response.ok) throw new Error("Ошибка при получении заказов");
                 const data = await response.json();
                 setOrders(data);
@@ -87,7 +87,7 @@ const Profile = () => {
 
     const handleSave = async (field) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/profile/update`, {
+            const response = await fetch(`/api/profile/update`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -119,7 +119,7 @@ const Profile = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/profile/change-password`, {
+            const response = await fetch(`/api/profile/change-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

@@ -14,8 +14,8 @@ const AdminRequest = () => {
         const fetchData = async () => {
             try {
                 const [requestsRes, ordersRes] = await Promise.all([
-                    fetch("http://localhost:5000/api/request"),
-                    fetch("http://localhost:5000/api/order"),
+                    fetch("/api/request"),
+                    fetch("/api/order"),
                 ]);
 
                 if (!requestsRes.ok || !ordersRes.ok) {

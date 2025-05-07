@@ -13,14 +13,14 @@ const Category = () => {
                 console.log(`Запрашиваем данные категории: ${image}`);
     
                 // Получаем категорию по image
-                const categoryResponse = await fetch(`http://localhost:5000/api/category/image/${image}`);
+                const categoryResponse = await fetch(`/api/category/image/${image}`);
                 if (!categoryResponse.ok) throw new Error("Категория не найдена");
     
                 const categoryData = await categoryResponse.json();
                 console.log(`Категория найдена: ${categoryData.name} (ID: ${categoryData.ID})`);
     
                 // Запрашиваем подкатегории с количеством товаров
-                const subcategoriesUrl = `http://localhost:5000/api/subcategory/${categoryData.ID}`;
+                const subcategoriesUrl = `/api/subcategory/${categoryData.ID}`;
                 console.log(`Запрос на подкатегории: ${subcategoriesUrl}`);
     
                 const subcategoriesResponse = await fetch(subcategoriesUrl);

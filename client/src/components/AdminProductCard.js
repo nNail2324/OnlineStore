@@ -26,13 +26,13 @@ const AdminProductCard = () => {
         const fetchProduct = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5000/api/product/card/${id}`);
+                const response = await fetch(`/api/product/card/${id}`);
                 if (!response.ok) throw new Error("Товар не найден");
                 const data = await response.json();
                 setProduct(data);
 
                 if (userId && data?.ID) {
-                    const res = await fetch("http://localhost:5000/api/favorite/check", {
+                    const res = await fetch("/api/favorite/check", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ user_id: userId, product_id: data.ID }),
@@ -49,7 +49,7 @@ const AdminProductCard = () => {
 
         const fetchReviews = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/product/feedback/${id}`);
+                const res = await fetch(`/api/product/feedback/${id}`);
                 const data = await res.json();
                 setReviews(data);
             } catch (err) {
@@ -64,7 +64,7 @@ const AdminProductCard = () => {
     useEffect(() => {
         const fetchImages = async () => {
           try {
-            const res = await fetch(`http://localhost:5000/api/product/images/${id}`);
+            const res = await fetch(`/api/product/images/${id}`);
             const data = await res.json();
             setImages(data);
           } catch (err) {
@@ -115,7 +115,7 @@ const AdminProductCard = () => {
                             {images.map((img, i) => (
                                 <div className="slide" key={i}>
                                 <img
-                                    src={`http://localhost:5000/images/${img.path}`}
+                                    src={`/images/${img.path}`}
                                     alt={product.name}
                                 />
                                 </div>

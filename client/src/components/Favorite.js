@@ -14,7 +14,7 @@ const Favorite = () => {
             if (!userId) return;
 
             try {
-                const response = await fetch(`http://localhost:5000/api/favorite/${userId}`);
+                const response = await fetch(`/api/favorite/${userId}`);
                 if (!response.ok) throw new Error("Ошибка при получении избранного");
 
                 const data = await response.json();
@@ -34,7 +34,7 @@ const Favorite = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/cart/add", {
+            const response = await fetch("/api/cart/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: userId, product_id: product.ID, quantity: 1 }),
@@ -55,7 +55,7 @@ const Favorite = () => {
         if (!userId) return;
 
         try {
-            const response = await fetch("http://localhost:5000/api/favorite/remove", {
+            const response = await fetch("/api/favorite/remove", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: userId, product_id: productId }),

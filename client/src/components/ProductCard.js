@@ -29,13 +29,13 @@ const ProductCard = () => {
         const fetchProduct = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5000/api/product/card/${id}`);
+                const response = await fetch(`/api/product/card/${id}`);
                 if (!response.ok) throw new Error("Товар не найден");
                 const data = await response.json();
                 setProduct(data);
 
                 if (userId && data?.ID) {
-                    const res = await fetch("http://localhost:5000/api/favorite/check", {
+                    const res = await fetch("/api/favorite/check", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ user_id: userId, product_id: data.ID }),
@@ -52,7 +52,7 @@ const ProductCard = () => {
 
         const fetchReviews = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/product/feedback/${id}`);
+                const res = await fetch(`/api/product/feedback/${id}`);
                 const data = await res.json();
                 setReviews(data);
             } catch (err) {
@@ -67,7 +67,7 @@ const ProductCard = () => {
     useEffect(() => {
         const fetchImages = async () => {
           try {
-            const res = await fetch(`http://localhost:5000/api/product/images/${id}`);
+            const res = await fetch(`/api/product/images/${id}`);
             const data = await res.json();
             setImages(data);
           } catch (err) {
@@ -90,7 +90,7 @@ const ProductCard = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/cart/add", {
+            const response = await fetch("/api/cart/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: userId, product_id: product.ID, quantity }),
@@ -117,7 +117,7 @@ const ProductCard = () => {
             const endpoint = isFavorite ? "remove" : "add";
             const method = isFavorite ? "DELETE" : "POST";
 
-            const res = await fetch(`http://localhost:5000/api/favorite/${endpoint}`, {
+            const res = await fetch(`/api/favorite/${endpoint}`, {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: userId, product_id: product.ID }),
@@ -138,7 +138,7 @@ const ProductCard = () => {
         if (!reviewText.trim()) return;
 
         try {
-            const res = await fetch("http://localhost:5000/api/product/feedback", {
+            const res = await fetch("/api/product/feedback", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -153,7 +153,7 @@ const ProductCard = () => {
             if (data.success) {
                 setReviewText("");
                 setReviewMark(5);
-                const refreshed = await fetch(`http://localhost:5000/api/product/feedback/${id}`);
+                const refreshed = await fetch(`/api/product/feedback/${id}`);
                 setReviews(await refreshed.json());
             } else {
                 showNotification("Ошибка при отправке отзыва");
@@ -207,7 +207,7 @@ const ProductCard = () => {
                             {images.map((img, i) => (
                                 <div className="slide" key={i}>
                                 <img
-                                    src={`http://localhost:5000/images/${img.path}`}
+                                    src={`/images/${img.path}`}
                                     alt={product.name}
                                 />
                                 </div>
