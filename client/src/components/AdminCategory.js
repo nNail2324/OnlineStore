@@ -15,14 +15,14 @@ const AdminCategory = () => {
     useEffect(() => {
         const fetchCategoryAndSubcategories = async () => {
             try {
-                const categoryResponse = await fetch(`http://localhost:5000/api/category/image/${image}`);
+                const categoryResponse = await fetch(`/api/category/image/${image}`);
                 if (!categoryResponse.ok) throw new Error("Категория не найдена");
 
                 const categoryData = await categoryResponse.json();
                 setCategoryName(categoryData.name);
                 setCategoryId(categoryData.ID);
 
-                const subcategoriesResponse = await fetch(`http://localhost:5000/api/subcategory/${categoryData.ID}`);
+                const subcategoriesResponse = await fetch(`/api/subcategory/${categoryData.ID}`);
                 if (!subcategoriesResponse.ok) throw new Error("Подкатегории не найдены");
 
                 const subcategoriesData = await subcategoriesResponse.json();
@@ -47,7 +47,7 @@ const AdminCategory = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/subcategory/create", {
+            const response = await fetch("/api/subcategory/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -66,7 +66,7 @@ const AdminCategory = () => {
             setNewSubcategoryUnit("");
 
             // Обновляем список подкатегорий
-            const updatedResponse = await fetch(`http://localhost:5000/api/subcategory/${categoryId}`);
+            const updatedResponse = await fetch(`/api/subcategory/${categoryId}`);
             const updatedData = await updatedResponse.json();
             setSubcategories(updatedData);
         } catch (error) {
