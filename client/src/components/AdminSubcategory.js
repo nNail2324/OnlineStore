@@ -10,7 +10,7 @@ const AdminSubcategory = () => {
     const [subcategoryName, setSubcategoryName] = useState("");
     const [unit, setUnit] = useState("");
 
-    const [searchQuery, setSearchQuery] = useState(""); // Новый поиск
+    const [searchQuery, setSearchQuery] = useState(""); 
 
     const [newProduct, setNewProduct] = useState({
         name: "",
@@ -24,7 +24,7 @@ const AdminSubcategory = () => {
     const [editMode, setEditMode] = useState(false);
     const [editingProductId, setEditingProductId] = useState(null);
 
-    const attributeOptions = ["Цвет", "Размер", "Материал", "Бренд", "Страна производства", "Высота", "Ширина", "Толщина"];
+    const attributeOptions = ["Цвет", "Размер", "Материал", "Бренд", "Страна производства", "Высота", "Ширина", "Толщина", "Стандарт"];
     const navigate = useNavigate();
 
     useEffect(() => {

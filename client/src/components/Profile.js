@@ -288,7 +288,7 @@ const Profile = () => {
                                     <label>{order.total_price.toLocaleString("ru-RU")} руб.</label>
                                 </div>
 
-                                <div className="black-text">
+                                <div className="delivery-label">
                                         <label>
                                             {order.delivery_method === "courier"
                                                 ? "Курьером"

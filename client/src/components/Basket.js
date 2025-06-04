@@ -232,7 +232,7 @@ const Basket = () => {
                                 <div className="black-title">
                                     <label>Стоимость доставки</label>
                                 </div>
-                                <div className="black-text">
+                                <div className="delivery-label">
                                     <label>
                                         {deliveryPrice === 0
                                             ? "Бесплатно"
@@ -245,7 +245,7 @@ const Basket = () => {
                         <div className="black-title">
                             <label>Общая сумма к оплате</label>
                         </div>
-                        <div className="black-text">
+                        <div className="delivery-label">
                             <label>{finalTotal.toLocaleString("ru-RU")} ₽</label>
                         </div>
 

@@ -2,7 +2,9 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../context/auth-context";
 import { NotificationContext } from "../context/notification-context";
 import { useNavigate } from "react-router-dom";
-import { VscAccount, VscHeart, VscAdd } from "react-icons/vsc";
+import { VscAccount, VscHeart, VscAdd, VscCallIncoming } from "react-icons/vsc";
+import { BsBasket  } from "react-icons/bs";
+
 
 const Header = () => {
     const { isAuthenticated } = useContext(AuthContext);
@@ -113,6 +115,43 @@ const Header = () => {
                     <label className="company-name">стройматериалы</label>
                 </div>
 
+                <div className="mobile-buttons">
+                    <div className="mobile-button">
+                        <VscCallIncoming 
+                            className="logo-from-react"
+                            onClick={() => setShowModal(true)} 
+                        />
+                    </div>
+
+                    <div className="mobile-button">
+                        <BsBasket  
+                            className="logo-from-react" 
+                            onClick={() => navigate("/basket")}
+                        />
+                    </div>
+
+                    <div className="mobile-button">
+                        <VscHeart 
+                            className="logo-from-react" 
+                            onClick={() => navigate("/favorite")} 
+                        />
+                    </div>
+
+                    <div className="mobile-button">
+                        {isAuthenticated ? (
+                            <VscAccount 
+                                className="logo-from-react" 
+                                onClick={() => navigate("/profile")} 
+                            />
+                        ) : (
+                            <VscAdd 
+                                className="logo-from-react" 
+                                onClick={() => navigate("/auth")} 
+                            />
+                        )}
+                    </div>
+                </div>
+
                 <div className="header-right">
                     <div className="search" ref={searchRef}>
                         <input
@@ -155,18 +194,34 @@ const Header = () => {
                         )}
                     </div>
 
-                    <div className="orange-button">
+                    <div className="header-button">
                         <button onClick={() => setShowModal(true)}>Оставить заявку</button>
                     </div>
 
-                    <div className="orange-button">
-                        <button onClick={() => navigate("/basket")}>Корзина</button>
+                    <div className="header-button">
+                        <button
+                            onClick={() => {
+                                if (isAuthenticated) {
+                                    navigate("/basket");
+                                } else {
+                                    showNotification("Требуется авторизация!");
+                                }
+                            }}
+                        >
+                            Корзина
+                        </button>
                     </div>
 
                     <div className="logo-button">
                         <VscHeart 
                             className="logo-from-react" 
-                            onClick={() => navigate("/favorite")} 
+                            onClick={() => {
+                                if (isAuthenticated) {
+                                    navigate("/favorite");
+                                } else {
+                                    showNotification("Требуется авторизация!");
+                                }
+                            }}
                         />
                     </div>
 

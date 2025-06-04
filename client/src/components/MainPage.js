@@ -37,7 +37,6 @@ const MainPage = () => {
         fetchCategories();
         fetchLocations();
 
-        // Автопереключение слайдов каждые 5 секунд
         const interval = setInterval(() => {
             setCurrentSlide(prev => (prev === 0 ? 1 : 0));
         }, 5000);
@@ -51,9 +50,7 @@ const MainPage = () => {
 
     return (
         <div className="body-page">
-            {/* Баннер-слайдер */}
             <div className="banner-slider">
-                {/* Слайд с каталогом */}
                 <div 
                     className={`banner-slide ${currentSlide === 0 ? 'active' : ''}`}
                     style={{ backgroundImage: "url('../image/banner.jpg')" }}
@@ -63,7 +60,6 @@ const MainPage = () => {
                     </div>
                 </div>
                 
-                {/* Слайд с городами */}
                 <div className={`banner-slide cities-slide ${currentSlide === 1 ? 'active' : ''}`}>
                     <div className="cities-content">
                         <div className="city-label">
@@ -78,7 +74,6 @@ const MainPage = () => {
                     </div>
                 </div>
                 
-                {/* Точки навигации */}
                 <div className="banner-dots">
                     {[0, 1].map((index) => (
                         <button

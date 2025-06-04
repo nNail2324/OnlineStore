@@ -88,7 +88,7 @@ const Order = () => {
                         <label>Способ доставки</label>
                     </div>
 
-                    <div className="black-text">
+                    <div className="delivery-label">
                         {orderData.delivery_method === "courier"
                             ? "Курьером"
                             : "Самовывоз"}
@@ -97,7 +97,7 @@ const Order = () => {
                     <div className="black-title">
                         <label>Статус заказа</label>
                     </div>
-                    <div className="black-text">
+                    <div className="delivery-label">
                         <label>{orderData.status}</label>
                     </div>
                 </div>
@@ -121,7 +121,7 @@ const Order = () => {
                     <div className="black-title">
                         <label>Общая сумма к оплате</label>
                     </div>
-                    <div className="black-text">
+                    <div className="delivery-label">
                         <label>{orderData.total_price.toLocaleString("ru-RU")} ₽</label>
                     </div>
 
