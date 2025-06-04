@@ -309,7 +309,7 @@ const ProductCard = () => {
                 </div>
 
                 <div className="types">
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "10px 0" }}>
+                    <div className="stars">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <span key={star} onClick={() => setReviewMark(star)} style={{ cursor: "pointer" }}>
                                 {star <= reviewMark ? (
@@ -343,7 +343,6 @@ const ProductCard = () => {
                         </div>
                     ) : (
                         reviews.map((rev, idx) => {
-                            // Получаем первую букву имени
                             const firstLetter = rev.username ? rev.username.charAt(0).toUpperCase() : 'A';
                             
                             return (
@@ -366,7 +365,7 @@ const ProductCard = () => {
                                             i < rev.mark ? <FaStar key={i} color="gold" style={{fontSize: "20px"}} /> : <FaRegStar key={i} color="gray" style={{fontSize: "20px"}}/>
                                         ))}
                                     </div>
-                                    <div className="black-text">
+                                    <div className="description-text">
                                         <label>{rev.description}</label>
                                     </div>
                                 </div>

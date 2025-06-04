@@ -26,22 +26,24 @@ const Footer = () => {
                         <label>Контактные данные</label>
                     </div>
                     <div className="contact-item">
-                        <FaPhone className="icon" /> <span>+7 (900) 123-45-67</span>
+                        <FaPhone className="icon" /> <span>+7 (987) 586-66-98</span>
                     </div>
                     <div className="contact-item">
-                        <FaEnvelope className="icon" /> <span>info@company.com</span>
+                        <FaEnvelope className="icon" /> <span>ip-sharipov@bk.ru</span>
                     </div>
                     <div className="contact-item">
                         <FaMapMarkerAlt className="icon" /> <span>Чекмагуш, ул. Первомайская, 54</span>
                     </div>
                     <div className="contact-item">
                         <div className="network">
-                            <FaWhatsapp className="logo-react-description"/> <span>Whatsapp</span>
-                            <FaTelegramPlane className="logo-react-description"/> <span>Telegram</span>
+                            <div className="messenger" onClick={() => window.open('https://wa.me/+79875866698', '_blank')}>
+                                <FaWhatsapp className="logo-react-description"/> <span>Whatsapp</span>
+                            </div>
+
+                            <div className="messenger" onClick={() => window.open('https://t.me/+79875866698', '_blank')}>
+                                <FaTelegramPlane className="logo-react-description"/> <span>Telegram</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="contact-item">
-                        <span>&copy; 2008-2025 ИП Шарипов Ирек Фларитович</span>
                     </div>
                 </div>
 
@@ -71,6 +73,9 @@ const Footer = () => {
                     </div>
                 </div>
 
+                <div className="copyright">
+                    <span>&copy; 2008-2025 ИП Шарипов Ирек Фларитович</span>
+                </div>
             </footer>
 
             {modalContent && (

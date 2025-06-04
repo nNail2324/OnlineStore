@@ -71,11 +71,11 @@ const AdminHeader = () => {
                 </div>
 
                 <div className="header-right">
-                    <div className="orange-button">
+                    <div className="header-button">
                         <button onClick={() => onClickUsers()}>Пользователи</button>
                     </div>
 
-                    <div className="orange-button">
+                    <div className="header-button">
                         <button onClick={() => onClickRequests()}>Заявки и заказы</button>
                     </div>
 
