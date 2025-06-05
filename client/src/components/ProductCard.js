@@ -251,7 +251,7 @@ const ProductCard = () => {
                         </div>
                     )}
 
-                    <div className="bold-text">
+                    <div className="card-label">
                         <label>Характеристики</label>
                     </div>
                     <div className="characteristics">
@@ -295,7 +295,7 @@ const ProductCard = () => {
             </div>
 
             <div className="types">
-                <div className="bold-text">
+                <div className="card-label">
                     <label>Описание</label>
                 </div>
                 <div className="description-text" >
@@ -304,7 +304,7 @@ const ProductCard = () => {
             </div>
 
             <div className="types">
-                <div className="bold-text">
+                <div className="card-label">
                     <label>Отзывы</label>
                 </div>
 
@@ -338,9 +338,7 @@ const ProductCard = () => {
 
                 <div className="feedback">
                     {reviews.length === 0 ? (
-                        <div className="black-text">
-                            <label>Отзывов пока нет</label>
-                        </div>
+                        <div className="black-text"></div>
                     ) : (
                         reviews.map((rev, idx) => {
                             const firstLetter = rev.username ? rev.username.charAt(0).toUpperCase() : 'A';
