@@ -1762,6 +1762,14 @@ body {
     height: 1px;
 }
 
+.section-divider {
+    border: none;          
+    height: 1px;                   
+    background-color: #ccc;         
+    margin: 32px 0;                 
+    width: 100%;               
+}
+
 /* Медиазапросы для адаптации */
 @media (max-width: 1200px) {
     .image-product-slider {
@@ -1774,11 +1782,11 @@ body {
     }
 
     .description-text {
-        font-size: 15px;
+        font-size: 17px;
     }
 
     .card-label {
-        font-size: 27px;
+        font-size: 25px;
     }
 }
 
@@ -1820,7 +1828,7 @@ body {
     }
 
     .card-label {
-        font-size: 25px;
+        font-size: 23px;
     }
 }
 
@@ -1830,7 +1838,7 @@ body {
     }
 
     .description-text {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .feedback-button button {
@@ -1865,7 +1873,7 @@ body {
     }
 
     .card-label {
-        font-size: 23px;
+        font-size: 21px;
     }
 }
 
@@ -1875,7 +1883,7 @@ body {
     }
 
     .description-text {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .feedback-button button {
@@ -1898,7 +1906,7 @@ body {
     }
 
     .card-label {
-        font-size: 20px;
+        font-size: 19px;
     }
 }
 
