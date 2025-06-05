@@ -1693,6 +1693,12 @@ body {
     color: black;
 }
 
+.feedback-text {
+    font-family: 'Inter-Medium';
+    font-size: 20px;
+    text-align: justify;
+}
+
 .stars {
     display: flex;
     align-items: center;
@@ -1734,7 +1740,7 @@ body {
 .description-text {
     color: gray;
     font-family: 'Inter-Medium';
-    font-size: 17px;
+    font-size: 20px;
     text-align: justify;
 }
 
@@ -1766,7 +1772,7 @@ body {
     border: none;          
     height: 1px;                   
     background-color: #ccc;         
-    margin: 32px 0;                 
+    margin-top: 20px;                 
     width: 100%;               
 }
 
@@ -1782,6 +1788,10 @@ body {
     }
 
     .description-text {
+        font-size: 17px;
+    }
+
+    .feedback-text {
         font-size: 17px;
     }
 
@@ -1830,6 +1840,10 @@ body {
     .card-label {
         font-size: 23px;
     }
+
+    .section-divider {        
+        margin-top: 20px;                               
+    }
 }
 
 @media (max-width: 576px) {
@@ -1838,6 +1852,10 @@ body {
     }
 
     .description-text {
+        font-size: 15px;
+    }
+
+    .feedback-text {
         font-size: 15px;
     }
 
@@ -1886,6 +1904,10 @@ body {
         font-size: 14px;
     }
 
+    .feedback-text {
+        font-size: 14px;
+    }
+
     .feedback-button button {
         height: 30px;
         font-size: 11px;
@@ -1914,6 +1936,10 @@ body {
     .feedback-button button {
         height: 25px;
         font-size: 10px;
+    }
+
+    .feedback-text {
+        font-size: 11px;
     }
 
     .input-feedback::placeholder {

@@ -294,8 +294,6 @@ const ProductCard = () => {
                 </div>
             </div>
 
-            <hr className="section-divider" />
-
             <div className="types">
                 <div className="card-label">
                     <label>Описание</label>
