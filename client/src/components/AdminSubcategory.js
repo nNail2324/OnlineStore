@@ -24,7 +24,7 @@ const AdminSubcategory = () => {
     const [editMode, setEditMode] = useState(false);
     const [editingProductId, setEditingProductId] = useState(null);
 
-    const attributeOptions = ["Цвет", "Размер", "Материал", "Бренд", "Страна производства", "Высота", "Ширина", "Толщина", "Стандарт"];
+    const attributeOptions = ["Цвет", "Размер", "Материал", "Бренд", "Страна производства", "Высота", "Ширина", "Толщина", "Стандарт", "Диаметр"];
     const navigate = useNavigate();
 
     useEffect(() => {

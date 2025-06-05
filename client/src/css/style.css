@@ -141,6 +141,7 @@ body {
     flex-direction: row;
     gap: 10px;
     align-items: center;
+    padding-top: 5px;
 }
 
 .quantity-button {
@@ -492,7 +493,7 @@ body {
     }
 
     .black-text {
-        font-size: 10px;
+        font-size: 8px;
     }
 
     .add-button button {

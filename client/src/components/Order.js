@@ -41,7 +41,10 @@ const Order = () => {
         window.open(`/api/order/${orderId}/invoices`, "_blank");
     };
 
-    if (!orderData) return <div>Загрузка...</div>;
+    if (!orderData) return 
+        <div className="loading-error">
+            Загрузка...
+        </div>
 
     return (
         <div className="body-page">

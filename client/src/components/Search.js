@@ -69,7 +69,9 @@ const Search = () => {
             </div>
 
             {loading ? (
-                <p>Загрузка...</p>
+                <div className="loading-error">
+                    Загрузка...
+                </div>
             ) : products.length === 0 ? (
                 <div className="type">
                     <div className="black-title">

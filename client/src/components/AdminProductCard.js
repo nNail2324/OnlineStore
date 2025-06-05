@@ -95,7 +95,10 @@ const AdminProductCard = () => {
         setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    if (loading) return <div>Загрузка...</div>;
+    if (loading) return 
+        <div className="loading-error">
+            Загрузка...
+        </div>
     if (error) return <div>Ошибка: {error}</div>;
     if (!product) return null;
 
