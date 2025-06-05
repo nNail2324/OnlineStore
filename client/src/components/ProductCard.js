@@ -365,7 +365,7 @@ const ProductCard = () => {
                                             i < rev.mark ? <FaStar key={i} color="gold" style={{fontSize: "20px"}} /> : <FaRegStar key={i} color="gray" style={{fontSize: "20px"}}/>
                                         ))}
                                     </div>
-                                    <div className="description-text">
+                                    <div className="feedback-tex">
                                         <label>{rev.description}</label>
                                     </div>
                                 </div>

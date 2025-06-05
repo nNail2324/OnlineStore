@@ -1634,7 +1634,7 @@ body {
 
 .card-label {
     font-family: 'Inter-Bold';
-    font-size: 30px;
+    font-size: 27px;
     padding-top: 10px;
 }
   
@@ -1813,6 +1813,11 @@ body {
     .feedback-button button {
         height: 35px;
         font-size: 14px;
+        border-width: 1px;
+    }
+
+    .input-feedback {
+        border-width: 1px;
     }
 
     .input-feedback::placeholder {
