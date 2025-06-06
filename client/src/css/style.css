@@ -2156,7 +2156,8 @@ body {
     gap: 10px;
     min-height: 100vh;
     background-image: url('../image/pattern.svg');
-    background-size: 104px 60px; /* Размер паттерна */
+    background-size: 104px 60px;
+    background-repeat: repeat; /* Добавьте это! */
 }
 
 .error-message {

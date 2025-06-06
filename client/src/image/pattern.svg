@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="104" height="60">
   <defs>
     <pattern id="chessPattern" patternUnits="userSpaceOnUse" width="104" height="60">
-      <rect x="60" y="0" width="44" height="30" fill="url(#ImagePattern)" />
-      <rect x="0" y="30" width="44" height="30" fill="url(#ImagePattern)" />
+      <rect x="60" y="0" width="44" height="30" fill="url(#ImagePattern)"/>
+      <rect x="0" y="30" width="44" height="30" fill="url(#ImagePattern)"/>
     </pattern>
     <pattern id="ImagePattern" patternUnits="userSpaceOnUse" width="44" height="30">
-      <image href="pattern.png" width="44" height="30" />
+      <image href="pattern.png" width="44" height="30"/> <!-- Убрал ../image/ -->
     </pattern>
   </defs>
-  <rect width="100%" height="100%" fill="url(#chessPattern)" />
+  <rect width="100%" height="100%" fill="url(#chessPattern)"/>
 </svg>
