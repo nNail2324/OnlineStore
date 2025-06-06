@@ -2155,29 +2155,8 @@ body {
     flex-direction: column;
     gap: 10px;
     min-height: 100vh;
-  
-    background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 30px,
-      rgba(0,0,0,0.1) 30px,
-      rgba(0,0,0,0.1) 60px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 60px,
-      rgba(0,0,0,0.1) 60px,
-      rgba(0,0,0,0.1) 120px
-    );
-  
-    background-repeat: repeat;
-    background-size: 44px 30px;
-  
-    background-position:
-      60px 0px,   /* Чётные строки: отступ слева */
-      0px 30px;   /* Нечётные строки: сдвиг по Y на 30px */
+    background-image: url('/chess-pattern.svg');
+    background-size: 104px 60px; /* Размер паттерна */
 }
 
 .error-message {
