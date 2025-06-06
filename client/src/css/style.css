@@ -1011,6 +1011,7 @@ body {
 
 .contact-item label:hover, .work-schedule label:hover {
     color: #FF7F00;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .network {
@@ -1246,7 +1247,7 @@ body {
         padding-right: 60px;
     }
 
-    .body-page-auth {
+    .body-page-auth{
         padding-left: 60px;
         padding-right: 60px;
     }
@@ -2189,7 +2190,7 @@ body {
     gap: 10px;
     min-height: 100vh;
     background-image: url('../image/pattern_2.0.svg');
-    background-repeat: repeat; /* Повтор по обоим осям */
+    background-repeat: repeat; 
     background-attachment: fixed;
 }
 
@@ -2251,6 +2252,7 @@ body {
 
 .auth-label label:hover {
     color: black;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .authentication {
