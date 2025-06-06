@@ -108,7 +108,7 @@ const handleBlur = () => {
 };
 
   return (
-    <div className="body-page">
+    <div className="body-page-auth">
       <div className="authentication">
         <div className="name">
           <label>{isLoginMode ? "Вход" : "Регистрация"}</label>
