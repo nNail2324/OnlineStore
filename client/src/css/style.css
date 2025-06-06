@@ -2314,6 +2314,11 @@ body {
 
 /* Медиазапросы для адаптации */
 @media (max-width: 1200px) {
+    .body-page-auth {
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+
     .authentication {
         width: 60%;
     }
@@ -2326,6 +2331,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    .body-page-auth {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
     .authentication {
         width: 80%;
         padding-top: 20px;
