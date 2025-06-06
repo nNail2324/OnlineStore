@@ -348,6 +348,10 @@ body {
         width: 35px;
         font-size: 17px;
     }
+
+    .price-row {
+        gap: 5px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -1660,7 +1664,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    margin-top: 20px;
 }
 
 .input-feedback {

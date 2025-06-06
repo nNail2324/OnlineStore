@@ -182,6 +182,15 @@ const ProductCard = () => {
         setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
+    const pluralize = (count, one, few, many) => {
+        const mod10 = count % 10;
+        const mod100 = count % 100;
+    
+        if (mod10 === 1 && mod100 !== 11) return one;
+        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return few;
+        return many;
+    };
+
     if (loading) return 
         <div className="body-page">
             <div className="loading-error">
@@ -245,13 +254,14 @@ const ProductCard = () => {
                                     )}
                                 </span>
                             ))}
+                            
                             <span className="black-text">
-                                {reviews.length} отзывов
+                                {reviews.length} {pluralize(reviews.length, "отзыв", "отзыва", "отзывов")}
                             </span>
                         </div>
                     )}
 
-                    <div className="card-label">
+                    <div className="bold-text">
                         <label>Характеристики</label>
                     </div>
                     <div className="characteristics">
@@ -352,7 +362,7 @@ const ProductCard = () => {
                             const firstLetter = rev.username ? rev.username.charAt(0).toUpperCase() : 'A';
                             
                             return (
-                                <div key={idx} className="delivery-column">
+                                <div key={idx} className="characteristics">
                                     <div className="review-header">
                                         <div className="user-avatar">
                                             {firstLetter}
