@@ -905,6 +905,10 @@ body {
     .request-modal-form input::placeholder {
         font-size: 14px;
     }
+
+    .request-modal-form input {
+        padding: 7px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -929,6 +933,44 @@ body {
     .request-modal-form input::placeholder {
         font-size: 13px;
     }
+
+    .request-modal-form input {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .request-modal-form input {
+        font-size: 11px;
+    }
+
+    .request-modal-form input::placeholder {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 350px) {
+    .request-modal-form input {
+        font-size: 10px;
+        margin-bottom: 7px;
+        padding: 5px;
+        border-radius: 7px;
+    }
+
+    .request-modal-form input::placeholder {
+        font-size: 10px;
+    }
+}
+
+.request-modal-form input {
+    border: 2px solid #ebebeb;
+    border-radius: 7px;
+    box-sizing: border-box;
+    font-family: Inter-Medium;
+    font-size: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 100%;
 }
 
 /*Подвал*/

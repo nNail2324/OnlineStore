@@ -52,7 +52,7 @@ const Header = () => {
         }
 
         try {
-            const res = await fetch("/api/requests/create", {
+            const res = await fetch("/api/request/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
