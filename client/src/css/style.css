@@ -293,7 +293,7 @@ body {
     }
 
     .bold-text {
-        font-size: 20px;
+        font-size: 23px;
     }
 
     .black-title {
@@ -308,6 +308,10 @@ body {
 @media (max-width: 768px) {
     .name label {
         font-size: 30px;
+    }
+
+    .bold-text {
+        font-size: 20px;
     }
 
     .add-button button {
@@ -356,7 +360,7 @@ body {
     }
 
     .bold-text {
-        font-size: 17px;
+        font-size: 19px;
     }
 
     .black-title {
@@ -427,7 +431,7 @@ body {
     }
 
     .bold-text {
-        font-size: 15px;
+        font-size: 17px;
     }
 
     .black-title {
@@ -484,7 +488,7 @@ body {
     }
 
     .bold-text {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .black-title {
@@ -1775,14 +1779,6 @@ body {
     height: 1px;
 }
 
-.section-divider {
-    border: none;          
-    height: 1px;                   
-    background-color: #ccc;         
-    margin-top: 20px;                 
-    width: 100%;               
-}
-
 /* Медиазапросы для адаптации */
 @media (max-width: 1200px) {
     .image-product-slider {
@@ -1804,6 +1800,10 @@ body {
 
     .card-label {
         font-size: 23px;
+    }
+
+    .remark {
+        font-size: 12px;
     }
 }
 
@@ -1854,9 +1854,6 @@ body {
         padding-top: 20px;
     }
 
-    .section-divider {        
-        margin-top: 20px;                               
-    }
 }
 
 @media (max-width: 576px) {
@@ -1866,6 +1863,10 @@ body {
 
     .description-text {
         font-size: 14px;
+    }
+
+    .remark {
+        font-size: 11px;
     }
 
     .feedback-text {
@@ -1915,6 +1916,10 @@ body {
 
     .description-text {
         font-size: 13px;
+    }
+
+    .remark {
+        font-size: 10px;
     }
 
     .feedback-text {

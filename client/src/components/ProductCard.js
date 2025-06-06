@@ -352,7 +352,7 @@ const ProductCard = () => {
                             const firstLetter = rev.username ? rev.username.charAt(0).toUpperCase() : 'A';
                             
                             return (
-                                <div key={idx} className="characteristics">
+                                <div key={idx} className="delivery-column">
                                     <div className="review-header">
                                         <div className="user-avatar">
                                             {firstLetter}
