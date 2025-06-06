@@ -2151,30 +2151,14 @@ body {
 
 .body-page-auth {
     padding: 20px 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-    background-color: #f8f8f8; /* Фон под паттерном */
-}
-
-.body-page-auth::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('../image/pattern.png');
-    background-repeat: repeat;
-    opacity: 0.1; /* Прозрачность паттерна */
-    z-index: -1;
-    
-    /* Шахматный порядок: */
-    background-size: 44px 30px;
-    background-position: 
-        60px 0,    /* 1-я строка: отступ слева 60px */
-        -22px 30px, /* 2-я строка: смещение влево на половину ширины (44/2 = 22px) */
-        60px 60px;  /* 3-я строка: как 1-я */
+    background-image: url('../image/pattern_2.0.png');
+    background-repeat: repeat; /* Повтор по обоим осям */
+    background-size: 50px 67px; /* Точный размер вашего паттерна */
+    background-attachment: fixed; /* Опционально: фиксирует фон */
 }
 
 .error-message {
