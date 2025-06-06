@@ -204,7 +204,7 @@ const Header = () => {
                                 if (isAuthenticated) {
                                     navigate("/basket");
                                 } else {
-                                    showNotification("Требуется авторизация!");
+                                    showNotification("Требуется авторизация");
                                 }
                             }}
                         >
@@ -219,7 +219,7 @@ const Header = () => {
                                 if (isAuthenticated) {
                                     navigate("/favorite");
                                 } else {
-                                    showNotification("Требуется авторизация!");
+                                    showNotification("Требуется авторизация");
                                 }
                             }}
                         />

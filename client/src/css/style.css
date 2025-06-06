@@ -962,17 +962,6 @@ body {
     }
 }
 
-.request-modal-form input {
-    border: 2px solid #ebebeb;
-    border-radius: 7px;
-    box-sizing: border-box;
-    font-family: Inter-Medium;
-    font-size: 10px;
-    margin-bottom: 10px;
-    padding: 5px;
-    width: 100%;
-}
-
 /*Подвал*/
 
 .footer {
@@ -2159,6 +2148,28 @@ body {
 }
 
 /*Аутентификация*/
+
+.body-page-auth {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100vh;
+
+    background-image: 
+        url('/image/pattern.png'),   /* Первый слой */
+        url('/image/pattern.png');   /* Второй сдвинутый слой */
+
+    background-position: 
+        50px 0px,          /* Первый слой — без сдвига */
+        0 30px;    /* Второй слой — сдвинут по X и Y */
+
+    background-size: 44px 30px;     /* Размер паттерна */
+    background-repeat: repeat;
+}
 
 .error-message {
     color: red;

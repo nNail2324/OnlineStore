@@ -38,7 +38,7 @@ const AdminSearch = () => {
 
     const addToCart = async (product) => {
         if (!userId) {
-            showNotification("Требуется авторизация!");
+            showNotification("Требуется авторизация");
             return;
         }
 

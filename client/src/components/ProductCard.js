@@ -85,7 +85,7 @@ const ProductCard = () => {
 
     const handleAddToCart = async () => {
         if (!userId) {
-            showNotification("Требуется авторизация!");
+            showNotification("Требуется авторизация");
             return;
         }
 
@@ -109,7 +109,7 @@ const ProductCard = () => {
 
     const toggleFavorite = async () => {
         if (!userId) {
-            showNotification("Требуется авторизация!");
+            showNotification("Требуется авторизация");
             return;
         }
 
@@ -132,7 +132,7 @@ const ProductCard = () => {
 
     const submitFeedback = async () => {
         if (!userId) {
-            showNotification("Требуется авторизация!");
+            showNotification("Требуется авторизация");
             return;
         }
         if (!reviewText.trim()) return;
@@ -254,7 +254,7 @@ const ProductCard = () => {
                                     )}
                                 </span>
                             ))}
-                            
+
                             <span className="black-text">
                                 {reviews.length} {pluralize(reviews.length, "отзыв", "отзыва", "отзывов")}
                             </span>
