@@ -1635,7 +1635,7 @@ body {
 .card-label {
     font-family: 'Inter-Bold';
     font-size: 25px;
-    padding-top: 10px;
+    padding-top: 30px;
 }
   
 .characteristics {
@@ -1695,7 +1695,7 @@ body {
 
 .feedback-text {
     font-family: 'Inter-Medium';
-    font-size: 20px;
+    font-size: 17px;
     text-align: justify;
 }
 
@@ -1740,7 +1740,14 @@ body {
 .description-text {
     color: gray;
     font-family: 'Inter-Medium';
-    font-size: 20px;
+    font-size: 18px;
+    text-align: justify;
+}
+
+.remark {
+    color: #ccc;
+    font-family: 'Inter-Medium';
+    font-size: 14px;
     text-align: justify;
 }
 
@@ -1844,6 +1851,7 @@ body {
 
     .card-label {
         font-size: 21px;
+        padding-top: 20px;
     }
 
     .section-divider {        

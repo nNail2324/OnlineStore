@@ -294,18 +294,22 @@ const ProductCard = () => {
                 </div>
             </div>
 
-            <hr className="section-divider" />
-
             <div className="types">
                 <div className="card-label">
                     <label>Описание</label>
                 </div>
+
                 <div className="description-text" >
-                    <label>{product.description}</label>
+                    <span>{product.description}</span>
+                </div>
+
+                <div className="remark">
+                    <span>Цены и наличие товаров, указанные на сайте, могут отличаться от фактических в торговой точке. 
+                          Пожалуйста, уточняйте актуальную стоимость и наличие продукции перед оформлением заказа.
+                          Информация на сайте регулярно обновляется, однако не исключены расхождения с ранее реализованными партиями товаров.
+                    </span>
                 </div>
             </div>
-
-            <hr className="section-divider" />
 
             <div className="types">
                 <div className="card-label">
