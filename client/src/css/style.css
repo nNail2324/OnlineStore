@@ -2151,6 +2151,7 @@ body {
 
 .body-page-auth {
     padding: 20px 180px;
+    border: 20px solid white;
     display: flex;
     flex-direction: column;
     gap: 10px;
