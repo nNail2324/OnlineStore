@@ -1,12 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="104" height="60">
-  <defs>
-    <pattern id="chessPattern" patternUnits="userSpaceOnUse" width="104" height="60">
-      <rect x="60" y="0" width="44" height="30" fill="url(#ImagePattern)"/>
-      <rect x="0" y="30" width="44" height="30" fill="url(#ImagePattern)"/>
-    </pattern>
-    <pattern id="ImagePattern" patternUnits="userSpaceOnUse" width="44" height="30">
-      <image href="pattern.png" width="44" height="30"/> <!-- Убрал ../image/ -->
-    </pattern>
-  </defs>
-  <rect width="100%" height="100%" fill="url(#chessPattern)"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="126.14206mm"
+   height="91.932396mm"
+   viewBox="0 0 126.14206 91.932396"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="layer1"
+     transform="translate(-45.143071,-64.025)">
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:50.8px;font-family:a_SimplerDnm;-inkscape-font-specification:'a_SimplerDnm, Bold';fill:#ff7f00;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none"
+       x="121.6176"
+       y="99.991432"
+       id="text236-1"><tspan
+         style="font-size:50.8px;fill:#e2e2e2;fill-opacity:0.886275;stroke-width:0;stroke-dasharray:none"
+         x="121.6176"
+         y="99.991432"
+         id="tspan288-4">И</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:21.638px;font-family:a_SimplerDnm;-inkscape-font-specification:'a_SimplerDnm, Bold';fill:#ff7f00;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none"
+       x="156.26837"
+       y="79.344704"
+       id="text1790-8"><tspan
+         id="tspan1788-1"
+         style="fill:#e2e2e2;fill-opacity:0.886275;stroke-width:0;stroke-dasharray:none"
+         x="156.26837"
+         y="79.344704">п</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:28.7642px;font-family:a_SimplerDnm;-inkscape-font-specification:'a_SimplerDnm, Bold';fill:#000000;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none"
+       x="142.58316"
+       y="99.991432"
+       id="text294-9"><tspan
+         id="tspan292-1"
+         style="font-size:28.7642px;fill:#e2e2e2;fill-opacity:0.886275;stroke-width:0;stroke-dasharray:none"
+         x="142.58316"
+         y="99.991432">Ш</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:50.8px;font-family:a_SimplerDnm;-inkscape-font-specification:'a_SimplerDnm, Bold';fill:#ff7f00;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none"
+       x="48.546669"
+       y="155.9574"
+       id="text236-6-7-8"><tspan
+         style="font-size:50.8px;fill:#e2e2e2;fill-opacity:0.886275;stroke-width:0;stroke-dasharray:none"
+         x="48.546669"
+         y="155.9574"
+         id="tspan288-9-4-5">И</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:21.638px;font-family:a_SimplerDnm;-inkscape-font-specification:'a_SimplerDnm, Bold';fill:#ff7f00;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none"
+       x="83.197411"
+       y="135.31071"
+       id="text1790-3-8-5"><tspan
+         id="tspan1788-8-7-4"
+         style="fill:#e2e2e2;fill-opacity:0.886275;stroke-width:0;stroke-dasharray:none"
+         x="83.197411"
+         y="135.31071">п</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:28.7642px;font-family:a_SimplerDnm;-inkscape-font-specification:'a_SimplerDnm, Bold';fill:#000000;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none"
+       x="69.512199"
+       y="155.9574"
+       id="text294-5-8-6"><tspan
+         id="tspan292-9-8-8"
+         style="font-size:28.7642px;fill:#e2e2e2;fill-opacity:0.886275;stroke-width:0;stroke-dasharray:none"
+         x="69.512199"
+         y="155.9574">Ш</tspan></text>
+  </g>
 </svg>
