@@ -2155,7 +2155,7 @@ body {
     flex-direction: column;
     gap: 10px;
     min-height: 100vh;
-    background-image: url('/chess-pattern.svg');
+    background-image: url('../image/pattern.svg');
     background-size: 104px 60px; /* Размер паттерна */
 }
 
