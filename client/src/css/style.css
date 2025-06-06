@@ -1634,7 +1634,7 @@ body {
 
 .card-label {
     font-family: 'Inter-Bold';
-    font-size: 27px;
+    font-size: 25px;
     padding-top: 10px;
 }
   
@@ -1748,7 +1748,7 @@ body {
     display: flex;
     align-items: center;
     font-family: 'Inter-Medium';
-    font-size: 20px;
+    font-size: 18px;
     padding: 4px 0;
     white-space: nowrap;
 }
@@ -1784,19 +1784,19 @@ body {
     }
 
     .spec-line {
-        font-size: 17px;
+        font-size: 15px;
     }
 
     .description-text {
-        font-size: 17px;
+        font-size: 15px;
     }
 
     .feedback-text {
-        font-size: 17px;
+        font-size: 15px;
     }
 
     .card-label {
-        font-size: 25px;
+        font-size: 23px;
     }
 }
 
@@ -1843,7 +1843,7 @@ body {
     }
 
     .card-label {
-        font-size: 23px;
+        font-size: 21px;
     }
 
     .section-divider {        
@@ -1853,15 +1853,15 @@ body {
 
 @media (max-width: 576px) {
     .spec-line {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .description-text {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .feedback-text {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .feedback-button button {
@@ -1896,21 +1896,21 @@ body {
     }
 
     .card-label {
-        font-size: 21px;
+        font-size: 19px;
     }
 }
 
 @media (max-width: 480px) {
     .spec-line {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .description-text {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .feedback-text {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .feedback-button button {
@@ -1933,7 +1933,7 @@ body {
     }
 
     .card-label {
-        font-size: 19px;
+        font-size: 17px;
     }
 }
 
@@ -1975,7 +1975,7 @@ body {
     }
 
     .card-label {
-        font-size: 17px;
+        font-size: 15px;
     }
 }
 

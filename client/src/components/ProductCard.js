@@ -294,6 +294,8 @@ const ProductCard = () => {
                 </div>
             </div>
 
+            <hr className="section-divider" />
+
             <div className="types">
                 <div className="card-label">
                     <label>Описание</label>
@@ -365,7 +367,7 @@ const ProductCard = () => {
                                             i < rev.mark ? <FaStar key={i} color="gold" style={{fontSize: "20px"}} /> : <FaRegStar key={i} color="gray" style={{fontSize: "20px"}}/>
                                         ))}
                                     </div>
-                                    <div className="feedback-tex">
+                                    <div className="feedback-text">
                                         <label>{rev.description}</label>
                                     </div>
                                 </div>
