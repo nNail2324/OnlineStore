@@ -1001,7 +1001,7 @@ body {
     line-height: 1.5;
 }
 
-.contact-item, .work-schedule label {
+.contact-item label, .work-schedule label {
     display: block;
     color: white;
     font-family: 'Inter-Medium';
@@ -1009,7 +1009,7 @@ body {
     line-height: 1.5;
 }
 
-.contact-item, .work-schedule label:hover {
+.contact-item label:hover, .work-schedule label:hover {
     color: #FF7F00;
 }
 
@@ -2180,17 +2180,16 @@ body {
 /*Аутентификация*/
 
 .body-page-auth {
-    padding-left: 180px;
-    padding-right: 180px;
     padding-top: 20px;
     padding-bottom: 20px;
+    padding-left: 180px;
+    padding-right: 180px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     min-height: 100vh;
     background-image: url('../image/pattern_2.0.svg');
     background-repeat: repeat; /* Повтор по обоим осям */
-    background-size: 110px 100px; /* Точный размер вашего паттерна */
     background-attachment: fixed;
 }
 
