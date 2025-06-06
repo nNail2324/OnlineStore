@@ -2160,8 +2160,8 @@ body {
     min-height: 100vh;
 
     background-image: 
-        url('/image/pattern.png'),   /* Первый слой */
-        url('/image/pattern.png');   /* Второй сдвинутый слой */
+        url('../image/pattern.png'),   /* Первый слой */
+        url('../image/pattern.png');   /* Второй сдвинутый слой */
 
     background-position: 
         50px 0px,          /* Первый слой — без сдвига */
