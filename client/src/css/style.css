@@ -2157,8 +2157,7 @@ body {
     min-height: 100vh;
     background-image: url('../image/pattern_2.0.png');
     background-repeat: repeat; /* Повтор по обоим осям */
-    background-size: 50px 67px; /* Точный размер вашего паттерна */
-    background-attachment: fixed; /* Опционально: фиксирует фон */
+    background-size: 110px 62px; /* Точный размер вашего паттерна */
 }
 
 .error-message {
