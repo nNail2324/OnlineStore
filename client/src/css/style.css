@@ -2150,24 +2150,22 @@ body {
 /*Аутентификация*/
 
 .body-page-auth {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 180px;
-    padding-right: 180px;
+    padding: 20px 180px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     min-height: 100vh;
-
+  
     background-image:
-        url('../image/pattern.png'),   /* Чётные строки */
-        url('../image/pattern.png');   /* Нечётные строки */
-
-    background-size: 104px 60px;       /* 44 (картинка) + 60 (отступ) = 104 по X, 30 + 30 по Y = 60 */
-    background-position:
-        60px 0px,                      /* Чётные строки с отступом слева 60px */
-        0px 30px;                      /* Нечётные строки без отступа, но смещены по Y */
+      url('../image/pattern.png'),
+      url('../image/pattern.png');
+  
     background-repeat: repeat;
+    background-size: 44px 30px;
+  
+    background-position:
+      60px 0px,   /* Чётные строки: отступ слева */
+      0px 30px;   /* Нечётные строки: сдвиг по Y на 30px */
 }
 
 .error-message {
