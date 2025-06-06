@@ -2153,7 +2153,7 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 20px;
-    padding-right: 200px;
+    padding-right: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -2164,10 +2164,10 @@ body {
         url('../image/pattern.png');   /* Второй сдвинутый слой */
 
     background-position: 
-        50px 0px,          /* Первый слой — без сдвига */
+        60px 0px,          /* Первый слой — без сдвига */
         0 30px;    /* Второй слой — сдвинут по X и Y */
 
-    background-size: 44px 30px;     /* Размер паттерна */
+    background-size: 104px 30px;     /* Размер паттерна */
     background-repeat: repeat;
 }
 
