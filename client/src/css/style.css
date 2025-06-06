@@ -1247,7 +1247,7 @@ body {
         padding-right: 60px;
     }
 
-    .body-page-auth{
+    .body-page-auth {
         padding-left: 60px;
         padding-right: 60px;
     }
@@ -2189,7 +2189,7 @@ body {
     flex-direction: column;
     gap: 10px;
     min-height: 100vh;
-    background-image: url('../image/pattern_2.0.svg');
+    background-image: url('../image/pattern_3.0.svg');
     background-repeat: repeat; 
     background-attachment: fixed;
 }
