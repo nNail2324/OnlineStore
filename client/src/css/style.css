@@ -2157,8 +2157,20 @@ body {
     min-height: 100vh;
   
     background-image:
-      url('../image/pattern.png'),
-      url('../image/pattern.png');
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 30px,
+      rgba(0,0,0,0.1) 30px,
+      rgba(0,0,0,0.1) 60px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(0,0,0,0.1) 60px,
+      rgba(0,0,0,0.1) 120px
+    );
   
     background-repeat: repeat;
     background-size: 44px 30px;
