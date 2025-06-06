@@ -1001,6 +1001,18 @@ body {
     line-height: 1.5;
 }
 
+.contact-item, .work-schedule label {
+    display: block;
+    color: white;
+    font-family: 'Inter-Medium';
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.contact-item, .work-schedule label:hover {
+    color: #FF7F00;
+}
+
 .network {
     display: flex;
     gap: 10px;
@@ -1124,6 +1136,10 @@ body {
     .contact-item, .work-schedule span {
         font-size: 13px;
     }
+
+    .contact-item, .work-schedule label {
+        font-size: 13px;
+    }
     
     .logo-react-description {
         font-size: 20px;
@@ -1188,6 +1204,10 @@ body {
     }
     
     .contact-item, .work-schedule span {
+        font-size: 12px;
+    }
+
+    .contact-item, .work-schedule label {
         font-size: 12px;
     }
     
@@ -2160,12 +2180,15 @@ body {
 /*Аутентификация*/
 
 .body-page-auth {
-    padding: 20px 180px;
+    padding-left: 180px;
+    padding-right: 180px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     min-height: 100vh;
-    background-image: url('../image/pattern.svg');
+    background-image: url('../image/pattern_2.0.svg');
     background-repeat: repeat; /* Повтор по обоим осям */
     background-size: 110px 100px; /* Точный размер вашего паттерна */
     background-attachment: fixed;
@@ -2221,10 +2244,14 @@ body {
 }
 
 .auth-label label{
-    color: black;
+    color: gray;
     font-family: 'Inter-Medium';
     font-size: 16px;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.auth-label label:hover {
+    color: black;
 }
 
 .authentication {
