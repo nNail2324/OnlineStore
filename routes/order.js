@@ -212,11 +212,11 @@ router.get("/:orderId/invoices", async (req, res) => {
         // От кого и Кому
         doc.fontSize(10);
         doc.text("От кого: ", 50, doc.y, { continued: true });
-        doc.text("ИП Шарипов Ирек Фларитович", { underline: true });
+        doc.text("ИП Шарипов Ирек Фларитович", { underline: true, continued: false });
         doc.moveDown();
 
         doc.text("Кому: ", 50, doc.y, { continued: true });
-        doc.text(order.contact_name, { underline: true });
+        doc.text(order.contact_name, { underline: true, continued: false });
 
         doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
 
@@ -254,9 +254,14 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(2);
 
         // Итоги
-        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
-        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
-        doc.text(`Статус заказа: ${order.status}`, { align: "left" });
+        doc.text("Стоимость доставки: ", { continued: true });
+        doc.text(`${order.delivery_price.toLocaleString("ru-RU")} ₽`);
+        
+        doc.text("Итого: ", { continued: true });
+        doc.text(`${order.total_price.toLocaleString("ru-RU")} ₽`);
+        
+        doc.text("Статус заказа: ", { continued: true });
+        doc.text(order.status);
 
         doc.moveDown(3);
 
