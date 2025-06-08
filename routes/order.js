@@ -227,62 +227,10 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         doc.moveDown();
 
-        // Таблица товаров с линиями
+        // Таблица товаров
         doc.fontSize(12);
         const tableTop = doc.y;
-        const startX = 50;
-        const rowHeight = 20;
         const colWidths = [30, 200, 50, 50, 60, 60];
-
-        // Нарисовать заголовки
-        const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
-        let currentX = startX;
-
-        headers.forEach((header, i) => {
-            doc.text(header, currentX + 5, tableTop + 5, { width: colWidths[i] - 10, align: "center" });
-            currentX += colWidths[i];
-        });
-
-        // Горизонтальная линия под заголовками
-        doc.moveTo(startX, tableTop + rowHeight)
-        .lineTo(startX + colWidths.reduce((a, b) => a + b, 0), tableTop + rowHeight)
-        .stroke();
-
-        // Отрисовать строки таблицы
-        let itemY = tableTop + rowHeight;
-        items.forEach((item, idx) => {
-            let currentX = startX;
-            const row = [
-                `${idx + 1}`,
-                item.name,
-                item.unit,
-                `${item.quantity}`,
-                `${item.price.toLocaleString("ru-RU")} ₽`,
-                `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
-            ];
-
-            row.forEach((text, i) => {
-                doc.text(text, currentX + 5, itemY + 5, { width: colWidths[i] - 10, align: "left" });
-                currentX += colWidths[i];
-            });
-
-            // Горизонтальная линия под каждой строкой
-            doc.moveTo(startX, itemY + rowHeight)
-            .lineTo(startX + colWidths.reduce((a, b) => a + b, 0), itemY + rowHeight)
-            .stroke();
-
-            itemY += rowHeight;
-        });
-
-        // Вертикальные линии (граничные)
-        let columnX = startX;
-        for (let i = 0; i <= colWidths.length; i++) {
-            const lineX = columnX;
-            doc.moveTo(lineX, tableTop)
-            .lineTo(lineX, itemY)
-            .stroke();
-            columnX += colWidths[i] || 0;
-        }
 
         // Заголовки
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
