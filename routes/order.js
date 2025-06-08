@@ -222,76 +222,36 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         doc.moveDown();
 
-       // Таблица товаров с линиями
+        // Таблица товаров
         doc.fontSize(12);
         const tableTop = doc.y;
         const colWidths = [30, 200, 50, 50, 60, 60];
-        const rowHeight = 20;
 
-        // Горизонтальные линии
-        function drawHorizontalLine(y) {
-        doc.moveTo(50, y)
-            .lineTo(50 + colWidths.reduce((a, b) => a + b, 0), y)
-            .stroke();
-        }
-
-        // Вертикальные линии
-        function drawVerticalLines(y) {
-        let x = 50;
-        colWidths.forEach(width => {
-            doc.moveTo(x, y)
-            .lineTo(x, y + rowHeight * (items.length + 1))
-            .stroke();
-            x += width;
-        });
-        // Последняя вертикальная линия
-        doc.moveTo(x, y)
-            .lineTo(x, y + rowHeight * (items.length + 1))
-            .stroke();
-        }
-
-        // Рисуем линии таблицы
-        drawHorizontalLine(tableTop); // Верхняя линия заголовков
-        drawVerticalLines(tableTop); // Вертикальные линии
-
-        // Заголовки таблицы
+        // Заголовки
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
-        doc.fillColor('black');
         headers.forEach((header, i) => {
-        doc.text(header, 
-                50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + colWidths[i]/2, 
-                tableTop + 5, 
-                { width: colWidths[i], align: "center" });
+            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { width: colWidths[i], align: "center" });
         });
 
-        drawHorizontalLine(tableTop + rowHeight); // Линия под заголовками
+        doc.moveDown(0.5);
 
-        // Строки с товарами
+        let itemY = tableTop + 20;
         items.forEach((item, idx) => {
-        const rowY = tableTop + rowHeight * (idx + 1);
-        
-        const row = [
-            `${idx + 1}`,
-            item.name,
-            item.unit,
-            `${item.quantity}`,
-            `${item.price.toLocaleString("ru-RU")} ₽`,
-            `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
-        ];
-        
-        // Текст в ячейках
-        row.forEach((text, i) => {
-            doc.text(text, 
-                    50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + colWidths[i]/2, 
-                    rowY + 5, 
-                    { width: colWidths[i], align: i === 1 ? "left" : "center" });
-        });
-        
-        drawHorizontalLine(rowY + rowHeight); // Линия под строкой
+            const row = [
+                `${idx + 1}`,
+                item.name,
+                `${item.quantity}`,
+                item.unit,
+                `${item.price.toLocaleString("ru-RU")} ₽`,
+                `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
+            ];
+            row.forEach((text, i) => {
+                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { width: colWidths[i], align: "center" });
+            });
+            itemY += 20;
         });
 
-        // Нижняя граница таблицы
-        drawHorizontalLine(tableTop + rowHeight * (items.length + 1));
+        doc.moveDown(2);
 
         // Итоговая информация (без переносов, каждая строка отдельно)
         doc.fontSize(12);
