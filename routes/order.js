@@ -205,7 +205,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.font("Inter-Medium");
 
         // Заголовок и дата
-        doc.fontSize(10).text(`Дата заказа: ${new Date(order.created_at).toLocaleDateString("ru-RU")}`, { align: "right" });
+        doc.fontSize(10).text(`${new Date(order.created_at).toLocaleDateString("ru-RU")}`, { align: "right" });
 
         doc.moveDown(1);
 
@@ -255,9 +255,12 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         // Итоги
         doc.fontSize(12);
-        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
-        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
-        doc.text(`Статус заказа: ${order.status}`, { align: "left" });
+        const finalY = doc.y; // Фиксируем текущую позицию Y
+
+        // Вычисляем позиции для каждого блока
+        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 50, finalY);
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 250, finalY);
+        doc.text(`Статус заказа: ${order.status}`, 450, finalY);
 
         doc.moveDown(3);
 
