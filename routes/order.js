@@ -210,18 +210,13 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(1);
 
         // От кого и Кому
-        doc.text("От кого: ", { lineBreak: false });
-        doc.text("ИП Шарипов Ирек Фларитович", {
-            underline: true,
-            lineBreak: false
-        });
+        doc.fontSize(10);
+        doc.text("От кого: ");
+        doc.text("ИП Шарипов Ирек Фларитович", { underline: true });
         doc.moveDown();
 
-        doc.text("Кому: ", { lineBreak: false });
-        doc.text(order.contact_name, {
-            underline: true,
-            lineBreak: false
-        });
+        doc.text("Кому: ");
+        doc.text(order.contact_name, { underline: true });
 
         doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
 
