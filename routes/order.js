@@ -205,21 +205,31 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.font("Inter-Medium");
 
         // Заголовок и дата
-        doc.fontSize(20).text(`Накладная №${orderId}`, { align: "left" });
         doc.fontSize(10).text(`Дата заказа: ${new Date(order.created_at).toLocaleDateString("ru-RU")}`, { align: "right" });
+
+        doc.moveDown(1);
+
+        // От кого и Кому
+        doc.fontSize(10);
+        doc.text("От кого: ");
+        doc.text("ИП Шарипов Ирек Фларитович", { underline: true });
+        doc.moveDown();
+
+        doc.text("Кому: ");
+        doc.text(order.contact_name, { underline: true });
+
+        doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
 
         doc.moveDown();
 
         // Таблица товаров
-        doc.fontSize(12).text("Товары:", { underline: true }).moveDown(0.5);
-
         const tableTop = doc.y;
         const colWidths = [30, 200, 50, 50, 60, 60];
 
         // Заголовки
-        const headers = ["#", "Наименование", "Кол-во", "Ед.", "Цена", "Сумма"];
+        const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
         headers.forEach((header, i) => {
-            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { width: colWidths[i], align: "left" });
+            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { width: colWidths[i], align: "center" });
         });
 
         doc.moveDown(0.5);
@@ -243,22 +253,11 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(2);
 
         // Итоги
-        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "right" });
-        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "right" });
-        doc.text(`Статус заказа: ${order.status}`, { align: "right" });
+        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
+        doc.text(`Статус заказа: ${order.status}`, { align: "left" });
 
         doc.moveDown(3);
-
-        // От кого и Кому
-        doc.fontSize(10);
-        doc.text("От кого:", { underline: true });
-        doc.text("ИП Шарипов Ирек Фларитович");
-        doc.moveDown();
-
-        doc.text("Кому:", { underline: true });
-        doc.text(order.contact_name);
-        doc.text(order.contact_phone);
-        doc.text(order.delivery_address);
 
         doc.end();
 
