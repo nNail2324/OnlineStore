@@ -199,9 +199,11 @@ router.get("/:orderId/invoices", async (req, res) => {
         const doc = new PDFDocument({ margin: 50 });
         const writeStream = fs.createWriteStream(invoicePath);
         const fontPath = path.join(__dirname, "../client/src/font/Inter-Medium.otf");
+        const titlePath = path.join(__dirname, "../client/src/font/Inter-Bold.otf")
 
         doc.pipe(writeStream);
         doc.registerFont("Inter-Medium", fontPath);
+        doc.registerFont("Inter-Bold", titlePath)
         doc.font("Inter-Medium");
 
         // Заголовок и дата
@@ -217,7 +219,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.text(order.contact_name, { underline: true, continued: false });
         doc.moveDown(3); // Уменьшен отступ
 
-        doc.fontSize(20).text(`Накладная №${orderId}`, { align: "center" }); // Уменьшен размер шрифта
+        doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" }); // Уменьшен размер шрифта
         doc.moveDown(1);
 
         // Таблица товаров (на всю ширину с учетом margin)
@@ -246,14 +248,15 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         const tableTop = doc.y;
         
-        // Заголовки таблицы
+       // Заголовки таблицы
+        doc.fontSize(12);
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
         headers.forEach((header, i) => {
             doc.text(header, 
-                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (colWidths[i]/2), 
-                tableTop, 
+                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 2, // +2 небольшой отступ от границы
+                tableTop + 5, // +5 для вертикального выравнивания
                 { 
-                    width: colWidths[i], 
+                    width: colWidths[i] - 4, // Уменьшаем ширину на 4 для отступов
                     align: "center",
                     lineBreak: false 
                 }
@@ -273,15 +276,17 @@ router.get("/:orderId/invoices", async (req, res) => {
             ];
             
             row.forEach((text, i) => {
-                doc.text(text, 
-                    tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (i === 1 ? 5 : colWidths[i]/2), 
-                    itemY, 
-                    { 
-                        width: colWidths[i] - 10, 
-                        align: i === 1 ? "left" : "center",
-                        lineBreak: i === 1 // Перенос только для наименования
-                    }
-                );
+                const options = {
+                    width: colWidths[i] - 10,
+                    align: i === 1 ? "left" : "center",
+                    lineBreak: i === 1
+                };
+                
+                // Точный расчет позиции для каждого элемента
+                const xPos = tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (i === 1 ? 5 : colWidths[i]/2 - doc.widthOfString(text, options)/2);
+                const yPos = itemY + 5; // +5 для вертикального выравнивания
+                
+                doc.text(text, xPos, yPos, options);
             });
             itemY += 20;
         });
@@ -306,7 +311,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         
         // 2. Итого
         doc.y += lineHeight;
-        doc.font('Inter-Medium').fontSize(12).text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
+        doc.fontSize(12).text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
             tableMargin, 
             doc.y, 
             { 
