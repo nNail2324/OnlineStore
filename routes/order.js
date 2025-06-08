@@ -260,7 +260,7 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         // Итоговая информация (исправленная версия)
         const leftMargin = 50; // Отступ слева как у таблицы
-        const lineHeight = 20; // Высота строки
+        const lineHeight = 10; // Высота строки
         
         // 1. Стоимость доставки
         doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 
