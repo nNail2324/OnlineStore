@@ -149,28 +149,6 @@ router.get("/:orderId", async (req, res) => {
     }
 });
 
-router.patch("/:orderId/status", async (req, res) => {
-    try {
-        const { orderId } = req.params;
-        const { status } = req.body;  // Новый статус, передаваемый в теле запроса
-
-        const [check] = await db.query("SELECT status FROM orders WHERE ID = ?", [orderId]);
-        if (!check.length) return res.status(404).json({ message: "Заказ не найден" });
-
-        const currentStatus = check[0].status;
-        if (currentStatus === "Отменён") {
-            return res.status(400).json({ message: "Невозможно изменить статус этого заказа" });
-        }
-
-        // Обновление статуса заказа
-        await db.query("UPDATE orders SET status = ? WHERE ID = ?", [status, orderId]);
-        res.json({ status });
-    } catch (err) {
-        console.error("Ошибка при изменении статуса:", err);
-        res.status(500).json({ message: "Ошибка сервера" });
-    }
-});
-
 router.get("/:orderId/invoices", async (req, res) => {
     try {
         const { orderId } = req.params;
@@ -199,11 +177,11 @@ router.get("/:orderId/invoices", async (req, res) => {
         const doc = new PDFDocument({ margin: 50 });
         const writeStream = fs.createWriteStream(invoicePath);
         const fontPath = path.join(__dirname, "../client/src/font/Inter-Medium.otf");
-        const titlePath = path.join(__dirname, "../client/src/font/Inter-Bold.otf")
+        const titlePath = path.join(__dirname, "../client/src/font/Inter-Bold.otf");
 
         doc.pipe(writeStream);
         doc.registerFont("Inter-Medium", fontPath);
-        doc.registerFont("Inter-Bold", titlePath)
+        doc.registerFont("Inter-Bold", titlePath);
         doc.font("Inter-Medium");
 
         // Заголовок и дата
@@ -217,56 +195,52 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         doc.text("Кому: ", { continued: true });
         doc.text(order.contact_name, { underline: true, continued: false });
-        doc.moveDown(3); // Уменьшен отступ
+        doc.moveDown(3);
 
-        doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" }); // Уменьшен размер шрифта
+        doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" });
         doc.moveDown(1);
-
         doc.font("Inter-Medium");
 
-        // Таблица товаров (на всю ширину с учетом margin)
+        // Таблица товаров
         const tableMargin = doc.page.margins.left;
         const tableWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
-        const colWidths = [30, tableWidth - 330, 50, 50, 60, 80]; // Подобраны пропорционально
+        const colWidths = [30, tableWidth - 330, 50, 50, 60, 80];
+        const headerHeight = 20;
+        const rowHeight = 20;
 
-        // Рисуем границы таблицы
-        const drawTableBorders = (yStart, yEnd) => {
-            const lineY = yStart - 10;
-            const lineHeight = yEnd - yStart + 25;
-            
-            // Внешние границы
-            doc.rect(tableMargin, lineY, tableWidth, lineHeight).stroke();
-            
-            // Горизонтальные линии
-            doc.moveTo(tableMargin, lineY + 20).lineTo(tableMargin + tableWidth, lineY + 20).stroke();
-            
-            // Вертикальные линии между колонками
-            let xPos = tableMargin;
-            for (let i = 0; i < colWidths.length - 1; i++) {
-                xPos += colWidths[i];
-                doc.moveTo(xPos, lineY).lineTo(xPos, lineY + lineHeight).stroke();
-            }
-        };
-
+        // Заголовки таблицы
+        const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
         const tableTop = doc.y;
         
-       // Заголовки таблицы
-        doc.fontSize(12);
-        const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
+        // Рисуем верхнюю границу таблицы
+        doc.moveTo(tableMargin, tableTop).lineTo(tableMargin + tableWidth, tableTop).stroke();
+        
+        // Заполняем заголовки
         headers.forEach((header, i) => {
             doc.text(header, 
-                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0),
-                tableTop + 5, // +5 для вертикального выравнивания
+                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (colWidths[i]/2),
+                tableTop + (headerHeight - 12)/2, // Центрирование по вертикали
                 { 
-                    width: colWidths[i] - 4, // Уменьшаем ширину на 4 для отступов
+                    width: colWidths[i], 
                     align: "center",
                     lineBreak: false 
                 }
             );
+            
+            // Вертикальные линии между колонками
+            if (i < headers.length - 1) {
+                const xPos = tableMargin + colWidths.slice(0, i+1).reduce((a, b) => a + b, 0);
+                doc.moveTo(xPos, tableTop).lineTo(xPos, tableTop + headerHeight).stroke();
+            }
         });
 
+        // Нижняя граница заголовков
+        doc.moveTo(tableMargin, tableTop + headerHeight)
+           .lineTo(tableMargin + tableWidth, tableTop + headerHeight)
+           .stroke();
+
         // Строки таблицы
-        let itemY = tableTop + 20;
+        let currentY = tableTop + headerHeight;
         items.forEach((item, idx) => {
             const row = [
                 `${idx + 1}`,
@@ -277,28 +251,44 @@ router.get("/:orderId/invoices", async (req, res) => {
                 `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
             ];
             
+            // Заполняем данные
             row.forEach((text, i) => {
-                const options = {
+                const textOptions = {
                     width: colWidths[i] - 10,
                     align: i === 1 ? "left" : "center",
                     lineBreak: i === 1
                 };
                 
-                // Точный расчет позиции для каждого элемента
-                const xPos = tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (i === 1 ? 5 : colWidths[i]/2 - doc.widthOfString(text, options)/2);
-                const yPos = itemY + 5; // +5 для вертикального выравнивания
+                const xPos = tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 
+                            (i === 1 ? 5 : colWidths[i]/2 - doc.widthOfString(text, textOptions)/2);
                 
-                doc.text(text, xPos, yPos, options);
+                doc.text(text, 
+                    xPos,
+                    currentY + (rowHeight - 12)/2, // Центрирование по вертикали
+                    textOptions
+                );
+                
+                // Вертикальные линии между колонками
+                if (i < row.length - 1) {
+                    const lineX = tableMargin + colWidths.slice(0, i+1).reduce((a, b) => a + b, 0);
+                    doc.moveTo(lineX, currentY).lineTo(lineX, currentY + rowHeight).stroke();
+                }
             });
-            itemY += 20;
+            
+            // Горизонтальная линия между строками
+            doc.moveTo(tableMargin, currentY + rowHeight)
+               .lineTo(tableMargin + tableWidth, currentY + rowHeight)
+               .stroke();
+            
+            currentY += rowHeight;
         });
 
-        // Рисуем границы таблицы
-        drawTableBorders(tableTop, itemY - 20);
-        doc.y = itemY + 10;
+        // Нижняя граница таблицы
+        doc.moveTo(tableMargin, currentY).lineTo(tableMargin + tableWidth, currentY).stroke();
+        doc.y = currentY + 15;
 
         // Итоговая информация
-        const lineHeight = 2;
+        doc.fontSize(12);
         
         // 1. Стоимость доставки
         doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 
@@ -312,8 +302,8 @@ router.get("/:orderId/invoices", async (req, res) => {
         );
         
         // 2. Итого
-        doc.y += lineHeight;
-        doc.fontSize(12).text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
+        doc.y += 15;
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
             tableMargin, 
             doc.y, 
             { 
@@ -329,7 +319,6 @@ router.get("/:orderId/invoices", async (req, res) => {
             res.setHeader("Content-Type", "application/pdf");
             const filename = `Накладная №${orderId}.pdf`;
             res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
-
 
             res.sendFile(invoicePath, (err) => {
                 if (err) console.error("Ошибка при отправке PDF:", err);
