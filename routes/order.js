@@ -254,13 +254,13 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(2);
 
         // Итоги
-        doc.text("Стоимость доставки: ", { continued: true });
+        doc.text("Стоимость доставки: ", { continued: true, align: "left" });
         doc.text(`${order.delivery_price.toLocaleString("ru-RU")} ₽`);
         
-        doc.text("Итого: ", { continued: true });
+        doc.text("Итого: ", { continued: true, align: "left" });
         doc.text(`${order.total_price.toLocaleString("ru-RU")} ₽`);
         
-        doc.text("Статус заказа: ", { continued: true });
+        doc.text("Статус заказа: ", { continued: true, align: "left" });
         doc.text(order.status);
 
         doc.moveDown(3);
@@ -269,7 +269,7 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         writeStream.on("finish", () => {
             res.setHeader("Content-Type", "application/pdf");
-            res.setHeader("Content-Disposition", `attachment; filename=invoice-${orderId}.pdf`);
+            res.setHeader("Content-Disposition", `attachment; filename=Накладная №${orderId}.pdf`);
 
             res.sendFile(invoicePath, (err) => {
                 if (err) console.error("Ошибка при отправке PDF:", err);
