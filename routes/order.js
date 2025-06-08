@@ -206,7 +206,6 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         // Заголовок и дата
         doc.fontSize(10).text(`${new Date(order.created_at).toLocaleDateString("ru-RU")}`, { align: "right" });
-
         doc.moveDown(1);
 
         // От кого и Кому
@@ -219,7 +218,6 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(5);
 
         doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
-
         doc.moveDown();
 
         // Таблица товаров
@@ -227,57 +225,79 @@ router.get("/:orderId/invoices", async (req, res) => {
         const tableTop = doc.y;
         const colWidths = [30, 200, 50, 50, 60, 60];
 
-        // Заголовки
+        // Заголовки таблицы
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
         headers.forEach((header, i) => {
-            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { width: colWidths[i], align: "center" });
+            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { 
+                width: colWidths[i], 
+                align: "center" 
+            });
         });
 
         doc.moveDown(0.5);
 
+        // Строки таблицы
         let itemY = tableTop + 20;
         items.forEach((item, idx) => {
             const row = [
                 `${idx + 1}`,
                 item.name,
-                `${item.quantity}`,
                 item.unit,
+                `${item.quantity}`,
                 `${item.price.toLocaleString("ru-RU")} ₽`,
                 `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
             ];
             row.forEach((text, i) => {
-                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { width: colWidths[i], align: "center" });
+                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { 
+                    width: colWidths[i], 
+                    align: i === 1 ? "left" : "center" // Наименование выравниваем по левому краю
+                });
             });
             itemY += 20;
         });
 
         doc.moveDown(2);
 
-        // Итоговая информация (без переносов, каждая строка отдельно)
-        doc.fontSize(12);
-
-        // 1. Стоимость доставки (гарантированно в одну строку)
-        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, {
-            align: 'left',
-            lineBreak: false // Запрет переноса
-        });
-
-        // 2. Итого (новая строка, без переноса)
-        doc.moveDown(1); // или doc.y += 15 для точного контроля
-        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, {
-            align: 'left',
-            lineBreak: false
-        });
-
-        // 3. Статус (новая строка, без переноса)
-        doc.moveDown(1);
-        doc.text(`Статус заказа: ${order.status}`, {
-            align: 'left',
-            lineBreak: false
-        });
+        // Итоговая информация (исправленная версия)
+        const leftMargin = 50; // Отступ слева как у таблицы
+        const lineHeight = 20; // Высота строки
+        
+        // 1. Стоимость доставки
+        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 
+            leftMargin, 
+            doc.y, 
+            { 
+                width: 400,
+                align: 'left',
+                lineBreak: false
+            }
+        );
+        
+        // 2. Итого
+        doc.y += lineHeight;
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
+            leftMargin, 
+            doc.y, 
+            { 
+                width: 400,
+                align: 'left',
+                lineBreak: false
+            }
+        );
+        
+        // 3. Статус
+        doc.y += lineHeight;
+        doc.text(`Статус заказа: ${order.status}`, 
+            leftMargin, 
+            doc.y, 
+            { 
+                width: 400,
+                align: 'left',
+                lineBreak: false
+            }
+        );
 
         doc.moveDown(3);
-
         doc.end();
 
         writeStream.on("finish", () => {
