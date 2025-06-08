@@ -191,13 +191,12 @@ router.get("/:orderId/invoices", async (req, res) => {
             return res.status(404).json({ message: "Заказ не найден" });
         }
 
+        const order = orderInfo[0];
         const invoiceDir = path.join(process.cwd(), "invoices");
-        if (!fs.existsSync(invoiceDir)) {
-            fs.mkdirSync(invoiceDir, { recursive: true });
-        }
+        if (!fs.existsSync(invoiceDir)) fs.mkdirSync(invoiceDir, { recursive: true });
 
         const invoicePath = path.join(invoiceDir, `invoice-${orderId}.pdf`);
-        const doc = new PDFDocument();
+        const doc = new PDFDocument({ margin: 50 });
         const writeStream = fs.createWriteStream(invoicePath);
         const fontPath = path.join(__dirname, "../client/src/font/Inter-Medium.otf");
 
@@ -205,17 +204,61 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.registerFont("Inter-Medium", fontPath);
         doc.font("Inter-Medium");
 
-        doc.fontSize(20).text(`Накладная для заказа №${orderId}`, { align: "center" }).moveDown();
-
-        items.forEach((item, idx) => {
-            doc
-                .fontSize(12)
-                .text(`${idx + 1}. ${item.name} — ${item.quantity} ${item.unit} по ${item.price} ₽`);
-        });
+        // Заголовок и дата
+        doc.fontSize(20).text(`Накладная №${orderId}`, { align: "left" });
+        doc.fontSize(10).text(`Дата заказа: ${new Date(order.created_at).toLocaleDateString("ru-RU")}`, { align: "right" });
 
         doc.moveDown();
-        doc.text(`Итого: ${orderInfo[0].total_price} ₽`, { align: "right" });
-        doc.text(`Статус: ${orderInfo[0].status}`, { align: "right" });
+
+        // Таблица товаров
+        doc.fontSize(12).text("Товары:", { underline: true }).moveDown(0.5);
+
+        const tableTop = doc.y;
+        const colWidths = [30, 200, 50, 50, 60, 60];
+
+        // Заголовки
+        const headers = ["#", "Наименование", "Кол-во", "Ед.", "Цена", "Сумма"];
+        headers.forEach((header, i) => {
+            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { width: colWidths[i], align: "left" });
+        });
+
+        doc.moveDown(0.5);
+
+        let itemY = tableTop + 20;
+        items.forEach((item, idx) => {
+            const row = [
+                `${idx + 1}`,
+                item.name,
+                `${item.quantity}`,
+                item.unit,
+                `${item.price.toLocaleString("ru-RU")} ₽`,
+                `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
+            ];
+            row.forEach((text, i) => {
+                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { width: colWidths[i], align: "left" });
+            });
+            itemY += 20;
+        });
+
+        doc.moveDown(2);
+
+        // Итоги
+        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "right" });
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "right" });
+        doc.text(`Статус заказа: ${order.status}`, { align: "right" });
+
+        doc.moveDown(3);
+
+        // От кого и Кому
+        doc.fontSize(10);
+        doc.text("От кого:", { underline: true });
+        doc.text("ИП Шарипов Ирек Фларитович");
+        doc.moveDown();
+
+        doc.text("Кому:", { underline: true });
+        doc.text(order.contact_name);
+        doc.text(order.contact_phone);
+        doc.text(order.delivery_address);
 
         doc.end();
 
@@ -224,13 +267,10 @@ router.get("/:orderId/invoices", async (req, res) => {
             res.setHeader("Content-Disposition", `attachment; filename=invoice-${orderId}.pdf`);
 
             res.sendFile(invoicePath, (err) => {
-                if (err) {
-                    console.error("Ошибка при отправке PDF:", err);
-                } else {
-                    fs.unlink(invoicePath, (err) => {
-                        if (err) console.error("Не удалось удалить файл:", err);
-                    });
-                }
+                if (err) console.error("Ошибка при отправке PDF:", err);
+                else fs.unlink(invoicePath, (err) => {
+                    if (err) console.error("Не удалось удалить файл:", err);
+                });
             });
         });
 
@@ -238,12 +278,10 @@ router.get("/:orderId/invoices", async (req, res) => {
             console.error("Ошибка записи PDF:", err);
             res.status(500).json({ message: "Ошибка при генерации PDF" });
         });
-
     } catch (err) {
         console.error("Ошибка генерации накладной:", err);
         res.status(500).json({ message: "Ошибка сервера" });
     }
 });
-
 
 module.exports = router;
