@@ -195,7 +195,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         const invoiceDir = path.join(process.cwd(), "invoices");
         if (!fs.existsSync(invoiceDir)) fs.mkdirSync(invoiceDir, { recursive: true });
 
-        const invoicePath = path.join(invoiceDir, `invoice-${orderId}.pdf`);
+        const invoicePath = path.join(invoiceDir, `Накладная №${orderId}.pdf`);
         const doc = new PDFDocument({ margin: 50 });
         const writeStream = fs.createWriteStream(invoicePath);
         const fontPath = path.join(__dirname, "../client/src/font/Inter-Medium.otf");
@@ -211,11 +211,11 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         // От кого и Кому
         doc.fontSize(10);
-        doc.text("От кого: ");
+        doc.text("От кого: ", 50, doc.y, { continued: true });
         doc.text("ИП Шарипов Ирек Фларитович", { underline: true });
         doc.moveDown();
 
-        doc.text("Кому: ");
+        doc.text("Кому: ", 50, doc.y, { continued: true });
         doc.text(order.contact_name, { underline: true });
 
         doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
@@ -246,7 +246,7 @@ router.get("/:orderId/invoices", async (req, res) => {
                 `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
             ];
             row.forEach((text, i) => {
-                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { width: colWidths[i], align: "left" });
+                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { width: colWidths[i], align: "center" });
             });
             itemY += 20;
         });
