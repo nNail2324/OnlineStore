@@ -216,6 +216,7 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         doc.text("Кому: ", { continued: true });
         doc.text(order.contact_name, { underline: true, continued: false });
+        doc.moveDown(2);
 
         doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
 
@@ -253,7 +254,8 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(2);
 
         // Итоги
-        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
+        doc.text("Стоимость доставки: ", { continued: true });
+        doc.text(`${order.delivery_price.toLocaleString("ru-RU")} ₽`, { continued: false });
         doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
         doc.text(`Статус заказа: ${order.status}`, { align: "left" });
 
