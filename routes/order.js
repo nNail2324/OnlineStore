@@ -211,10 +211,10 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         // От кого и Кому
         doc.fontSize(10);
-        doc.text("От кого: ", 50, doc.y, { continued: true });
+        doc.text("От кого: ", { continued: true });
         doc.text("ИП Шарипов Ирек Фларитович", { underline: true, continued: false });
 
-        doc.text("Кому: ", 50, doc.y, { continued: true });
+        doc.text("Кому: ", { continued: true });
         doc.text(order.contact_name, { underline: true, continued: false });
 
         doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
@@ -253,14 +253,9 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(2);
 
         // Итоги
-        doc.text("Стоимость доставки: ", { continued: true });
-        doc.text(`${order.delivery_price.toLocaleString("ru-RU")} ₽`);
-        
-        doc.text("Итого: ", { continued: true });
-        doc.text(`${order.total_price.toLocaleString("ru-RU")} ₽`);
-        
-        doc.text("Статус заказа: ", { continued: true });
-        doc.text(order.status);
+        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
+        doc.text(`Статус заказа: ${order.status}`, { align: "left" });
 
         doc.moveDown(3);
 
@@ -268,7 +263,7 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         writeStream.on("finish", () => {
             res.setHeader("Content-Type", "application/pdf");
-            res.setHeader("Content-Disposition", `attachment; filename=Накладная №${orderId}.pdf`);
+            res.setHeader("Content-Disposition", `attachment; filename=invoice-${orderId}.pdf`);
 
             res.sendFile(invoicePath, (err) => {
                 if (err) console.error("Ошибка при отправке PDF:", err);
