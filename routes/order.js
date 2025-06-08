@@ -222,6 +222,8 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" }); // Уменьшен размер шрифта
         doc.moveDown(1);
 
+        doc.font("Inter-Medium");
+
         // Таблица товаров (на всю ширину с учетом margin)
         const tableMargin = doc.page.margins.left;
         const tableWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
@@ -253,7 +255,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
         headers.forEach((header, i) => {
             doc.text(header, 
-                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 2, // +2 небольшой отступ от границы
+                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0),
                 tableTop + 5, // +5 для вертикального выравнивания
                 { 
                     width: colWidths[i] - 4, // Уменьшаем ширину на 4 для отступов
@@ -325,7 +327,9 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         writeStream.on("finish", () => {
             res.setHeader("Content-Type", "application/pdf");
-            res.setHeader("Content-Disposition", `attachment; filename=invoice-${orderId}.pdf`);
+            const filename = `Накладная №${orderId}.pdf`;
+            res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
+
 
             res.sendFile(invoicePath, (err) => {
                 if (err) console.error("Ошибка при отправке PDF:", err);
