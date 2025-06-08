@@ -254,8 +254,8 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(2);
 
         // Итоги
-        doc.text("Стоимость доставки: ", { continued: true });
-        doc.text(order.delivery_price.toLocaleString("ru-RU"), { continued: false });
+        doc.fontSize(12);
+        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
         doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, { align: "left" });
         doc.text(`Статус заказа: ${order.status}`, { align: "left" });
 
