@@ -259,8 +259,11 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         // Вычисляем позиции для каждого блока
         doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 50, finalY);
+        doc.moveDown(1);
         doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 250, finalY);
+        doc.moveDown(1);
         doc.text(`Статус заказа: ${order.status}`, 450, finalY);
+        doc.moveDown(1);
 
         doc.moveDown(3);
 
