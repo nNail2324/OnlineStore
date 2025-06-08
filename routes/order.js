@@ -222,48 +222,99 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         doc.moveDown();
 
-        // Таблица товаров
+       // Таблица товаров с линиями
         doc.fontSize(12);
         const tableTop = doc.y;
         const colWidths = [30, 200, 50, 50, 60, 60];
+        const rowHeight = 20;
 
-        // Заголовки
+        // Горизонтальные линии
+        function drawHorizontalLine(y) {
+        doc.moveTo(50, y)
+            .lineTo(50 + colWidths.reduce((a, b) => a + b, 0), y)
+            .stroke();
+        }
+
+        // Вертикальные линии
+        function drawVerticalLines(y) {
+        let x = 50;
+        colWidths.forEach(width => {
+            doc.moveTo(x, y)
+            .lineTo(x, y + rowHeight * (items.length + 1))
+            .stroke();
+            x += width;
+        });
+        // Последняя вертикальная линия
+        doc.moveTo(x, y)
+            .lineTo(x, y + rowHeight * (items.length + 1))
+            .stroke();
+        }
+
+        // Рисуем линии таблицы
+        drawHorizontalLine(tableTop); // Верхняя линия заголовков
+        drawVerticalLines(tableTop); // Вертикальные линии
+
+        // Заголовки таблицы
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
+        doc.fillColor('black');
         headers.forEach((header, i) => {
-            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { width: colWidths[i], align: "center" });
+        doc.text(header, 
+                50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + colWidths[i]/2, 
+                tableTop + 5, 
+                { width: colWidths[i], align: "center" });
         });
 
-        doc.moveDown(0.5);
+        drawHorizontalLine(tableTop + rowHeight); // Линия под заголовками
 
-        let itemY = tableTop + 20;
+        // Строки с товарами
         items.forEach((item, idx) => {
-            const row = [
-                `${idx + 1}`,
-                item.name,
-                `${item.quantity}`,
-                item.unit,
-                `${item.price.toLocaleString("ru-RU")} ₽`,
-                `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
-            ];
-            row.forEach((text, i) => {
-                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { width: colWidths[i], align: "center" });
-            });
-            itemY += 20;
+        const rowY = tableTop + rowHeight * (idx + 1);
+        
+        const row = [
+            `${idx + 1}`,
+            item.name,
+            item.unit,
+            `${item.quantity}`,
+            `${item.price.toLocaleString("ru-RU")} ₽`,
+            `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
+        ];
+        
+        // Текст в ячейках
+        row.forEach((text, i) => {
+            doc.text(text, 
+                    50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + colWidths[i]/2, 
+                    rowY + 5, 
+                    { width: colWidths[i], align: i === 1 ? "left" : "center" });
+        });
+        
+        drawHorizontalLine(rowY + rowHeight); // Линия под строкой
         });
 
-        doc.moveDown(2);
+        // Нижняя граница таблицы
+        drawHorizontalLine(tableTop + rowHeight * (items.length + 1));
 
-        // Итоги
+        // Итоговая информация (без переносов, каждая строка отдельно)
         doc.fontSize(12);
-        const finalY = doc.y; // Фиксируем текущую позицию Y
 
-        // Вычисляем позиции для каждого блока
-        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 50, finalY);
+        // 1. Стоимость доставки (гарантированно в одну строку)
+        doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, {
+            align: 'left',
+            lineBreak: false // Запрет переноса
+        });
+
+        // 2. Итого (новая строка, без переноса)
+        doc.moveDown(1); // или doc.y += 15 для точного контроля
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, {
+            align: 'left',
+            lineBreak: false
+        });
+
+        // 3. Статус (новая строка, без переноса)
         doc.moveDown(1);
-        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 250, finalY);
-        doc.moveDown(1);
-        doc.text(`Статус заказа: ${order.status}`, 450, finalY);
-        doc.moveDown(1);
+        doc.text(`Статус заказа: ${order.status}`, {
+            align: 'left',
+            lineBreak: false
+        });
 
         doc.moveDown(3);
 
