@@ -213,7 +213,6 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.fontSize(10);
         doc.text("От кого: ", 50, doc.y, { continued: true });
         doc.text("ИП Шарипов Ирек Фларитович", { underline: true, continued: false });
-        doc.moveDown();
 
         doc.text("Кому: ", 50, doc.y, { continued: true });
         doc.text(order.contact_name, { underline: true, continued: false });
@@ -254,13 +253,13 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.moveDown(2);
 
         // Итоги
-        doc.text("Стоимость доставки: ", { continued: true, align: "left" });
+        doc.text("Стоимость доставки: ", { continued: true });
         doc.text(`${order.delivery_price.toLocaleString("ru-RU")} ₽`);
         
-        doc.text("Итого: ", { continued: true, align: "left" });
+        doc.text("Итого: ", { continued: true });
         doc.text(`${order.total_price.toLocaleString("ru-RU")} ₽`);
         
-        doc.text("Статус заказа: ", { continued: true, align: "left" });
+        doc.text("Статус заказа: ", { continued: true });
         doc.text(order.status);
 
         doc.moveDown(3);
