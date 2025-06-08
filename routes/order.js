@@ -215,26 +215,50 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         doc.text("Кому: ", { continued: true });
         doc.text(order.contact_name, { underline: true, continued: false });
-        doc.moveDown(5);
+        doc.moveDown(3); // Уменьшен отступ
 
-        doc.fontSize(25).text(`Накладная №${orderId}`, { align: "center" });
-        doc.moveDown();
+        doc.fontSize(20).text(`Накладная №${orderId}`, { align: "center" }); // Уменьшен размер шрифта
+        doc.moveDown(1);
 
-        // Таблица товаров
-        doc.fontSize(12);
+        // Таблица товаров (на всю ширину с учетом margin)
+        const tableMargin = doc.page.margins.left;
+        const tableWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+        const colWidths = [30, tableWidth - 330, 50, 50, 60, 80]; // Подобраны пропорционально
+
+        // Рисуем границы таблицы
+        const drawTableBorders = (yStart, yEnd) => {
+            const lineY = yStart - 10;
+            const lineHeight = yEnd - yStart + 25;
+            
+            // Внешние границы
+            doc.rect(tableMargin, lineY, tableWidth, lineHeight).stroke();
+            
+            // Горизонтальные линии
+            doc.moveTo(tableMargin, lineY + 20).lineTo(tableMargin + tableWidth, lineY + 20).stroke();
+            
+            // Вертикальные линии между колонками
+            let xPos = tableMargin;
+            for (let i = 0; i < colWidths.length - 1; i++) {
+                xPos += colWidths[i];
+                doc.moveTo(xPos, lineY).lineTo(xPos, lineY + lineHeight).stroke();
+            }
+        };
+
         const tableTop = doc.y;
-        const colWidths = [30, 200, 50, 50, 60, 60];
-
+        
         // Заголовки таблицы
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
         headers.forEach((header, i) => {
-            doc.text(header, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), tableTop, { 
-                width: colWidths[i], 
-                align: "center" 
-            });
+            doc.text(header, 
+                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (colWidths[i]/2), 
+                tableTop, 
+                { 
+                    width: colWidths[i], 
+                    align: "center",
+                    lineBreak: false 
+                }
+            );
         });
-
-        doc.moveDown(0.5);
 
         // Строки таблицы
         let itemY = tableTop + 20;
@@ -247,27 +271,34 @@ router.get("/:orderId/invoices", async (req, res) => {
                 `${item.price.toLocaleString("ru-RU")} ₽`,
                 `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
             ];
+            
             row.forEach((text, i) => {
-                doc.text(text, 50 + colWidths.slice(0, i).reduce((a, b) => a + b, 0), itemY, { 
-                    width: colWidths[i], 
-                    align: i === 1 ? "left" : "center" // Наименование выравниваем по левому краю
-                });
+                doc.text(text, 
+                    tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (i === 1 ? 5 : colWidths[i]/2), 
+                    itemY, 
+                    { 
+                        width: colWidths[i] - 10, 
+                        align: i === 1 ? "left" : "center",
+                        lineBreak: i === 1 // Перенос только для наименования
+                    }
+                );
             });
             itemY += 20;
         });
 
-        doc.moveDown(6);
+        // Рисуем границы таблицы
+        drawTableBorders(tableTop, itemY - 20);
+        doc.y = itemY + 10;
 
-        // Итоговая информация (исправленная версия)
-        const leftMargin = 50; // Отступ слева как у таблицы
-        const lineHeight = 5; // Высота строки
+        // Итоговая информация
+        const lineHeight = 2;
         
         // 1. Стоимость доставки
         doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 
-            leftMargin, 
+            tableMargin, 
             doc.y, 
             { 
-                width: 400,
+                width: tableWidth,
                 align: 'left',
                 lineBreak: false
             }
@@ -275,29 +306,16 @@ router.get("/:orderId/invoices", async (req, res) => {
         
         // 2. Итого
         doc.y += lineHeight;
-        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
-            leftMargin, 
+        doc.font('Inter-Medium').fontSize(12).text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
+            tableMargin, 
             doc.y, 
             { 
-                width: 400,
-                align: 'left',
-                lineBreak: false
-            }
-        );
-        
-        // 3. Статус
-        doc.y += lineHeight;
-        doc.text(`Статус заказа: ${order.status}`, 
-            leftMargin, 
-            doc.y, 
-            { 
-                width: 400,
+                width: tableWidth,
                 align: 'left',
                 lineBreak: false
             }
         );
 
-        doc.moveDown(3);
         doc.end();
 
         writeStream.on("finish", () => {
