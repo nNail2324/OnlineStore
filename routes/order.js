@@ -255,7 +255,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
         headers.forEach((header, i) => {
             doc.text(header, 
-                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 5, // +2 небольшой отступ от границы
+                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 2, // +2 небольшой отступ от границы
                 tableTop + 5, // +5 для вертикального выравнивания
                 { 
                     width: colWidths[i] - 4, // Уменьшаем ширину на 4 для отступов
