@@ -219,7 +219,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.text(order.contact_name, { underline: true, continued: false });
         doc.moveDown(3);
 
-        doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" });
+        doc.font("Inter-Bold").fontSize(20).text(`НАКЛАДНАЯ №${orderId}`, { align: "center" });
         doc.moveDown(1);
         
         doc.font("Inter-Medium");
@@ -379,8 +379,7 @@ router.get("/:orderId/invoices", async (req, res) => {
             { width: tableWidth, align: 'left' }
         );
         
-        doc.moveDown(0.5);
-        doc.font("Inter-Bold").text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
+        doc.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
             tableMargin, 
             doc.y, 
             { width: tableWidth, align: 'left' }
