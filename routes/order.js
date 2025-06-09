@@ -219,7 +219,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         doc.text(order.contact_name, { underline: true, continued: false });
         doc.moveDown(3);
 
-        doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" });
+        doc.font("Inter-Bold").fontSize(20).text(`НАКЛАДНАЯ №${orderId}`, { align: "center" });
         doc.moveDown(1);
         
         doc.font("Inter-Medium");
@@ -272,7 +272,7 @@ router.get("/:orderId/invoices", async (req, res) => {
             xPos += header.width;
         });
 
-        // Рисуем границы заголовка
+        // Рисуем внешние границы таблицы (прямоугольник)
         doc.rect(tableMargin, tableTop, tableWidth, rowHeight).stroke();
 
         // Строки таблицы
@@ -353,16 +353,23 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         // Вертикальные линии между колонками
         let verticalX = tableMargin;
+        // Левая граница таблицы
         doc.moveTo(verticalX, tableTop)
            .lineTo(verticalX, tableTop + (items.length + 1) * rowHeight)
            .stroke();
         
+        // Линии между колонками
         Object.values(colWidths).slice(0, -1).forEach(width => {
             verticalX += width;
             doc.moveTo(verticalX, tableTop)
                .lineTo(verticalX, tableTop + (items.length + 1) * rowHeight)
                .stroke();
         });
+
+        // Правая граница таблицы (добавлена эта строка)
+        doc.moveTo(tableMargin + tableWidth, tableTop)
+           .lineTo(tableMargin + tableWidth, tableTop + (items.length + 1) * rowHeight)
+           .stroke();
 
         // Обновляем позицию Y после таблицы
         doc.y = tableTop + (items.length + 1) * rowHeight + 20;
@@ -375,8 +382,7 @@ router.get("/:orderId/invoices", async (req, res) => {
             { width: tableWidth, align: 'left' }
         );
         
-        doc.moveDown(0.5);
-        doc.font("Inter-Bold").text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
+        doc.font.text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
             tableMargin, 
             doc.y, 
             { width: tableWidth, align: 'left' }
