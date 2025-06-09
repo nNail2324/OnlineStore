@@ -217,110 +217,169 @@ router.get("/:orderId/invoices", async (req, res) => {
 
         doc.text("Кому: ", { continued: true });
         doc.text(order.contact_name, { underline: true, continued: false });
-        doc.moveDown(3); // Уменьшен отступ
+        doc.moveDown(3);
 
-        doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" }); // Уменьшен размер шрифта
+        doc.font("Inter-Bold").fontSize(20).text(`Накладная №${orderId}`, { align: "center" });
         doc.moveDown(1);
         
         doc.font("Inter-Medium");
 
-        // Таблица товаров (на всю ширину с учетом margin)
+        // Параметры таблицы
         const tableMargin = doc.page.margins.left;
         const tableWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
-        const colWidths = [30, tableWidth - 330, 50, 50, 60, 80]; // Подобраны пропорционально
-
-        // Рисуем границы таблицы
-        const drawTableBorders = (yStart, yEnd) => {
-            const lineY = yStart - 10;
-            const lineHeight = yEnd - yStart + 25;
-            
-            // Внешние границы
-            doc.rect(tableMargin, lineY, tableWidth, lineHeight).stroke();
-            
-            // Горизонтальные линии
-            doc.moveTo(tableMargin, lineY + 20).lineTo(tableMargin + tableWidth, lineY + 20).stroke();
-            
-            // Вертикальные линии между колонками
-            let xPos = tableMargin;
-            for (let i = 0; i < colWidths.length - 1; i++) {
-                xPos += colWidths[i];
-                doc.moveTo(xPos, lineY).lineTo(xPos, lineY + lineHeight).stroke();
-            }
-        };
-
-        const tableTop = doc.y;
         
-       // Заголовки таблицы
-        doc.fontSize(12);
-        const headers = ["№", "Наименование", "Ед. изм.", "Кол-во", "Цена", "Сумма"];
-        headers.forEach((header, i) => {
-            doc.text(header, 
-                tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 2, // +2 небольшой отступ от границы
-                tableTop, // +5 для вертикального выравнивания
+        // Ширина колонок (сумма должна быть равна tableWidth)
+        const colWidths = {
+            number: 30,       // №
+            name: tableWidth * 0.5,  // Наименование (50% ширины)
+            unit: 50,        // Ед. изм.
+            quantity: 50,   // Кол-во
+            price: 80,      // Цена
+            sum: 80         // Сумма
+        };
+        
+        // Проверка суммы ширин колонок
+        const totalColWidth = Object.values(colWidths).reduce((a, b) => a + b, 0);
+        if (totalColWidth > tableWidth) {
+            // Корректировка ширины колонки с наименованием, если сумма ширин превышает доступную
+            colWidths.name -= (totalColWidth - tableWidth);
+        }
+
+        // Заголовки таблицы
+        const headers = [
+            { text: "№", width: colWidths.number },
+            { text: "Наименование", width: colWidths.name },
+            { text: "Ед. изм.", width: colWidths.unit },
+            { text: "Кол-во", width: colWidths.quantity },
+            { text: "Цена", width: colWidths.price },
+            { text: "Сумма", width: colWidths.sum }
+        ];
+
+        // Начальная позиция таблицы
+        const tableTop = doc.y;
+        const rowHeight = 20;
+        const cellPadding = 5;
+
+        // Рисуем заголовки таблицы
+        doc.font("Inter-Bold").fontSize(10);
+        let xPos = tableMargin;
+        headers.forEach(header => {
+            doc.text(header.text, xPos + cellPadding, tableTop + cellPadding, {
+                width: header.width - cellPadding * 2,
+                align: "center",
+                lineBreak: false
+            });
+            xPos += header.width;
+        });
+
+        // Рисуем границы заголовка
+        doc.rect(tableMargin, tableTop, tableWidth, rowHeight).stroke();
+
+        // Строки таблицы
+        doc.font("Inter-Medium").fontSize(10);
+        items.forEach((item, idx) => {
+            const rowY = tableTop + (idx + 1) * rowHeight;
+            
+            // №
+            doc.text(`${idx + 1}`, 
+                tableMargin + cellPadding, 
+                rowY + cellPadding, 
                 { 
-                    width: colWidths[i] - 4, // Уменьшаем ширину на 4 для отступов
+                    width: colWidths.number - cellPadding * 2,
                     align: "center",
                     lineBreak: false 
                 }
             );
-        });
-
-        // Строки таблицы
-        let itemY = tableTop + 20;
-        items.forEach((item, idx) => {
-            const row = [
-                `${idx + 1}`,
-                item.name,
-                item.unit,
-                `${item.quantity}`,
-                `${item.price.toLocaleString("ru-RU")} ₽`,
-                `${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`
-            ];
             
-            row.forEach((text, i) => {
-                const options = {
-                    width: colWidths[i] - 10,
-                    align: i === 1 ? "left" : "center",
-                    lineBreak: i === 1
-                };
-                
-                // Точный расчет позиции для каждого элемента
-                const xPos = tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + (i === 1 ? 5 : colWidths[i]/2 - doc.widthOfString(text, options)/2);
-                const yPos = itemY + 5; // +5 для вертикального выравнивания
-                
-                doc.text(text, xPos, yPos, options);
-            });
-            itemY += 20;
+            // Наименование (с переносом строки)
+            doc.text(item.name, 
+                tableMargin + colWidths.number + cellPadding, 
+                rowY + cellPadding, 
+                { 
+                    width: colWidths.name - cellPadding * 2,
+                    align: "left"
+                }
+            );
+            
+            // Ед. изм.
+            doc.text(item.unit, 
+                tableMargin + colWidths.number + colWidths.name + cellPadding, 
+                rowY + cellPadding, 
+                { 
+                    width: colWidths.unit - cellPadding * 2,
+                    align: "center",
+                    lineBreak: false 
+                }
+            );
+            
+            // Кол-во
+            doc.text(`${item.quantity}`, 
+                tableMargin + colWidths.number + colWidths.name + colWidths.unit + cellPadding, 
+                rowY + cellPadding, 
+                { 
+                    width: colWidths.quantity - cellPadding * 2,
+                    align: "center",
+                    lineBreak: false 
+                }
+            );
+            
+            // Цена
+            doc.text(`${item.price.toLocaleString("ru-RU")} ₽`, 
+                tableMargin + colWidths.number + colWidths.name + colWidths.unit + colWidths.quantity + cellPadding, 
+                rowY + cellPadding, 
+                { 
+                    width: colWidths.price - cellPadding * 2,
+                    align: "right",
+                    lineBreak: false 
+                }
+            );
+            
+            // Сумма
+            doc.text(`${(item.quantity * item.price).toLocaleString("ru-RU")} ₽`, 
+                tableMargin + colWidths.number + colWidths.name + colWidths.unit + colWidths.quantity + colWidths.price + cellPadding, 
+                rowY + cellPadding, 
+                { 
+                    width: colWidths.sum - cellPadding * 2,
+                    align: "right",
+                    lineBreak: false 
+                }
+            );
+            
+            // Горизонтальная линия между строками
+            doc.moveTo(tableMargin, rowY + rowHeight)
+               .lineTo(tableMargin + tableWidth, rowY + rowHeight)
+               .stroke();
         });
 
-        // Рисуем границы таблицы
-        drawTableBorders(tableTop, itemY - 20);
-        doc.y = itemY + 10;
+        // Вертикальные линии между колонками
+        let verticalX = tableMargin;
+        doc.moveTo(verticalX, tableTop)
+           .lineTo(verticalX, tableTop + (items.length + 1) * rowHeight)
+           .stroke();
+        
+        Object.values(colWidths).slice(0, -1).forEach(width => {
+            verticalX += width;
+            doc.moveTo(verticalX, tableTop)
+               .lineTo(verticalX, tableTop + (items.length + 1) * rowHeight)
+               .stroke();
+        });
+
+        // Обновляем позицию Y после таблицы
+        doc.y = tableTop + (items.length + 1) * rowHeight + 20;
 
         // Итоговая информация
-        const lineHeight = 2;
-        
-        // 1. Стоимость доставки
+        doc.fontSize(12);
         doc.text(`Стоимость доставки: ${order.delivery_price.toLocaleString("ru-RU")} ₽`, 
             tableMargin, 
             doc.y, 
-            { 
-                width: tableWidth,
-                align: 'left',
-                lineBreak: false
-            }
+            { width: tableWidth, align: 'left' }
         );
         
-        // 2. Итого
-        doc.y += lineHeight;
-        doc.fontSize(12).text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
+        doc.moveDown(0.5);
+        doc.font("Inter-Bold").text(`Итого: ${order.total_price.toLocaleString("ru-RU")} ₽`, 
             tableMargin, 
             doc.y, 
-            { 
-                width: tableWidth,
-                align: 'left',
-                lineBreak: false
-            }
+            { width: tableWidth, align: 'left' }
         );
 
         doc.end();
@@ -329,7 +388,6 @@ router.get("/:orderId/invoices", async (req, res) => {
             res.setHeader("Content-Type", "application/pdf");
             const filename = `Накладная №${orderId}.pdf`;
             res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
-
 
             res.sendFile(invoicePath, (err) => {
                 if (err) console.error("Ошибка при отправке PDF:", err);
