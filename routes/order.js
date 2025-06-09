@@ -256,7 +256,7 @@ router.get("/:orderId/invoices", async (req, res) => {
         headers.forEach((header, i) => {
             doc.text(header, 
                 tableMargin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 2, // +2 небольшой отступ от границы
-                tableTop + 50, // +5 для вертикального выравнивания
+                tableTop, // +5 для вертикального выравнивания
                 { 
                     width: colWidths[i] - 4, // Уменьшаем ширину на 4 для отступов
                     align: "center",
