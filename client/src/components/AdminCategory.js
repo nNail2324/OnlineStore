@@ -150,8 +150,10 @@ const AdminCategory = () => {
                             <label>{subcategory.name}</label>
                             <label>{subcategory.product_count}</label>
                         </div>
-                        
-                        <TiDelete size={30} onClick={(e) => onDeleteSubcategory(subcategory.ID, e)} />
+
+                        <div className="edit-button">
+                            <TiDelete size={30} onClick={(e) => onDeleteSubcategory(subcategory.ID, e)} />
+                        </div>
                     </div>
                 ))}
             </div>
