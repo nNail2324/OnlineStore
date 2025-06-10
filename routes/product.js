@@ -94,6 +94,42 @@ router.get("/card/:productId", async (req, res) => {
     }
 });
 
+// Добавьте этот маршрут в ваш product router
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+    const connection = await db.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        // 1. Удаляем отзывы о товаре
+        await connection.query("DELETE FROM feedback WHERE product_id = ?", [id]);
+        
+        // 2. Удаляем атрибуты товара
+        await connection.query("DELETE FROM product_attributes WHERE product_id = ?", [id]);
+        
+        // 3. Удаляем изображения товара
+        await connection.query("DELETE FROM product_images WHERE product_id = ?", [id]);
+        
+        // 4. Удаляем сам товар
+        const [result] = await connection.query("DELETE FROM product WHERE ID = ?", [id]);
+
+        if (result.affectedRows === 0) {
+            await connection.rollback();
+            return res.status(404).json({ message: "Товар не найден" });
+        }
+
+        await connection.commit();
+        res.json({ success: true });
+
+    } catch (err) {
+        await connection.rollback();
+        console.error("Ошибка при удалении товара:", err);
+        res.status(500).json({ message: "Ошибка сервера" });
+    } finally {
+        connection.release();
+    }
+});
 
 router.get("/feedback/:productId", async (req, res) => {
     try {

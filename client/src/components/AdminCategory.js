@@ -148,12 +148,9 @@ const AdminCategory = () => {
                             <label>{subcategory.name}</label>
                             <label>{subcategory.product_count}</label>
                         </div>
-                        <button 
-                            className="white-button"
-                            onClick={(e) => onDeleteSubcategory(subcategory.ID, e)}
-                        >
-                            Удалить
-                        </button>
+                        <div className="white-button">
+                            <button onClick={(e) => onDeleteSubcategory(subcategory.ID, e)}>Удалить</button>
+                        </div>
                     </div>
                 ))}
             </div>
