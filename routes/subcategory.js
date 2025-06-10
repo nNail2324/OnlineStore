@@ -47,6 +47,39 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// Добавьте этот маршрут в ваш subcategory router
+router.delete("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Сначала проверяем, есть ли товары в этой подкатегории
+        const [products] = await db.query(
+            "SELECT COUNT(*) as count FROM product WHERE subcategory_id = ?",
+            [id]
+        );
+        
+        if (products[0].count > 0) {
+            return res.status(400).json({ 
+                message: "Нельзя удалить подкатегорию с товарами" 
+            });
+        }
+
+        const [result] = await db.query(
+            "DELETE FROM subcategory WHERE ID = ?",
+            [id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Подкатегория не найдена" });
+        }
+
+        res.json({ message: "Подкатегория успешно удалена" });
+    } catch (err) {
+        console.error("Ошибка при удалении подкатегории:", err);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+});
+
 // Получение одной подкатегории по ID
 router.get("/single/:id", async (req, res) => {
     try {

@@ -74,6 +74,32 @@ const AdminCategory = () => {
         }
     };
 
+    const onDeleteSubcategory = async (subcategoryId, e) => {
+        e.stopPropagation(); // Предотвращаем всплытие события, чтобы не срабатывал onClickSubcategory
+        
+        if (!window.confirm("Вы уверены, что хотите удалить эту подкатегорию?")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/subcategory/${subcategoryId}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) throw new Error("Ошибка при удалении подкатегории");
+
+            alert("Подкатегория удалена!");
+            
+            // Обновляем список подкатегорий
+            const updatedResponse = await fetch(`/api/subcategory/${categoryId}`);
+            const updatedData = await updatedResponse.json();
+            setSubcategories(updatedData);
+        } catch (error) {
+            console.error("Ошибка при удалении подкатегории:", error);
+            alert("Не удалось удалить подкатегорию");
+        }
+    };
+
     return (
         <div className="body-page">
             <div className="title-row">
@@ -122,6 +148,12 @@ const AdminCategory = () => {
                             <label>{subcategory.name}</label>
                             <label>{subcategory.product_count}</label>
                         </div>
+                        <button 
+                            className="white-button"
+                            onClick={(e) => onDeleteSubcategory(subcategory.ID, e)}
+                        >
+                            Удалить
+                        </button>
                     </div>
                 ))}
             </div>
