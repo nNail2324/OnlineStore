@@ -241,18 +241,18 @@ const AdminSubcategory = () => {
                 </div>
 
                 <div className="black-title"><label>Изображения</label></div>
-                <div className="types">
-                    {newProduct.images.map((img, i) => (
-                        <div className="admin-form" key={i}>
-                            <input
-                                placeholder="URL изображения"
-                                value={img}
-                                onChange={(e) => handleImageChange(i, e.target.value)}
-                            />
-                            <div className="edit-button">
-                                <TiDelete size={30} onClick={() => removeImageField(i)} />
+                    <div className="types">
+                        {newProduct.images.map((img, i) => (
+                            <div className="admin-form" key={i}>
+                                <input
+                                    placeholder="URL изображения"
+                                    value={img}
+                                    onChange={(e) => handleImageChange(i, e.target.value)}
+                                />
+                                <div className="edit-button">
+                                    <TiDelete size={30} onClick={() => removeImageField(i)} />
+                                </div>
                             </div>
-                        </div>
                     ))}
                     <div className="attribute-button">
                         <button onClick={addImageField}>+ Изображение</button>

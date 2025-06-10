@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { TiDelete } from "react-icons/ti";
+
 const AdminCategory = () => {
     const { image } = useParams();
     const [categoryName, setCategoryName] = useState("");
@@ -148,9 +150,8 @@ const AdminCategory = () => {
                             <label>{subcategory.name}</label>
                             <label>{subcategory.product_count}</label>
                         </div>
-                        <div className="white-button">
-                            <button onClick={(e) => onDeleteSubcategory(subcategory.ID, e)}>Удалить</button>
-                        </div>
+                        
+                        <TiDelete size={30} onClick={(e) => onDeleteSubcategory(subcategory.ID, e)} />
                     </div>
                 ))}
             </div>
