@@ -48,25 +48,22 @@ const AdminSubcategory = () => {
 
     const onClickCard = (productId) => navigate(`/product/${productId}`);
 
-    const handleDeleteProduct = async (productId, e) => {
-        e.stopPropagation(); // Prevent card click event
-        
+    const handleDeleteProduct = async (productId) => {
         if (!window.confirm("Вы уверены, что хотите удалить этот товар?")) {
             return;
         }
-
+    
         try {
             const response = await fetch(`/api/product/${productId}`, {
                 method: "DELETE"
             });
-
+    
             if (!response.ok) throw new Error("Ошибка при удалении товара");
-
+    
             showNotification("Товар успешно удален");
             
-            // Refresh products list
-            const updatedProductsRes = await fetch(`/api/product/subcategory/${id}`);
-            const updatedProducts = await updatedProductsRes.json();
+            // Обновляем список товаров
+            const updatedProducts = products.filter(p => p.ID !== productId);
             setProducts(updatedProducts);
         } catch (error) {
             console.error("Ошибка при удалении товара:", error);
@@ -314,7 +311,7 @@ const AdminSubcategory = () => {
                                         <button onClick={() => handleEditClick(product)}>Изменить</button>
                                     </div>
                                     <div className="white-button">
-                                        <button onClick={() => handleDeleteProduct(product.ID, e)}>Удалить</button>
+                                        <button onClick={() => handleDeleteProduct(product.ID)}>Удалить</button>
                                     </div>
                                 </div>
                             </div>
